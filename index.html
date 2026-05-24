@@ -2,528 +2,1321 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#040608">
-<link rel="manifest" href="manifest.json">
-<title>EDEN SNIPER · Explosion Logic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>EDEN SNIPER v6 · Proof Engine</title>
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#00f0d0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EDEN SNIPER">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
-:root{
-  --bg:#040608;--bg2:#070c10;--bg3:#0b1118;
-  --border:#0f1e2a;--border2:#152230;
-  --cyan:#00f0d0;--lime:#b8ff00;--fire:#ff3c1f;
-  --gold:#ffb800;--sky:#38b6ff;--purple:#9d4dff;--pink:#ff3cac;--coil:#00d4ff;
-  --fog:#2e4a5c;--mist:#0d1c26;--body:#587a8c;--bright:#c8e8f5;
-}
+:root{--bg:#040608;--bg2:#070c10;--bg3:#0b1118;--border:#0f1e2a;--border2:#152230;--cyan:#00f0d0;--lime:#b8ff00;--fire:#ff3c1f;--gold:#ffb800;--sky:#38b6ff;--purple:#9d4dff;--pink:#ff3cac;--fog:#2e4a5c;--mist:#0d1c26;--body:#587a8c;--bright:#c8e8f5;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{background:var(--bg);color:var(--body);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
-mono{font-family:'IBM Plex Mono',monospace;}
-
-/* Topbar with Background Toggle */
+html,body{background:var(--bg);color:var(--body);font-family:"IBM Plex Sans",sans-serif;min-height:100vh;overflow-x:hidden;}
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.logo{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;letter-spacing:4px;color:var(--cyan);}
+.logo{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;letter-spacing:4px;color:var(--cyan);}
 .logo-sub{font-size:8px;letter-spacing:2px;color:var(--fog);margin-top:2px;}
-.topright{text-align:right;font-size:10px;color:var(--fog);line-height:1.8;display:flex;flex-direction:column;align-items:flex-end;}
-.topright b{color:var(--cyan);font-family:'IBM Plex Mono',monospace;}
-.bg-toggle{margin-top:4px;background:var(--bg3);border:1px solid var(--border);color:var(--fog);font-size:8px;padding:3px 6px;border-radius:4px;cursor:pointer;font-weight:bold;letter-spacing:1px;}
-.bg-toggle.on{color:var(--lime);border-color:rgba(184,255,0,0.3);background:rgba(184,255,0,0.05);}
-.pbar{height:1px;background:var(--border);}
-.pbfill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--lime));transition:width .3s;}
-
-/* Phase Tabs & Sbar */
-.ptabs{display:flex;gap:0;background:var(--bg2);border-bottom:1px solid var(--border);}
-.ptab{flex:1;padding:8px 4px;font-size:9px;letter-spacing:2px;text-align:center;color:var(--fog);cursor:pointer;border-bottom:2px solid transparent;font-weight:600;}
+.topright{display:flex;align-items:center;gap:8px;}
+.topright-info{text-align:right;font-size:10px;color:var(--fog);line-height:1.8;}
+.topright-info b{color:var(--cyan);font-family:"IBM Plex Mono",monospace;}
+.pbar{height:2px;background:var(--border);}
+.pbfill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--lime));transition:width 0.3s;}
+.bg-toggle{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:9px;font-weight:700;letter-spacing:1px;cursor:pointer;color:var(--fog);font-family:"IBM Plex Mono",monospace;transition:0.2s;white-space:nowrap;}
+.bg-toggle.on{background:rgba(0,240,208,.1);border-color:var(--cyan);color:var(--cyan);}
+.notif-btn{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 8px;font-size:12px;cursor:pointer;transition:0.2s;margin-right:5px;}
+.notif-btn.granted{border-color:var(--lime);background:rgba(184,255,0,.08);}
+.notif-btn.denied{opacity:0.3;cursor:not-allowed;}
+.ptabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);}
+.ptab{flex:1;padding:8px 4px;font-size:9px;letter-spacing:1.5px;text-align:center;color:var(--fog);cursor:pointer;border-bottom:2px solid transparent;font-weight:600;}
 .ptab.act{color:var(--cyan);border-bottom-color:var(--cyan);}
 .ptab.act-lime{color:var(--lime)!important;border-bottom-color:var(--lime)!important;}
 .ptab.act-fire{color:var(--fire)!important;border-bottom-color:var(--fire)!important;}
 .ptab.act-gold{color:var(--gold)!important;border-bottom-color:var(--gold)!important;}
-.ptab.act-coil{color:var(--coil)!important;border-bottom-color:var(--coil)!important;}
+.ptab.act-journal{color:var(--purple)!important;border-bottom-color:var(--purple)!important;}
 .sbar{padding:6px 14px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--fog);background:var(--bg2);border-bottom:1px solid var(--border);}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--lime);display:inline-block;margin-right:6px;animation:blink 1.8s infinite;}
-.dot.fast{animation:blink .4s infinite;background:var(--cyan);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}
-.mono-sm{font-family:'IBM Plex Mono',monospace;font-size:10px;}
-
-/* UI Structure */
+.dot.fast{animation:blink 0.4s infinite;background:var(--cyan);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.1;}}
+.mono-sm{font-family:"IBM Plex Mono",monospace;font-size:10px;}
 .pulse{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border2);}
 .pulse-c{background:var(--bg2);padding:6px 4px;text-align:center;}
 .pulse-l{font-size:7px;letter-spacing:1px;color:var(--fog);margin-bottom:2px;text-transform:uppercase;}
-.pulse-v{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;}
-.acwrap{background:var(--bg2);border-bottom:2px solid var(--border2);padding:9px 12px 3px;}
-.ac-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-.ac-label{font-size:8px;letter-spacing:3px;color:var(--fog);display:flex;align-items:center;gap:7px;}
-.badge-sm{background:var(--bg3);border:1px solid var(--border);color:var(--fog);font-size:8px;padding:1px 6px;border-radius:8px;}
-.no-calls{text-align:center;padding:10px 0 12px;font-size:9px;color:var(--mist);letter-spacing:1px;}
-.ac-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;overflow:hidden;position:relative;}
-.ac-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;}
-.ac-card.al::before{background:var(--lime);}
-.ac-card.as::before{background:var(--fire);}
-.ac-card.ab::before{background:var(--gold);}
-.ac-top{display:flex;align-items:center;gap:6px;padding:8px 10px 5px 12px;}
-.ac-sym{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;color:var(--bright);flex:1;}
-.ac-dir{font-size:8px;font-weight:700;letter-spacing:2px;padding:1px 7px;border-radius:2px;}
-.ac-dir.dl{background:rgba(184,255,0,.1);color:var(--lime);border:1px solid rgba(184,255,0,.25);}
-.ac-dir.ds{background:rgba(255,60,31,.1);color:var(--fire);border:1px solid rgba(255,60,31,.25);}
+.pulse-v{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:700;}
+.acwrap{background:var(--bg2);border-bottom:1px solid var(--border2);}
+.ac-head{display:flex;align-items:center;justify-content:space-between;padding:7px 12px 5px;}
+.ac-label{font-size:9px;letter-spacing:2px;color:var(--cyan);font-weight:700;}
+.badge-sm{font-size:8px;padding:1px 5px;background:rgba(0,240,208,.1);border:1px solid rgba(0,240,208,.25);border-radius:3px;margin-left:4px;}
+.ac-card{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;margin:0 10px 8px;overflow:hidden;}
+.ac-card.as{border-color:rgba(184,255,0,.2);}
+.ac-card.ad{border-color:rgba(255,60,31,.2);}
+.ac-card.ab{border-color:rgba(255,184,0,.2);}
+.ac-top{display:flex;align-items:center;gap:6px;padding:8px 10px 5px;}
+.ac-sym{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;color:var(--bright);}
+.ac-dir{font-size:8px;font-weight:700;letter-spacing:2px;padding:2px 6px;border-radius:2px;}
+.ac-dir.dp{background:rgba(184,255,0,.1);color:var(--lime);border:1px solid rgba(184,255,0,.25);}
+.ac-dir.dd{background:rgba(255,60,31,.1);color:var(--fire);border:1px solid rgba(255,60,31,.25);}
 .ac-dir.db{background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);}
-.ac-pnl{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;}
-.ac-pnls{font-size:8px;color:var(--fog);margin-top:1px;text-align:right;}
-.pp{color:var(--lime);}.pn{color:var(--fire);}.pz{color:var(--fog);}
-.ac-prog{height:2px;background:var(--border);}
-.ac-progf{height:100%;transition:width .5s;}
-.ac-lvls{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2);border-top:1px solid var(--border);}
+.ac-pnl{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;}
+.ac-pnls{font-size:8px;color:var(--fog);}
+.ac-prog{height:2px;background:var(--border);margin:2px 10px 5px;}
+.ac-progf{height:100%;border-radius:1px;}
+.ac-lvls{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);}
 .ac-lv{background:var(--bg2);padding:5px 4px;text-align:center;}
-.ac-lv-n{font-size:7px;letter-spacing:1px;color:var(--fog);margin-bottom:1px;}
-.ac-lv-v{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;}
+.ac-lv-n{font-size:7px;letter-spacing:1px;color:var(--fog);margin-bottom:2px;}
+.ac-lv-v{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:700;}
 .ac-lv.sl .ac-lv-v{color:var(--fire);}
 .ac-lv.en .ac-lv-v{color:var(--bright);}
-.ac-lv.t1 .ac-lv-v{color:#7acc44;}
+.ac-lv.t1 .ac-lv-v{color:rgba(122,204,68,1);}
 .ac-lv.t2 .ac-lv-v{color:var(--lime);}
-.ac-btns{display:flex;gap:5px;padding:6px 8px;}
-.btn-book{flex:1;padding:7px 4px;border-radius:4px;border:1px solid rgba(184,255,0,.3);background:rgba(184,255,0,.06);color:var(--lime);font-weight:700;font-size:9px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;}
-.btn-cut{flex:1;padding:7px 4px;border-radius:4px;border:1px solid rgba(255,60,31,.3);background:rgba(255,60,31,.06);color:var(--fire);font-weight:700;font-size:9px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;}
-.btn-hold{flex:2;padding:7px 4px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--fog);font-size:8px;text-align:center;line-height:1.5;}
-
-/* History & Cards */
-.hist-row{display:flex;align-items:center;gap:5px;padding:6px 9px;border-bottom:1px solid var(--border);}
-.hist-row:last-child{border-bottom:none;}
-.h-sym{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--bright);width:60px;font-size:10px;}
-.h-dir{width:50px;font-size:8px;font-weight:700;}
-.h-phase{flex:1;font-size:9px;color:var(--fog);}
-.h-pnl{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;width:48px;text-align:right;}
-.h-t{font-size:8px;color:var(--fog);}
-
-.page{padding:10px 12px 90px;}
-.signal-group-head{font-size:8px;letter-spacing:3px;color:var(--fog);padding:6px 2px 4px;display:flex;align-items:center;gap:8px;}
-.signal-group-head::after{content:'';flex:1;height:1px;background:var(--border);}
-
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;cursor:pointer;position:relative;}
-.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;}
-.card.cl::before{background:var(--lime);}
-.card.cs::before{background:var(--fire);}
-.card.cb::before{background:var(--gold);}
-.card.cp::before{background:var(--purple);}
-
-.card-top{display:flex;align-items:center;gap:7px;padding:10px 12px 8px 13px;}
-.csym{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:var(--bright);flex:1;}
-.cchg{font-size:10px;font-weight:600;}
-.gp{color:var(--lime);}.gn{color:var(--fire);}
-.phase-tag{font-size:8px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:3px;}
-.pt-pump{background:rgba(184,255,0,.1);color:var(--lime);border:1px solid rgba(184,255,0,.25);}
-.pt-dump{background:rgba(255,60,31,.1);color:var(--fire);border:1px solid rgba(255,60,31,.25);}
-.pt-bounce{background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);}
-.pt-coil{background:rgba(0,212,255,.1);color:var(--coil);border:1px solid rgba(0,212,255,.25);}
-
-.chips{display:flex;gap:4px;padding:0 12px 8px;flex-wrap:wrap;}
-.chip{font-size:8px;letter-spacing:.5px;padding:2px 8px;border-radius:2px;font-weight:600;}
-.chip-g{background:rgba(184,255,0,.06);color:var(--lime);border:1px solid rgba(184,255,0,.18);}
-.chip-r{background:rgba(255,60,31,.04);color:#803020;border:1px solid rgba(255,60,31,.12);}
-.chip-y{background:rgba(255,184,0,.06);color:var(--gold);border:1px solid rgba(255,184,0,.18);}
-.chip-b{background:rgba(56,182,255,.06);color:var(--sky);border:1px solid rgba(56,182,255,.18);}
-.chip-p{background:rgba(157,77,255,.06);color:var(--purple);border:1px solid rgba(157,77,255,.18);}
-
-.score-row{display:flex;align-items:center;gap:7px;padding:0 12px 9px;}
-.sbar2{flex:1;height:5px;background:var(--border);border-radius:2px;overflow:hidden;}
-.sbar2-fill{height:100%;border-radius:2px;}
-.slabel{font-size:8px;color:var(--fog);width:48px;}
-.sval{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;width:36px;text-align:right;}
-
-.price-row{display:flex;align-items:flex-end;justify-content:space-between;padding:0 12px 9px;}
-.price-big{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--bright);}
-.price-meta{text-align:right;font-size:9px;color:var(--fog);line-height:1.8;}
-.price-meta b{font-family:'IBM Plex Mono',monospace;color:var(--body);}
-
-.lvls{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2);border-top:1px solid var(--border);}
-.lv{background:var(--bg2);padding:7px 4px;text-align:center;}
-.lv-n{font-size:7px;letter-spacing:1px;color:var(--fog);margin-bottom:2px;}
-.lv-v{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;}
-.lv-p{font-size:7px;color:var(--fog);margin-top:1px;}
-.lv.sl .lv-v{color:var(--fire);}
-.lv.en .lv-v{color:var(--bright);}
-.lv.t1 .lv-v{color:#7acc44;}
-.lv.t2 .lv-v{color:var(--lime);}
-
-.add-btn{display:block;margin:7px 11px;padding:9px;border-radius:5px;border:1px solid rgba(0,240,208,.25);background:rgba(0,240,208,.05);color:var(--cyan);font-weight:700;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;text-align:center;}
-
-.exp{display:none;border-top:1px solid var(--border);}
-.card.open .exp{display:block;}
-.exp-in{padding:11px 12px;}
-.exp-sec{font-size:7px;letter-spacing:3px;color:var(--fog);margin-bottom:7px;}
-.erow{display:flex;gap:9px;padding:6px 9px;border-radius:4px;margin-bottom:5px;}
-.erow.ep{background:rgba(184,255,0,.04);border:1px solid rgba(184,255,0,.12);}
-.erow.ef{background:rgba(255,60,31,.03);border:1px solid rgba(255,60,31,.08);}
-.erow.ew{background:rgba(255,184,0,.04);border:1px solid rgba(255,184,0,.12);}
-.erow.eb{background:rgba(56,182,255,.04);border:1px solid rgba(56,182,255,.12);}
-.eico{font-size:11px;flex-shrink:0;margin-top:1px;}
-.etext{flex:1;line-height:1.5;}
-.etext strong{display:block;font-size:9px;letter-spacing:.5px;color:var(--bright);margin-bottom:2px;}
-.etext span{font-size:9px;color:var(--fog);}
-
-.scan-btn{position:fixed;bottom:10px;left:10px;right:10px;background:var(--bg2);border:1px solid var(--cyan);color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;letter-spacing:3px;padding:13px;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;z-index:50;}
+.ac-btns{display:flex;gap:6px;padding:6px 10px;}
+.btn-cut{flex:2;background:rgba(255,60,31,.08);border:1px solid rgba(255,60,31,.3);color:var(--fire);font-size:10px;font-weight:700;padding:7px;border-radius:4px;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;}
+.btn-hold{flex:1;background:rgba(0,240,208,.05);border:1px solid rgba(0,240,208,.15);color:var(--cyan);font-size:9px;padding:7px;border-radius:4px;text-align:center;}
+.scan-btn{position:fixed;bottom:10px;left:10px;right:10px;background:var(--bg2);border:1px solid var(--cyan);color:var(--cyan);font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:13px;letter-spacing:3px;padding:13px;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;z-index:50;}
 .scan-btn:disabled{opacity:.35;cursor:not-allowed;}
+.page{padding:10px 12px 90px;}
 .empty{text-align:center;padding:40px 20px;}
 .ei{font-size:32px;margin-bottom:8px;opacity:.5;}
 .eh{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--fog);margin-bottom:6px;}
 .eb{font-size:10px;color:var(--mist);line-height:1.9;}
+.signal-group-head{font-size:8px;letter-spacing:3px;color:var(--fog);padding:6px 2px 4px;display:flex;align-items:center;gap:8px;}
+.signal-group-head::after{content:"";flex:1;height:1px;background:var(--border);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;cursor:pointer;position:relative;}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;}
+.card.cl::before{background:var(--lime);}
+.card.cs::before{background:var(--fire);}
+.card.cb::before{background:var(--gold);}
+.tier-s1{border-top:2px solid var(--lime)!important;}
+.tier-s2{border-top:1px solid var(--gold)!important;}
+.card-top{display:flex;align-items:center;gap:7px;padding:10px 12px 8px 13px;}
+.csym{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:700;color:var(--bright);flex:1;}
+.cchg{font-size:10px;font-weight:600;}
+.gp{color:var(--lime);}
+.gn{color:var(--fire);}
+.phase-tag{font-size:8px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:3px;}
+.pt-pump{background:rgba(184,255,0,.1);color:var(--lime);border:1px solid rgba(184,255,0,.25);}
+.pt-dump{background:rgba(255,60,31,.1);color:var(--fire);border:1px solid rgba(255,60,31,.25);}
+.pt-bounce{background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);}
+.chips{display:flex;gap:4px;padding:0 12px 8px;flex-wrap:wrap;}
+.chip{font-size:8px;letter-spacing:.5px;padding:2px 8px;border-radius:2px;font-weight:600;}
+.chip-g{background:rgba(184,255,0,.06);color:var(--lime);border:1px solid rgba(184,255,0,.18);}
+.chip-r{background:rgba(255,60,31,.06);color:var(--fire);border:1px solid rgba(255,60,31,.18);}
+.chip-y{background:rgba(255,184,0,.06);color:var(--gold);border:1px solid rgba(255,184,0,.18);}
+.chip-b{background:rgba(56,182,255,.06);color:var(--sky);border:1px solid rgba(56,182,255,.18);}
+.chip-p{background:rgba(157,77,255,.06);color:var(--purple);border:1px solid rgba(157,77,255,.18);}
+.score-row{display:flex;align-items:center;gap:7px;padding:0 12px 9px;}
+.sbar2{flex:1;height:5px;background:var(--border);border-radius:2px;overflow:hidden;}
+.sbar2-fill{height:100%;border-radius:2px;}
+.slabel{font-size:8px;color:var(--fog);width:48px;}
+.sval{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;width:36px;text-align:right;}
+.price-row{display:flex;align-items:flex-end;justify-content:space-between;padding:0 12px 9px;}
+.price-big{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:700;color:var(--bright);}
+.price-meta{text-align:right;font-size:9px;color:var(--fog);line-height:1.8;}
+.price-meta b{font-family:"IBM Plex Mono",monospace;color:var(--body);}
+.lvls{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2);border-top:1px solid var(--border);}
+.lv{background:var(--bg2);padding:7px 4px;text-align:center;}
+.lv-n{font-size:7px;letter-spacing:1px;color:var(--fog);margin-bottom:2px;}
+.lv-v{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;}
+.lv-p{font-size:7px;color:var(--fog);margin-top:1px;}
+.lv.sl .lv-v{color:var(--fire);}
+.lv.en .lv-v{color:var(--bright);}
+.lv.t1 .lv-v{color:rgb(122,204,68);}
+.lv.t2 .lv-v{color:var(--lime);}
+.add-btn{display:block;margin:7px 11px;padding:9px;border-radius:5px;border:1px solid rgba(0,240,208,.25);background:rgba(0,240,208,.05);color:var(--cyan);font-weight:700;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;text-align:center;}
+.add-btn:disabled{opacity:.3;cursor:not-allowed;}
+.signal-alert{position:fixed;top:80px;left:10px;right:10px;background:var(--bg2);border:1px solid var(--lime);border-radius:7px;padding:10px 14px;z-index:300;display:none;animation:slideDown .3s ease;}
+.signal-alert.show{display:flex;align-items:center;gap:10px;}
+@keyframes slideDown{0%{transform:translateY(-20px);opacity:0;}100%{transform:translateY(0);opacity:1;}}
+.journal-wrap{padding:10px 12px 90px;display:none;}
+.journal-wrap.visible{display:block;}
+.jstat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+.jstat{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:10px 8px;text-align:center;}
+.jstat-l{font-size:7px;letter-spacing:2px;color:var(--fog);margin-bottom:4px;}
+.jstat-v{font-family:"IBM Plex Mono",monospace;font-size:18px;font-weight:700;}
+.jstat-s{font-size:8px;color:var(--fog);margin-top:2px;}
+.full-hist{background:var(--bg3);border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:10px;}
+.full-hist-head{display:grid;grid-template-columns:56px 48px 44px 1fr 52px 52px;gap:2px;padding:5px 9px;background:var(--mist);font-size:7px;letter-spacing:1px;color:var(--fog);font-weight:700;}
+.full-hist-row{display:grid;grid-template-columns:56px 48px 44px 1fr 52px 52px;gap:2px;padding:6px 9px;border-bottom:1px solid var(--border);align-items:center;}
+.full-hist-row:last-child{border-bottom:none;}
+.clear-btn{width:100%;padding:8px;border-radius:4px;border:1px solid rgba(255,60,31,.25);background:rgba(255,60,31,.04);color:var(--fire);font-size:9px;letter-spacing:2px;font-weight:700;cursor:pointer;font-family:"IBM Plex Sans",sans-serif;}
+.jfilter-row{display:flex;gap:5px;margin-bottom:8px;}
+.jfbtn{flex:1;padding:5px 4px;border-radius:3px;font-size:9px;font-weight:700;letter-spacing:1px;border:1px solid var(--border);background:var(--bg3);color:var(--fog);cursor:pointer;}
+.jfbtn.act{background:rgba(157,77,255,.12);border-color:var(--purple);color:var(--purple);}
+.wr-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px;}
+.wr-fill{height:100%;background:linear-gradient(90deg,var(--lime),var(--cyan));border-radius:4px;transition:width .5s;}
+.pz{color:var(--fire)!important;}
+.pp{color:var(--lime)!important;}
+.pn{color:var(--fire)!important;}
+.tier-badge{font-size:8px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:2px;}
+.tier-a{background:rgba(184,255,0,.12);color:var(--lime);border:1px solid rgba(184,255,0,.3);}
+.tier-b{background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.25);}
+.pattern-badge{font-size:8px;padding:2px 7px;border-radius:2px;background:rgba(157,77,255,.1);color:var(--purple);border:1px solid rgba(157,77,255,.25);}
+.no-calls{padding:16px;text-align:center;font-size:10px;color:var(--fog);}
 </style>
 </head>
 <body>
 
+<!-- SIGNAL ALERT -->
+<div class="signal-alert" id="signalAlert">
+  <div style="font-size:20px">⚡</div>
+  <div style="flex:1">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--lime)" id="alertTitle">NEW SIGNAL</div>
+    <div style="font-size:9px;color:var(--fog);margin-top:2px" id="alertBody">—</div>
+  </div>
+  <div style="color:var(--fog);cursor:pointer;font-size:14px" onclick="document.getElementById('signalAlert').classList.remove('show')">✕</div>
+</div>
+
 <div class="topbar">
   <div>
     <div class="logo">EDEN SNIPER</div>
-    <div class="logo-sub">3-PHASE EXPLOSION LOGIC</div>
+    <div class="logo-sub">v6 · PROOF ENGINE</div>
   </div>
   <div class="topright">
-    <div>Scanned: <b id="pairCnt">—</b></div>
-    <button id="bgToggle" class="bg-toggle" onclick="toggleBg()">BG SCAN: OFF</button>
+    <button class="notif-btn" id="notifBtn" onclick="requestNotifPermission()" title="Enable Notifications">🔔</button>
+    <button class="bg-toggle" id="bgToggle">BG ON</button>
+    <div class="topright-info">
+      <div style="font-size:9px;color:var(--fog)">Pairs: <b id="pairCnt" style="color:var(--bright)">—</b> &nbsp; Sigs: <b id="sigCnt" style="color:var(--lime)">—</b></div>
+      <div style="font-size:8px;color:var(--fog);margin-top:2px">Last: <span id="lastTime" style="color:var(--cyan);font-family:'IBM Plex Mono',monospace">—</span></div>
+      <div style="font-size:8px;color:var(--fog);margin-top:1px">Next: <span id="nextScanCd" style="color:var(--gold);font-family:'IBM Plex Mono',monospace">—</span></div>
+    </div>
   </div>
 </div>
 <div class="pbar"><div class="pbfill" id="prog" style="width:0%"></div></div>
 
 <div class="ptabs">
   <div class="ptab act" id="tab-ALL" onclick="setFilter('ALL')">ALL</div>
-  <div class="ptab" id="tab-COIL" onclick="setFilter('COIL')">⚙️ COIL</div>
   <div class="ptab" id="tab-PUMP" onclick="setFilter('PUMP')">▲ PUMP</div>
   <div class="ptab" id="tab-DUMP" onclick="setFilter('DUMP')">▼ DUMP</div>
   <div class="ptab" id="tab-BOUNCE" onclick="setFilter('BOUNCE')">↗ BNCE</div>
+  <div class="ptab" id="tab-JOURNAL" onclick="setFilter('JOURNAL')">📊</div>
 </div>
 
 <div class="sbar">
-  <div><span class="dot" id="dot"></span><span id="stxt">EDEN Logic Active</span></div>
+  <div><span class="dot" id="dot"></span><span id="stxt">v6 · Proof Engine · Historical Hit Rate Required · No Guessing</span></div>
   <div class="mono-sm" id="cdt"></div>
 </div>
 
 <div class="pulse">
   <div class="pulse-c"><div class="pulse-l">BTC</div><div class="pulse-v" id="mBTC" style="color:var(--fog)">—</div></div>
   <div class="pulse-c"><div class="pulse-l">SIGNALS</div><div class="pulse-v" id="mSig" style="color:var(--fog)">—</div></div>
-  <div class="pulse-c"><div class="pulse-l">CALLS</div><div class="pulse-v" id="mCalls" style="color:var(--fog)">0/3</div></div>
+  <div class="pulse-c"><div class="pulse-l">CALLS</div><div class="pulse-v" id="mCalls" style="color:var(--cyan)">0/5</div></div>
   <div class="pulse-c"><div class="pulse-l">W / L</div><div class="pulse-v" id="mWL" style="color:var(--fog)">0/0</div></div>
-  <div class="pulse-c"><div class="pulse-l">SESSION</div><div class="pulse-v sess pz" id="sessPnl">+0.00%</div></div>
+  <div class="pulse-c"><div class="pulse-l">SESSION</div><div class="pulse-v" id="sessPnl" style="color:var(--fog)">—</div></div>
 </div>
 
+<!-- Active Calls -->
 <div class="acwrap">
   <div class="ac-head">
-    <div class="ac-label">⚡ ACTIVE CALLS <span class="badge-sm" id="acCnt">0/3</span></div>
-    <div style="font-size:9px;color:var(--fog)">next <span id="cdSmall" style="color:var(--cyan);font-family:monospace">30s</span></div>
+    <div class="ac-label">⚡ ACTIVE CALLS <span class="badge-sm" id="acCnt">0/5</span></div>
+    <div style="font-size:9px;color:var(--fog)">next <span id="cdSmall" style="color:var(--cyan);font-family:monospace">—</span></div>
   </div>
-  <div id="acList"><div class="no-calls">No active calls — tap Scan</div></div>
-  <div id="histWrap"></div>
+  <div id="acList"><div class="no-calls">No active calls · tap ADD on a signal</div></div>
 </div>
 
-<div class="page" id="page">
-  <div class="empty">
-    <div class="ei">🎯</div>
-    <div class="eh">EDEN EXPLOSION LOGIC PWA</div>
-    <div class="eb">Tap Scan to find live phases. Background scan saves to persistent local storage.</div>
+<!-- Signal Page -->
+<div class="page" id="sigPage">
+  <div id="sigList">
+    <div class="empty">
+      <div class="ei">🎯</div>
+      <div class="eh">PATTERN ENGINE READY</div>
+      <div class="eb">Auto-scanning every 3 min<br>Requires ≥2 historical hits · ≥55% success rate<br>Only patterns that PROVED they work</div>
+    </div>
   </div>
 </div>
 
-<button class="scan-btn" id="scanBtn" onclick="startScan()">📡 &nbsp;SCAN — 3 PHASE LOGIC</button>
+<!-- Journal Page -->
+<div class="journal-wrap" id="journalPage">
+  <div class="jstat-grid">
+    <div class="jstat"><div class="jstat-l">WIN RATE</div><div class="jstat-v" id="jWR" style="color:var(--lime)">—</div><div class="jstat-s">total calls</div></div>
+    <div class="jstat"><div class="jstat-l">AVG WIN</div><div class="jstat-v" id="jAW" style="color:var(--lime)">—</div><div class="jstat-s">avg % gain</div></div>
+    <div class="jstat"><div class="jstat-l">AVG LOSS</div><div class="jstat-v" id="jAL" style="color:var(--fire)">—</div><div class="jstat-s">avg % loss</div></div>
+  </div>
+  <div class="wr-bar"><div class="wr-fill" id="wrFill" style="width:0%"></div></div>
+  <div style="font-size:8px;color:var(--fog);text-align:right;margin-top:3px;margin-bottom:10px" id="wrLabel">—</div>
+  <div class="jfilter-row">
+    <button class="jfbtn act" id="jf-ALL" onclick="filterJournal('ALL')">ALL</button>
+    <button class="jfbtn" id="jf-PUMP" onclick="filterJournal('PUMP')">PUMP</button>
+    <button class="jfbtn" id="jf-DUMP" onclick="filterJournal('DUMP')">DUMP</button>
+    <button class="jfbtn" id="jf-BOUNCE" onclick="filterJournal('BOUNCE')">BOUNCE</button>
+  </div>
+  <div class="full-hist">
+    <div class="full-hist-head"><span>SYM</span><span>TYPE</span><span>SCORE</span><span>REASONS</span><span>P&L</span><span>TIME</span></div>
+    <div id="histRows"><div style="padding:20px;text-align:center;font-size:10px;color:var(--fog)">No history yet</div></div>
+  </div>
+  <button class="clear-btn" onclick="clearHistory()">CLEAR HISTORY</button>
+</div>
+
+<button class="scan-btn" id="scanBtn" onclick="startScan()">⚡ SCAN MARKET</button>
 
 <script>
-// PWA Service Worker Registration
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(() => console.log("Service Worker Registered"));
+'use strict';
+
+// ─── CONFIG ───────────────────────────────────────────────
+const API = 'https://fapi.binance.com/fapi/v1';
+const MIN_VOL = 3_000_000;
+// SCORE_MIN removed in v6 — signals require historical proof, not a score gate
+const MAX_ACTIVE = 5;
+const SCAN_DELAY = 120; // ms between symbol fetches
+const MAX_SYMBOLS = 80; // scan top 80 by volume
+const SIGNAL_TTL = 15 * 60 * 1000;  // 15-min auto-expiry
+const BG_SCAN_INTERVAL = 3 * 60 * 1000; // auto bg-scan every 3 min
+const PRICE_POLL_SEC = 10;           // active call price refresh (sec)
+const SIG_PRICE_REFRESH = 30 * 1000; // signal card live price (ms)
+
+// ─── STATE ─────────────────────────────────────────────────
+let activeCalls = [];
+let signalResults = [];
+let callHistory = [];
+let currentFilter = 'ALL';
+let journalFilter = 'ALL';
+let scanning = false;
+let bgEnabled = true; // ON by default
+let bgTimer = null;
+let pricePoller = null;
+let pollCountdown = PRICE_POLL_SEC;
+let signalPriceTimer = null;
+let signalExpiryTimer = null;
+let wins = 0, losses = 0;
+let sessionPnl = 0;
+
+// ─── UTILITY ───────────────────────────────────────────────
+function fmtP(p) {
+  if (p === undefined || p === null || isNaN(p)) return '—';
+  if (p >= 1) return p.toFixed(4);
+  if (p >= 0.01) return p.toFixed(5);
+  if (p >= 0.0001) return p.toFixed(6);
+  return p.toFixed(8);
+}
+function fmtPct(p) { return (p >= 0 ? '+' : '') + p.toFixed(2) + '%'; }
+function now() { return Date.now(); }
+function ago(ts) {
+  const s = Math.floor((now() - ts) / 1000);
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  return Math.floor(s/3600) + 'h ago';
 }
 
-// ══════════════════════════════════════════════════════
-//  CONFIG & STORAGE ENGINE
-// ══════════════════════════════════════════════════════
-const FAPI   = 'https://fapi.binance.com/fapi/v1';
-const FDATA  = 'https://fapi.binance.com/futures/data';
-const M5_LEN = 150, H1_LEN = 60, BATCH = 5, MIN_VOL = 1.5e6, SCAN_N = 90, REFRESH = 60;
-const PUMP_MIN_SCORE = 6, DUMP_MIN_SCORE = 6, BOUNCE_MIN_SCORE = 7, COIL_MIN_SCORE = 5, RR_MIN = 2.0, MAX_SL_PCT = 2.5;
-
-let results=[], tickerMap={}, filter='ALL', expandedSym=null;
-let cdVal=REFRESH, scanning=false, btcDir='NEUTRAL', pricePoller=null;
-let bgEnabled = false;
-
-// Storage States
-let activeCalls = JSON.parse(localStorage.getItem('edenActive') || '[]');
-let tradeHistory = JSON.parse(localStorage.getItem('edenHistory') || '[]');
-let stats = JSON.parse(localStorage.getItem('edenStats') || '{"wins":0,"losses":0,"sessionPnl":0}');
-let wins = stats.wins, losses = stats.losses, sessionPnl = stats.sessionPnl;
-
-// Web Worker for reliable Background Timing (Bypasses tab throttling)
-const workerBlob = new Blob([`
-  let timer;
-  self.onmessage = function(e) {
-    if (e.data.cmd === 'start') {
-      clearInterval(timer);
-      timer = setInterval(() => self.postMessage('tick'), 1000);
-    } else if (e.data.cmd === 'stop') {
-      clearInterval(timer);
-    }
-  };
-`], { type: 'application/javascript' });
-const timerWorker = new Worker(URL.createObjectURL(workerBlob));
-
-timerWorker.onmessage = function() {
-    if(!scanning) {
-        cdVal--;
-        updateCD();
-        if(cdVal <= 0) startScan();
-    }
-};
-
-function saveStorage() {
-    localStorage.setItem('edenActive', JSON.stringify(activeCalls));
-    localStorage.setItem('edenHistory', JSON.stringify(tradeHistory));
-    localStorage.setItem('edenStats', JSON.stringify({ wins, losses, sessionPnl }));
+// ─── INDICATORS ─────────────────────────────────────────────
+function calcRSI(closes, period = 14) {
+  if (closes.length < period + 1) return 50;
+  let gains = 0, losses = 0;
+  for (let i = closes.length - period; i < closes.length; i++) {
+    const d = closes[i] - closes[i - 1];
+    if (d > 0) gains += d; else losses += Math.abs(d);
+  }
+  const avgG = gains / period, avgL = losses / period;
+  if (avgL === 0) return 100;
+  const rs = avgG / avgL;
+  return 100 - 100 / (1 + rs);
 }
 
-function notifyPush(title, body) {
-    if (bgEnabled && Notification.permission === 'granted') {
-        navigator.serviceWorker.ready.then(reg => {
-            reg.showNotification(title, { body: body, icon: 'icon-192.png', vibrate: [200, 100, 200] });
-        });
+// ─── PRECOMPUTE ALL INDICATORS (single pass, fast) ──────────
+function precomputeIndicators(C, H, L, O, V, n) {
+  // RSI at every bar (14-period simple)
+  const rsiArr = new Array(n).fill(50);
+  for (let i = 14; i < n; i++) {
+    let g = 0, l = 0;
+    for (let j = i - 13; j <= i; j++) {
+      const d = C[j] - C[j - 1];
+      if (d > 0) g += d; else l += Math.abs(d);
     }
+    const avgL = l / 14;
+    rsiArr[i] = avgL === 0 ? 100 : 100 - 100 / (1 + (g / 14) / avgL);
+  }
+
+  // BB width at every bar (20-period)
+  const bbwArr = new Array(n).fill(0.05);
+  for (let i = 20; i < n; i++) {
+    const sl = C.slice(i - 20, i);
+    const mean = sl.reduce((a, b) => a + b, 0) / 20;
+    const variance = sl.reduce((a, b) => a + (b - mean) ** 2, 0) / 20;
+    bbwArr[i] = (2 * Math.sqrt(variance)) / (mean || 1);
+  }
+
+  // Rolling 20-bar average volume at every bar
+  const avArr = new Array(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    const sl = V.slice(Math.max(0, i - 19), i + 1);
+    avArr[i] = sl.reduce((a, b) => a + b, 0) / (sl.length || 1);
+  }
+
+  // BBW 20th and 80th percentile (from last 200 bars of data)
+  const recentBBW = bbwArr.slice(Math.max(0, n - 200), n).filter(w => w > 0).slice().sort((a, b) => a - b);
+  const p20 = recentBBW[Math.floor(recentBBW.length * 0.20)] || 0.02;
+  const p80 = recentBBW[Math.floor(recentBBW.length * 0.80)] || 0.10;
+
+  return { rsiArr, bbwArr, avArr, p20, p80 };
 }
 
-async function toggleBg() {
-    const btn = document.getElementById('bgToggle');
-    if (!bgEnabled) {
-        const perm = await Notification.requestPermission();
-        if (perm === 'granted') {
-            bgEnabled = true;
-            btn.textContent = 'BG SCAN: ON';
-            btn.classList.add('on');
-            notifyPush("EDEN Background Active", "Scans will run while the app is minimized.");
-            if(!scanning) startCD(); 
-        } else {
-            alert("Notification permission required for background alerts.");
-        }
+// ─── DEAD COIN FILTER ──────────────────────────────────────
+function isDeadCoin(vol24h, closes, price) {
+  if (vol24h < MIN_VOL) return true;
+  if (closes.length < 20) return true;
+  const range5d = Math.max(...closes.slice(-288)) - Math.min(...closes.slice(-288));
+  const rangePct = range5d / (price || 1) * 100;
+  if (rangePct < 2.5) return true; // flat dead coin
+  return false;
+}
+
+// ─── 3-DAY SUCCESS RATE ENGINE ─────────────────────────────
+// For each pattern type, finds every historical occurrence in 3d data
+// and measures what % of those led to 5%+ follow-through move.
+// Signal ONLY fires if hits ≥ 2 AND rate ≥ 55%.
+function calcPatternSuccessRate(C, H, L, O, V, n, patType, ind) {
+  const { rsiArr, bbwArr, avArr, p20 } = ind;
+  // Look back up to 750 bars (≈62h of 5m data); leave 30 bars buffer at end
+  const lookback = Math.min(750, n - 30);
+  let total = 0, hits = 0, totalMove = 0;
+
+  for (let i = n - lookback; i < n - 20; i++) {
+    const rsi  = rsiArr[i];
+    const bbw  = bbwArr[i];
+    const av   = avArr[i] || 1;
+    const volR = V[i] / av;
+    const rng  = H[i] - L[i] || 0.0001;
+    const body = Math.abs(C[i] - O[i]) / rng;
+    const upW  = (H[i] - Math.max(C[i], O[i])) / rng;
+    const loW  = (Math.min(C[i], O[i]) - L[i]) / rng;
+    const bull = C[i] >= O[i];
+    const bear = C[i] < O[i];
+    let matched = false;
+
+    if (patType === 'PUMP') {
+      // ── Coil Release ──
+      // Pre: BBW in squeeze (bottom 20th pct), RSI not extended
+      // Trigger: Bullish bar breaking 20-bar high on ≥3× volume with strong body
+      const h20prev = Math.max(...H.slice(Math.max(0, i - 20), i));
+      const inSqz   = bbw <= p20 * 1.4;
+      const brk     = C[i] > h20prev && bull;
+      matched = inSqz && volR >= 3 && brk && body >= 0.40 && rsi >= 35 && rsi <= 62;
+
+    } else if (patType === 'DUMP') {
+      // ── Top Rejection ──
+      // Pre: Near 72-bar high, prior range ≥ 8%, RSI overbought
+      // Trigger: High-vol shooting star OR bearish engulf
+      const h72 = Math.max(...H.slice(Math.max(0, i - 72), i));
+      const l72 = Math.min(...L.slice(Math.max(0, i - 72), i));
+      const range72 = (h72 - l72) / (l72 || 1) * 100;
+      const nearTop  = (h72 - C[i]) / (h72 || 1) * 100 < 4;
+      const shootStar = upW >= 0.50 && bear && body < 0.38;
+      const engulf   = bear && C[i] < O[i - 1] && O[i] > C[i - 1] && body > 0.55;
+      matched = nearTop && range72 >= 8 && (shootStar || engulf) && volR >= 2.5 && rsi >= 60;
+
+    } else if (patType === 'BOUNCE') {
+      // ── Capitulation Floor ──
+      // Pre: Near 72-bar low, prior range ≥ 8%, RSI oversold
+      // Trigger: Pin bar (lower wick ≥ 50%, close in top 38% of bar) OR capitulation vol + recovery
+      const l72 = Math.min(...L.slice(Math.max(0, i - 72), i));
+      const h72 = Math.max(...H.slice(Math.max(0, i - 72), i));
+      const range72 = (h72 - l72) / (l72 || 1) * 100;
+      const nearBot = (C[i] - l72) / (l72 || 1) * 100 < 4;
+      const closeTop = (C[i] - L[i]) / rng > 0.38;  // closed in top 38%
+      const pinBar  = loW >= 0.48 && closeTop;
+      // Capitulation: prev bar big red with 5×+ vol, current bar green recovery
+      const prevAv  = avArr[Math.max(0, i - 1)] || 1;
+      const capVol  = i > 0 && C[i - 1] < O[i - 1] && V[i - 1] >= prevAv * 4.5;
+      const recovery = bull && volR >= 1.5;
+      matched = nearBot && range72 >= 8 && (pinBar || (capVol && recovery)) && rsi <= 42;
+    }
+
+    if (!matched) continue;
+    total++;
+
+    // Measure actual follow-through in next 12–25 bars (1–2h)
+    const fEnd = Math.min(i + 25, n);
+    if (patType === 'PUMP' || patType === 'BOUNCE') {
+      const maxH = Math.max(...H.slice(i + 1, fEnd));
+      const mv   = (maxH - C[i]) / (C[i] || 1) * 100;
+      if (mv >= 5) { hits++; totalMove += mv; }
     } else {
-        bgEnabled = false;
-        btn.textContent = 'BG SCAN: OFF';
-        btn.classList.remove('on');
+      const minL = Math.min(...L.slice(i + 1, fEnd));
+      const mv   = (C[i] - minL) / (C[i] || 1) * 100;
+      if (mv >= 5) { hits++; totalMove += mv; }
     }
-}
-
-// Math & Indicators identical to original
-function emaArr(src,p){const k=2/(p+1),n=src.length,out=new Array(n).fill(0);if(!n)return out;let s=0,cnt=Math.min(p,n);for(let i=0;i<cnt;i++)s+=src[i];out[cnt-1]=s/cnt;for(let i=cnt;i<n;i++)out[i]=src[i]*k+out[i-1]*(1-k);for(let i=0;i<cnt-1;i++)out[i]=out[cnt-1];return out;}
-function ema(src,p){return emaArr(src,p).at(-1)||0;}
-function calcRSI(C,p=14){const n=C.length;if(n<p+2)return 50;let g=0,l=0;for(let i=n-p;i<n;i++){const d=C[i]-C[i-1];d>0?g+=d:l-=d;}const ag=g/p,al=l/p;return al===0?100:100-100/(1+ag/al);}
-function calcATR(H,L,C,p=14){const t=[];for(let i=1;i<C.length;i++)t.push(Math.max(H[i]-L[i],Math.abs(H[i]-C[i-1]),Math.abs(L[i]-C[i-1])));const s=t.slice(-p);return s.length?s.reduce((a,b)=>a+b,0)/s.length:0;}
-function bbFull(C,p=20){const out=[];for(let i=p-1;i<C.length;i++){const sl=C.slice(i-p+1,i+1),m=sl.reduce((a,b)=>a+b,0)/p;const sd=Math.sqrt(sl.reduce((a,b)=>a+(b-m)**2,0)/p);out.push({upper:m+2*sd,lower:m-2*sd,mid:m,width:m>0?4*sd/m:0});}return out;}
-function macdH(C){const e12=emaArr(C,12),e26=emaArr(C,26);const ml=e12.map((v,i)=>v-e26[i]);const sig=emaArr(ml,9);return ml.map((v,i)=>v-sig[i]);}
-function rsiDiv(C,rsiArr,lookback=12){const n=C.length;if(n<lookback+2)return{bull:false,bear:false};const rNow=rsiArr[n-1],cNow=C[n-1];let prevHighC=-Infinity,prevHighR=0,prevLowC=Infinity,prevLowR=0;for(let i=n-lookback;i<n-2;i++){if(C[i]>prevHighC){prevHighC=C[i];prevHighR=rsiArr[i]||50;}if(C[i]<prevLowC){prevLowC=C[i];prevLowR=rsiArr[i]||50;}}return{bull:cNow<prevLowC&&rNow>prevLowR&&rNow<40,bear:cNow>prevHighC&&rNow<prevHighR&&rNow>65};}
-
-function f(v){if(!v&&v!==0)return'—';if(v>=10000)return v.toFixed(1);if(v>=100)return v.toFixed(2);if(v>=1)return v.toFixed(4);if(v>=0.01)return v.toFixed(5);return v.toFixed(6);}
-function pf(v,s=true){return(s&&v>0?'+':'')+v.toFixed(2)+'%';}
-function maxLev(sym){if(/^(BTC|ETH)/.test(sym))return 125;if(/^(BNB|SOL|ADA|XRP|LINK|AVAX|DOT|LTC|BCH)/.test(sym))return 75;return 20;}
-function sugLev(sym,score,slP){return Math.min(maxLev(sym),slP<0.5?30:slP<1?20:slP<1.5?15:10,score>=10?25:score>=8?15:10);}
-
-async function fetchK(sym,iv,lim){const r=await fetch(`${FAPI}/klines?symbol=${sym}&interval=${iv}&limit=${lim}`);if(!r.ok)throw new Error(sym);return(await r.json()).map(c=>({o:+c[1],h:+c[2],l:+c[3],c:+c[4],v:+c[5]}));}
-async function fetchFunding(sym){try{const r=await fetch(`${FAPI}/premiumIndex?symbol=${sym}`);if(!r.ok)return 0;return parseFloat((await r.json()).lastFundingRate)*100||0;}catch{return 0;}}
-async function fetchOIChange(sym){try{const r=await fetch(`${FDATA}/openInterestHist?symbol=${sym}&period=5m&limit=12`);if(!r.ok)return 0;const d=await r.json();if(!d||d.length<4)return 0;const old=parseFloat(d[0].sumOpenInterest)||1,now=parseFloat(d.at(-1).sumOpenInterest)||1;return(now-old)/old*100;}catch{return 0;}}
-
-async function getBTCBias(){try{const h1=await fetchK('BTCUSDT','1h',40),C=h1.map(c=>c.c),e21=ema(C,21),e50=ema(C,50),r=calcRSI(C,14);btcDir=C.at(-1)>e21&&e21>e50&&r>50?'BULL':C.at(-1)<e21&&e21<e50&&r<50?'BEAR':'NEUTRAL';const el=document.getElementById('mBTC');el.textContent=btcDir;el.style.color=btcDir==='BULL'?'var(--lime)':btcDir==='BEAR'?'var(--fire)':'var(--fog)';}catch{btcDir='NEUTRAL';}}
-
-// Core Analyze
-async function analyze(sym){
-  const [h1,m5,funding,oiChg]=await Promise.all([fetchK(sym,'1h',H1_LEN),fetchK(sym,'5m',M5_LEN),fetchFunding(sym),fetchOIChange(sym)]);
-  if(!h1||h1.length<20||!m5||m5.length<50)return null;
-  const price=m5.at(-1).c;if(!price||price<=0)return null;
-
-  const C1=h1.map(c=>c.c),h1Trend=C1.at(-1)>ema(C1,21)?'BULL':C1.at(-1)<ema(C1,21)?'BEAR':'NEUTRAL';
-  const O5=m5.map(c=>c.o),H5=m5.map(c=>c.h),L5=m5.map(c=>c.l),C5=m5.map(c=>c.c),V5=m5.map(c=>c.v);
-  const n=C5.length,e9=emaArr(C5,9)[n-1],e21=emaArr(C5,21)[n-1],bbh=bbFull(C5,20);
-  if(bbh.length<15)return null;
-  const atr5=calcATR(H5,L5,C5,14),atrP=price>0?atr5/price*100:1;
-  const rsi5All=[];for(let i=14;i<n;i++)rsi5All.push(calcRSI(C5.slice(0,i+1),14));
-  const rsi5=rsi5All.at(-1)||50,mhist=macdH(C5),macdNow=mhist.at(-1)||0,macdPrev=mhist.at(-2)||0;
-  const macdUp=macdNow>0&&macdNow>macdPrev,macdDn=macdNow<0&&macdNow<macdPrev;
-  const avgVol=V5.slice(-21,-1).reduce((a,b)=>a+b,0)/20||1,volR=V5[n-1]/avgVol,vol3=V5.slice(-3).reduce((a,b)=>a+b,0)/(3*avgVol);
-  const cO=O5[n-1],cH=H5[n-1],cL=L5[n-1],cC=C5[n-1],cO2=O5[n-2],cH2=H5[n-2],cL2=L5[n-2],cC2=C5[n-2];
-  const cRng=cH-cL||0.0001,cBod=Math.abs(cC-cO),bodyPct=cBod/cRng,loWick=(Math.min(cC,cO)-cL)/cRng,hiWick=(cH-Math.max(cC,cO))/cRng;
-  const isBull=cC>cO,isBear=cC<cO,prev2Bull=cC2>cO2,prev2Bear=cC2<cO2;
-
-  let sqBars=0;for(let i=bbh.length-1;i>=Math.max(0,bbh.length-60);i--){if(bbh[i].width<0.035)sqBars++;else break;}
-  const inSq=sqBars>=4,sqLB=Math.min(sqBars+5,40);let sqH=-Infinity,sqL=Infinity;
-  for(let i=n-sqLB-1;i<n-1;i++){if(i>=0){if(H5[i]>sqH)sqH=H5[i];if(L5[i]<sqL)sqL=L5[i];}}
-  if(!isFinite(sqH)||sqH<=sqL)return null;const sqRng=sqH-sqL;
-
-  const div=rsiDiv(C5,rsi5All.length>=n-14?rsi5All:[...new Array(n-rsi5All.length).fill(50),...rsi5All],14);
-  const priceInSq=price>=sqL&&price<=sqH,bbWidths=bbh.slice(-12).map(b=>b.width),bbNarrowing=bbWidths.length>4&&bbWidths.at(-1)<bbWidths[0]*0.95;
-  const volDeclining=V5.slice(-8,-1).reduce((a,b,i,arr)=>i<3?a:a&&b<arr[i-1]*1.15,true),coilBias=h1Trend==='BULL'?'LONG':h1Trend==='BEAR'?'SHORT':'LONG';
-  const isCoilSignal=sqBars>=8&&priceInSq&&bbNarrowing&&!isBull===!isBear&&rsi5>=38&&rsi5<=65;
-
-  const justBreakUp=(C5[n-1]>sqH&&C5[n-2]<=sqH)||(C5[n-2]>sqH&&C5[n-3]<=sqH&&C5[n-1]>sqH),extUp=sqRng>0?(price-sqH)/sqRng:99;
-  const pumpBreak=sqBars>=5&&justBreakUp&&extUp<0.7&&isBull&&bodyPct>0.40&&volR>=2.2;
-  const pumpMomentum=e9>e21&&C5[n-1]>e9&&isBull&&volR>=2&&rsi5>=48&&rsi5<=72&&macdUp&&!div.bear&&bodyPct>0.45;
-  const isPumpSignal=(pumpBreak||pumpMomentum)&&!isCoilSignal;
-
-  const isShootingStar=hiWick>0.55&&bodyPct<0.40&&(isBear||(isBull&&hiWick>bodyPct*1.5)),isBearEngulf=isBear&&cO>cH2&&cC<cL2&&prev2Bull;
-  const topDivergence=div.bear&&(isShootingStar||isBearEngulf||hiWick>0.45),fundOverheat=funding>0.03;
-  const isDumpSignal=(isShootingStar||isBearEngulf||topDivergence)&&rsi5>=55;
-
-  const isHammer=loWick>0.50&&bodyPct<0.42&&(isBull||(isBear&&loWick>bodyPct*2)),isDoji=bodyPct<0.20&&(loWick>0.35||hiWick>0.35),isBullEngulf=isBull&&cO<cL2&&cC>cH2&&prev2Bear;
-  const rsiOversold=rsi5<=34,volDryUp=V5.slice(-4,-1).every(v=>v<avgVol*0.8),prevWasHammer=(Math.min(cC2,cO2)-cL2)/(cH2-cL2||0.001)>0.50&&Math.abs(cC2-cO2)/(cH2-cL2||0.001)<0.40;
-  const confirmationCandle=prevWasHammer&&isBull&&cC>Math.max(cO2,cC2)&&rsi5<=42;
-  const isBounceSignal=(isHammer||isDoji||isBullEngulf)&&rsiOversold&&(btcDir!=='BEAR'),isBounceConfirm=confirmationCandle&&rsi5<=42;
-
-  let phase=null;
-  if(isBounceSignal||isBounceConfirm)phase='BOUNCE';
-  if(isDumpSignal)phase='DUMP';
-  if(isPumpSignal&&!isDumpSignal)phase='PUMP';
-  if(isCoilSignal&&!isDumpSignal)phase='COIL';
-  if(isPumpSignal&&isDumpSignal)phase='DUMP';
-  if(!phase)return null;
-
-  let sl,tp1,tp2,tp3,slP,tp1P,tp2P;const buf=atr5*0.08;
-  if(phase==='PUMP'){
-    sl=inSq?sqL-buf:Math.min(cL,L5[n-2])-buf;slP=(price-sl)/price*100;
-    if(slP>MAX_SL_PCT){sl=price*(1-MAX_SL_PCT/100);slP=MAX_SL_PCT;}if(slP<0.25){sl=price*0.9975;slP=0.25;}
-    const move=inSq?sqRng:atr5*2;tp1=inSq?sqH:price+move*0.8;tp2=inSq?sqH+sqRng*0.8:price+move*1.8;tp3=price+move*3;tp1P=(tp1-price)/price*100;tp2P=(tp2-price)/price*100;
-  } else if(phase==='DUMP'){
-    sl=cH+buf;slP=(sl-price)/price*100;if(slP>MAX_SL_PCT){sl=price*(1+MAX_SL_PCT/100);slP=MAX_SL_PCT;}if(slP<0.25){sl=price*1.0025;slP=0.25;}
-    tp1=price-atr5*2;tp2=price-atr5*4;tp3=price-atr5*7;tp1P=(price-tp1)/price*100;tp2P=(price-tp2)/price*100;
-  } else { 
-    sl=Math.min(cL,L5[n-2])-buf;slP=(price-sl)/price*100;if(slP>MAX_SL_PCT){sl=price*(1-MAX_SL_PCT/100);slP=MAX_SL_PCT;}if(slP<0.25){sl=price*0.9975;slP=0.25;}
-    tp1=price+atr5*2;tp2=price+atr5*4;tp3=price+atr5*7;tp1P=(tp1-price)/price*100;tp2P=(tp2-price)/price*100;
   }
 
-  const dir=phase==='DUMP'?'SHORT':(phase==='COIL'?coilBias:'LONG');
-  let slCoil,tp1Coil,tp2Coil,tp3Coil,slCoilP;
-  if(phase==='COIL'){
-    const buf2=atr5*0.1;slCoil=coilBias==='LONG'?sqL-buf2:sqH+buf2;slCoilP=Math.abs(price-slCoil)/price*100;
-    if(slCoilP>MAX_SL_PCT){slCoil=coilBias==='LONG'?price*(1-MAX_SL_PCT/100):price*(1+MAX_SL_PCT/100);slCoilP=MAX_SL_PCT;}
-    tp1Coil=coilBias==='LONG'?sqH+sqRng*0.5:sqL-sqRng*0.5;tp2Coil=coilBias==='LONG'?sqH+sqRng:sqL-sqRng;tp3Coil=coilBias==='LONG'?sqH+sqRng*2:sqL-sqRng*2;
-    sl=slCoil;tp1=tp1Coil;tp2=tp2Coil;tp3=tp3Coil;slP=slCoilP;tp1P=Math.abs(tp1-price)/price*100;tp2P=Math.abs(tp2-price)/price*100;
+  return {
+    total,
+    hits,
+    rate: total > 0 ? hits / total : 0,
+    avgMove: hits > 0 ? totalMove / hits : 0
+  };
+}
+
+// ─── MAIN SIGNAL ANALYSIS v6 ───────────────────────────────
+// NEW LOGIC: All conditions must be MET (not scored).
+// Historical proof required: ≥2 hits AND ≥55% success rate.
+// No guessing — only patterns the coin has confirmed in 3d data.
+function analyzeSymbol(sym, klines, vol24h, fundingRate) {
+  if (!klines || klines.length < 60) return null;
+
+  const n = klines.length;
+  const O = klines.map(k => parseFloat(k[1]));
+  const H = klines.map(k => parseFloat(k[2]));
+  const L = klines.map(k => parseFloat(k[3]));
+  const C = klines.map(k => parseFloat(k[4]));
+  const V = klines.map(k => parseFloat(k[5]));
+
+  const price = C[n - 1];
+  if (isDeadCoin(vol24h, C, price)) return null;
+
+  // Single-pass precompute (fast — avoids O(n²) recalculations)
+  const ind = precomputeIndicators(C, H, L, O, V, n);
+  const { rsiArr, bbwArr, avArr, p20 } = ind;
+
+  // Current bar indicators
+  const rsi    = rsiArr[n - 1];
+  const bbw    = bbwArr[n - 1];
+  const av     = avArr[n - 1] || 1;
+  const volR   = V[n - 1] / av;
+
+  // Candle geometry
+  const lastO = O[n-1], lastH = H[n-1], lastL = L[n-1], lastC = C[n-1];
+  const rng    = lastH - lastL || 0.0001;
+  const body   = Math.abs(lastC - lastO) / rng;
+  const upW    = (lastH - Math.max(lastC, lastO)) / rng;
+  const loW    = (Math.min(lastC, lastO) - lastL) / rng;
+  const isBull = lastC >= lastO;
+  const isBear = lastC <  lastO;
+
+  // Reference price levels
+  const h20  = Math.max(...H.slice(n - 21, n - 1));
+  const h72  = Math.max(...H.slice(n - 73, n - 1));
+  const l72  = Math.min(...L.slice(n - 73, n - 1));
+  const l80  = Math.min(...L.slice(n - 81, n - 1));
+  const range72  = (h72 - l72) / (l72 || 1) * 100;
+  const fromHigh = (h72 - price) / (h72 || 1) * 100;
+  const fromLow  = (price - l72) / (l72 || 1) * 100;
+
+  const chg24      = (price - C[Math.max(0, n - 289)]) / (C[Math.max(0, n - 289)] || 1) * 100;
+  const low200     = Math.min(...L.slice(Math.max(0, n - 200)));
+  const fromATL200 = (price - low200) / (low200 || 1) * 100;
+
+  // Prev-bar context for engulf / capitulation checks
+  const prevAv = avArr[n - 2] || 1;
+
+  // ── PATTERN A: COIL RELEASE (PUMP) ─────────────────────────
+  // ALL of these must be true:
+  //  1. BB squeeze — width in bottom 20th pct of 3-day range
+  //  2. RSI not already extended (35–62)
+  //  3. Trigger bar: breakout above 20-bar high, bullish, ≥3.5× vol, body ≥45%
+  //  4. Historical proof: ≥2 past hits, ≥55% success rate
+  let pumpResult = null;
+  {
+    const inSqz   = bbw <= p20 * 1.4;
+    const rsiOk   = rsi >= 35 && rsi <= 62;
+    const brk20   = lastC > h20 && isBull;
+    const volOk   = volR >= 3.5;
+    const bodyOk  = body >= 0.45;
+    const wickOk  = upW <= 0.30; // minimal upper wick = clean breakout
+
+    if (inSqz && rsiOk && brk20 && volOk && bodyOk && wickOk) {
+      const hist = calcPatternSuccessRate(C, H, L, O, V, n, 'PUMP', ind);
+      if (hist.hits >= 2 && hist.rate >= 0.55) pumpResult = { hist, volR, bbw };
+    }
   }
-  const rrV=slP>0?tp1P/slP:0;
-  if(phase==='COIL'&&rrV<1.8)return null;if(phase!=='BOUNCE'&&phase!=='COIL'&&rrV<RR_MIN)return null;if(phase==='BOUNCE'&&rrV<1.5)return null;
 
-  let score=0,reasons=[];
-  if(phase==='COIL'){score+=5;}
-  else if(phase==='PUMP'){score+=5;}
-  else if(phase==='DUMP'){score+=5;}
-  else {score+=6;}
-  
-  const minScore=phase==='COIL'?COIL_MIN_SCORE:phase==='PUMP'?PUMP_MIN_SCORE:phase==='DUMP'?DUMP_MIN_SCORE:BOUNCE_MIN_SCORE;
-  const pass=score>=minScore;
-  const accuracy = 80; // simplified for template brevity
+  // ── PATTERN B: TOP REJECTION (DUMP) ────────────────────────
+  // ALL of these must be true:
+  //  1. Near 3-day high (within 4%)
+  //  2. Prior move ≥ 8% (something to dump FROM)
+  //  3. RSI overbought ≥ 62
+  //  4. Trigger bar: shooting star (upWick ≥ 50%, bear, body < 38%) OR
+  //                  bearish engulf (bear, swallows prev green, body > 55%)
+  //  5. Volume ≥ 2.5× avg (sellers showing up)
+  //  6. Historical proof: ≥2 past hits, ≥55% success rate
+  let dumpResult = null;
+  {
+    const nearTop   = fromHigh < 4;
+    const priorMove = range72 >= 8;
+    const rsiOk     = rsi >= 62;
+    const shootStar = upW >= 0.50 && isBear && body < 0.38;
+    const engulf    = isBear && lastC < O[n-2] && lastO > C[n-2] && body > 0.55;
+    const volOk     = volR >= 2.5;
 
-  return{sym,price,dir,phase,pass,score,accuracy,h1Trend,rsi1h,rsi5,coilBias,inSq,sqBars,sqH,sqL,sqRng,bbNarrowing,volDeclining,volR,vol3,bodyPct,loWick,hiWick,isBull,isBear,isShootingStar,isHammer,isBullEngulf,isBearEngulf,confirmationCandle,div,macdUp,macdDn,funding,oiChg,fundOverheat,rsiOversold,atr5,atrP,sl,tp1,tp2,tp3,slP:Math.abs(slP),tp1P,tp2P,rr:rrV.toFixed(1),reasons,sugLev:sugLev(sym,score,Math.abs(slP)),maxLev:maxLev(sym)};
+    if (nearTop && priorMove && rsiOk && (shootStar || engulf) && volOk) {
+      const hist = calcPatternSuccessRate(C, H, L, O, V, n, 'DUMP', ind);
+      if (hist.hits >= 2 && hist.rate >= 0.55) dumpResult = { hist, volR, shootStar };
+    }
+  }
+
+  // ── PATTERN C: FLOOR PIN / CAPITULATION (BOUNCE) ──────────
+  // ALL of these must be true:
+  //  1. Near 3-day low (within 4%)
+  //  2. Prior dump ≥ 8% (something to bounce FROM)
+  //  3. RSI oversold ≤ 40
+  //  4. Trigger bar EITHER:
+  //     A. Pin bar: lower wick ≥ 50%, close in top 38% of range
+  //     B. Capitulation + recovery: prev bar big red (≥4.5× vol), current bar green
+  //  5. Historical proof: ≥2 past hits, ≥55% success rate
+  let bounceResult = null;
+  {
+    const nearBot  = fromLow < 4;
+    const priorMove = range72 >= 8;
+    const rsiOk    = rsi <= 40;
+    const closeTop = (lastC - lastL) / rng > 0.38;
+    const pinBar   = loW >= 0.48 && closeTop;
+    const capVol   = C[n-2] < O[n-2] && V[n-2] >= prevAv * 4.5;
+    const recovery = isBull && volR >= 1.5;
+    const trig     = pinBar || (capVol && recovery);
+
+    if (nearBot && priorMove && rsiOk && trig) {
+      const hist = calcPatternSuccessRate(C, H, L, O, V, n, 'BOUNCE', ind);
+      if (hist.hits >= 2 && hist.rate >= 0.55) bounceResult = { hist, volR, pinBar };
+    }
+  }
+
+  // ── SELECT HIGHEST CONFIDENCE SIGNAL ───────────────────────
+  // Confidence = hits × rate (rewards both count AND accuracy)
+  const candidates = [];
+  if (pumpResult)  candidates.push({ phase: 'PUMP',   res: pumpResult  });
+  if (dumpResult)  candidates.push({ phase: 'DUMP',   res: dumpResult  });
+  if (bounceResult) candidates.push({ phase: 'BOUNCE', res: bounceResult });
+  if (candidates.length === 0) return null;
+
+  candidates.sort((a, b) =>
+    (b.res.hist.hits * b.res.hist.rate) - (a.res.hist.hits * a.res.hist.rate)
+  );
+  const { phase, res } = candidates[0];
+  const { hist } = res;
+
+  // Build reason chips showing PROOF, not guesses
+  const reasons = [
+    `✅ ${hist.hits}/${hist.total} setups · ${(hist.rate * 100).toFixed(0)}% hit rate`,
+    `📈 avg follow: +${hist.avgMove.toFixed(1)}%`,
+    `🔥 VOL ${res.volR.toFixed(1)}×`
+  ];
+  if (phase === 'PUMP') {
+    reasons.push(`🔷 BB SQUEEZE ${(bbw * 100).toFixed(2)}%`);
+    reasons.push(`📶 RSI ${rsi.toFixed(0)} — coil ready`);
+  } else if (phase === 'DUMP') {
+    reasons.push(res.shootStar ? '⭐ SHOOTING STAR @ top' : '🕯️ BEARISH ENGULF @ top');
+    reasons.push(`📶 RSI ${rsi.toFixed(0)} OB · near 3d high`);
+    if (fundingRate > 0.0001) reasons.push(`💸 FUND ${(fundingRate * 100).toFixed(3)}%`);
+  } else {
+    reasons.push(res.pinBar ? '📍 PIN BAR @ floor' : '💥 CAPITULATION → RECOVERY');
+    reasons.push(`📶 RSI ${rsi.toFixed(0)} OS · near 3d low`);
+  }
+
+  // ── LEVELS (based on historical avg move, not fixed %) ─────
+  let entry = price, sl, tp1, tp2;
+  const avgMv = hist.avgMove;
+
+  if (phase === 'PUMP') {
+    sl  = Math.min(...L.slice(n - 8, n)) * 0.996;
+    if (sl > entry * 0.988) sl = entry * 0.988;
+    tp1 = entry * (1 + Math.max(0.030, avgMv * 0.40 / 100));
+    tp2 = entry * (1 + Math.max(0.060, avgMv * 0.75 / 100));
+  } else if (phase === 'DUMP') {
+    sl  = Math.max(...H.slice(n - 8, n)) * 1.003;
+    if (sl < entry * 1.012) sl = entry * 1.012;
+    tp1 = entry * (1 - Math.max(0.030, avgMv * 0.40 / 100));
+    tp2 = entry * (1 - Math.max(0.060, avgMv * 0.75 / 100));
+  } else {
+    sl  = Math.min(...L.slice(n - 10, n)) * 0.993;
+    if (sl > entry * 0.985) sl = entry * 0.985;
+    tp1 = entry * (1 + Math.max(0.030, avgMv * 0.40 / 100));
+    tp2 = entry * (1 + Math.max(0.070, avgMv * 0.80 / 100));
+  }
+
+  // Score = hit_rate × 7 + capped hit count × 0.6 (max ≈ 9.9)
+  const scoreRaw = Math.min(9.9, hist.rate * 7 + Math.min(hist.hits, 5) * 0.6);
+  const score    = Math.round(scoreRaw * 10) / 10;
+  // Tier A: ≥75% hit rate AND ≥3 historical hits
+  const tier     = hist.rate >= 0.75 && hist.hits >= 3 ? 'A' : 'B';
+
+  return {
+    sym, price, chg24, vol24h, rsi, volRatio: res.volR, fromATL200,
+    phase, score, reasons, entry, sl, tp1, tp2, tier,
+    patCount: hist.hits, patAvg: hist.avgMove, hitRate: hist.rate,
+    ts: now(), bbWidth: bbw, sqBars: 0, cvdPos: false, fundingRate
+  };
 }
 
-function addToActive(r){
-  if(!r||activeCalls.length>=3)return;
-  if(activeCalls.find(a=>a.sym===r.sym))return;
-  activeCalls.push({sym:r.sym,dir:r.dir,phase:r.phase,entry:r.price,cp:r.price,sl:r.sl,tp1:r.tp1,tp2:r.tp2,slP:r.slP,tp1P:r.tp1P,tp2P:r.tp2P,rr:r.rr,lev:r.sugLev,maxLev:r.maxLev,score:r.score,accuracy:r.accuracy,t:new Date().toTimeString().slice(0,8),pnl:0});
-  saveStorage();
-  notifyPush("New Signal Active", `${r.phase} on ${r.sym}`);
-  renderActiveCalls();
-  if(!pricePoller)pricePoller=setInterval(pollPrices,5000);
-}
+// ─── SCAN ENGINE ───────────────────────────────────────────
+async function startScan() {
+  if (scanning) return;
+  scanning = true;
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ SCANNING...';
+  setDot('fast');
+  setStatus('Fetching market data...');
+  setProgress(0);
 
-function closeCall(sym,reason){
-  const c=activeCalls.find(a=>a.sym===sym);if(!c)return;
-  sessionPnl+=c.pnl;
-  if(reason==='TP_HIT')wins++;
-  if(reason==='SL_HIT')losses++;
-  tradeHistory.unshift({sym:c.sym,dir:c.dir,phase:c.phase,reason,pnl:c.pnl,t:new Date().toTimeString().slice(0,8)});
-  activeCalls=activeCalls.filter(a=>a.sym!==sym);
-  saveStorage();
-  renderActiveCalls();renderHistory();updateSess();
-}
+  try {
+    // 1. Get all tickers + funding simultaneously
+    const [tickerRes, fundingRes] = await Promise.all([
+      fetch(`${API}/ticker/24hr`),
+      fetch(`${API}/premiumIndex`)
+    ]);
+    const tickers = await tickerRes.json();
+    const funding = await fundingRes.json();
 
-async function pollPrices(){
-  if(!activeCalls.length){clearInterval(pricePoller);pricePoller=null;return;}
-  try{
-    const rs=await Promise.allSettled(activeCalls.map(c=>fetch(`${FAPI}/ticker/price?symbol=${c.sym}`).then(r=>r.json())));
-    let rd=false;
-    rs.forEach(r=>{
-      if(r.status!=='fulfilled')return;
-      const d=r.value,c=activeCalls.find(a=>a.sym===d.symbol);if(!c)return;
-      c.cp=parseFloat(d.price);
-      c.pnl=c.dir==='LONG'?(c.cp-c.entry)/c.entry*100:(c.entry-c.cp)/c.entry*100;
-      if(c.dir==='LONG'&&c.cp>=c.tp2){closeCall(c.sym,'TP_HIT');rd=true;}
-      else if(c.dir==='LONG'&&c.cp<=c.sl) {closeCall(c.sym,'SL_HIT');rd=true;}
-      else if(c.dir==='SHORT'&&c.cp<=c.tp2){closeCall(c.sym,'TP_HIT');rd=true;}
-      else if(c.dir==='SHORT'&&c.cp>=c.sl) {closeCall(c.sym,'SL_HIT');rd=true;}
-      else rd=true;
+    const fundingMap = {};
+    (Array.isArray(funding) ? funding : []).forEach(f => {
+      fundingMap[f.symbol] = parseFloat(f.lastFundingRate || 0);
     });
-    if(rd){saveStorage();renderActiveCalls();updateSess();}
-  }catch(_){}
+
+    // 2. Filter USDT perpetuals, sort by volume, take top N
+    const usdtPairs = tickers
+      .filter(t => t.symbol.endsWith('USDT') && parseFloat(t.quoteVolume) > MIN_VOL)
+      .sort((a, b) => parseFloat(b.quoteVolume) - parseFloat(a.quoteVolume))
+      .slice(0, MAX_SYMBOLS);
+
+    document.getElementById('pairCnt').textContent = usdtPairs.length;
+
+    // Fetch BTC price
+    const btcT = tickers.find(t => t.symbol === 'BTCUSDT');
+    if (btcT) {
+      const btcPct = parseFloat(btcT.priceChangePercent);
+      document.getElementById('mBTC').textContent = '$' + Math.round(parseFloat(btcT.lastPrice)).toLocaleString();
+      document.getElementById('mBTC').className = 'pulse-v ' + (btcPct >= 0 ? 'pp' : 'pn');
+    }
+
+    const results = [];
+
+    for (let idx = 0; idx < usdtPairs.length; idx++) {
+      const t = usdtPairs[idx];
+      const sym = t.symbol;
+      const vol24h = parseFloat(t.quoteVolume);
+      const fr = fundingMap[sym] || 0;
+
+      setProgress((idx / usdtPairs.length) * 100);
+      setStatus(`Scanning ${sym} (${idx + 1}/${usdtPairs.length})...`);
+
+      try {
+        const kRes = await fetch(`${API}/klines?symbol=${sym}&interval=5m&limit=864`);
+        const klines = await kRes.json();
+        if (!Array.isArray(klines) || klines.length < 60) continue;
+
+        const sig = analyzeSymbol(sym, klines, vol24h, fr);
+        if (sig) results.push(sig);
+      } catch (e) { /* skip failed symbol */ }
+
+      if (idx < usdtPairs.length - 1) await sleep(SCAN_DELAY);
+    }
+
+    signalResults = results.sort((a, b) => b.score - a.score);
+    document.getElementById('sigCnt').textContent = signalResults.length;
+    document.getElementById('mSig').textContent = signalResults.length;
+    document.getElementById('mSig').style.color = signalResults.length > 0 ? 'var(--lime)' : 'var(--fog)';
+    document.getElementById('lastTime').textContent = new Date().toLocaleTimeString();
+    markLastScan();
+
+    renderSignals();
+    setStatus(`Done · ${signalResults.length} signals across ${usdtPairs.length} pairs`);
+    setDot('normal');
+    setProgress(100);
+
+    // Fire phone notification for every signal with score > 8
+    const hotSignals = signalResults.filter(s => s.score > 8);
+    hotSignals.forEach(s => maybeNotifySignal(s));
+
+    // Show in-app alert for top signal
+    if (signalResults.length > 0) {
+      const top = signalResults[0];
+      const label = top.score > 8 ? `🔥 SURE SIGNAL · score ${top.score}` : `${top.sym} · ${top.phase}`;
+      showAlert(label, `${top.reasons[0] || ''}`);
+    }
+
+    saveState();
+
+  } catch (e) {
+    setStatus('⚠ Scan failed: ' + e.message);
+    setDot('normal');
+  }
+
+  scanning = false;
+  btn.disabled = false;
+  btn.innerHTML = '⚡ SCAN MARKET';
+  setProgress(0);
 }
 
-function updateSess(){
-  const live=activeCalls.reduce((a,c)=>a+c.pnl,0), tot=sessionPnl+live;
-  const el=document.getElementById('sessPnl');
-  el.textContent=pf(tot);
-  el.style.color=tot>0?'var(--lime)':tot<0?'var(--fire)':'var(--fog)';
-  document.getElementById('mWL').textContent=`${wins}/${losses}`;
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── RENDER SIGNALS ────────────────────────────────────────
+function renderSignals() {
+  const list = document.getElementById('sigList');
+  const filtered = currentFilter === 'ALL'
+    ? signalResults
+    : signalResults.filter(s => s.phase === currentFilter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty"><div class="ei">🎯</div><div class="eh">NO ${currentFilter} SIGNALS</div><div class="eb">Run scan to detect patterns</div></div>`;
+    return;
+  }
+
+  const tierA = filtered.filter(s => s.tier === 'A');
+  const tierB = filtered.filter(s => s.tier === 'B');
+  let html = '';
+
+  if (tierA.length) {
+    html += `<div class="signal-group-head">TIER A · HIGH CONFIDENCE</div>`;
+    tierA.forEach(s => html += buildCard(s));
+  }
+  if (tierB.length) {
+    html += `<div class="signal-group-head">TIER B · WATCH</div>`;
+    tierB.forEach(s => html += buildCard(s));
+  }
+  list.innerHTML = html;
 }
 
-function renderActiveCalls(){
-  const el=document.getElementById('acList'), cnt=activeCalls.length;
-  document.getElementById('acCnt').textContent=cnt+'/3';
-  document.getElementById('mCalls').textContent=cnt+'/3';
-  document.getElementById('mCalls').style.color=cnt>0?'var(--cyan)':'var(--fog)';
-  if(!cnt){el.innerHTML='<div class="no-calls">No active calls — tap Scan</div>';return;}
-  el.innerHTML=activeCalls.map(c=>{
-    const isL=c.dir==='LONG',p=c.pnl, pCls=p>0?'pp':p<0?'pn':'pz';
-    const trvl=Math.abs(isL?c.cp-c.sl:c.sl-c.cp), rng=Math.abs(isL?c.tp2-c.sl:c.sl-c.tp2)||0.001;
-    return `
-    <div class="ac-card ${isL?'al':c.phase==='BOUNCE'?'ab':'as'}">
-      <div class="ac-top"><span class="ac-sym">${c.sym.replace('USDT','')}</span><div class="ac-pnl ${pCls}">${pf(p)}</div></div>
+function buildCard(s) {
+  const pClass = s.phase === 'PUMP' ? 'cl pt-pump' : s.phase === 'DUMP' ? 'cs pt-dump' : 'cb pt-bounce';
+  const cardClass = s.phase === 'PUMP' ? 'cl' : s.phase === 'DUMP' ? 'cs' : 'cb';
+  const tierClass = s.tier === 'A' ? 'tier-s1' : 'tier-s2';
+  const pctColor = s.chg24 >= 0 ? 'gp' : 'gn';
+  const scoreColor = s.score >= 9 ? 'var(--lime)' : s.score >= 7 ? 'var(--gold)' : 'var(--fire)';
+  const scorePct = Math.min((s.score / 10) * 100, 100);
+  const scoreBarColor = s.score >= 9 ? 'var(--lime)' : s.score >= 7 ? 'var(--gold)' : 'var(--fire)';
+
+  const alreadyActive = activeCalls.find(a => a.sym === s.sym && a.phase === s.phase);
+  const addDisabled = (activeCalls.length >= MAX_ACTIVE || alreadyActive) ? 'disabled' : '';
+
+  const chipsHtml = s.reasons.slice(0, 4).map(r => {
+    const cl = r.includes('RSI') ? 'chip-b' : r.includes('VOL') ? 'chip-p' : r.includes('PATTERN') ? 'chip-p' : r.includes('CVD') ? 'chip-g' : r.includes('PRIOR') ? 'chip-r' : 'chip-y';
+    return `<span class="chip ${cl}">${r}</span>`;
+  }).join('');
+
+  const patBadge = s.patCount > 0
+    ? `<span class="pattern-badge">📊 ${s.patCount}× PATTERN${s.patAvg > 0 ? ' · avg ' + s.patAvg.toFixed(1) + '%' : ''}</span>`
+    : '';
+
+  const livePrice = s.livePrice || s.price;
+  const drift = s.livePrice ? ((s.livePrice - s.entry) / s.entry * 100 * (s.phase === 'DUMP' ? -1 : 1)) : 0;
+  const driftColor = drift >= 0 ? 'var(--lime)' : 'var(--fire)';
+  const timeLeft = Math.max(0, SIGNAL_TTL - (now() - s.ts));
+  const minsLeft = Math.floor(timeLeft / 60000);
+  const secsLeft = Math.floor((timeLeft % 60000) / 1000);
+  const expLabel = s.stale ? '⚠ STALE' : `⏱ ${minsLeft}m${secsLeft}s`;
+  const expColor = s.stale ? 'var(--fire)' : minsLeft < 5 ? 'var(--gold)' : 'var(--fog)';
+
+  return `
+<div class="card ${cardClass} ${tierClass}" style="${s.stale ? 'opacity:0.55' : ''}">
+  <div class="card-top">
+    <span class="csym">${s.sym.replace('USDT','')}</span>
+    <span class="cchg ${pctColor}">${fmtPct(s.chg24)}</span>
+    <span class="phase-tag pt-${s.phase.toLowerCase()}">${s.phase}</span>
+    <span class="tier-badge tier-${s.tier.toLowerCase()}">TIER-${s.tier}</span>
+    <span style="font-size:8px;color:${expColor};margin-left:auto;font-family:'IBM Plex Mono',monospace">${expLabel}</span>
+  </div>
+  <div class="chips">${chipsHtml}${patBadge}</div>
+  <div class="score-row">
+    <span class="slabel">HIT%</span>
+    <div class="sbar2"><div class="sbar2-fill" style="width:${scorePct}%;background:${scoreBarColor}"></div></div>
+    <span class="sval" style="color:${scoreColor}">${s.hitRate ? (s.hitRate * 100).toFixed(0) + '%' : s.score}</span>
+  </div>
+  <div class="price-row">
+    <div>
+      <span class="price-big">${fmtP(livePrice)}</span>
+      ${s.livePrice ? `<span style="font-size:9px;color:${driftColor};margin-left:4px;font-family:'IBM Plex Mono',monospace">${fmtPct(drift)}</span>` : ''}
+    </div>
+    <div class="price-meta">
+      <div>RSI <b>${s.rsi.toFixed(1)}</b></div>
+      <div>VOL <b>${s.volRatio.toFixed(1)}×</b></div>
+      <div>ATL+ <b>${s.fromATL200.toFixed(0)}%</b></div>
+    </div>
+  </div>
+  <div class="lvls">
+    <div class="lv sl"><div class="lv-n">SL</div><div class="lv-v">${fmtP(s.sl)}</div></div>
+    <div class="lv en"><div class="lv-n">ENTRY</div><div class="lv-v">${fmtP(s.entry)}</div></div>
+    <div class="lv t1"><div class="lv-n">TP1</div><div class="lv-v">${fmtP(s.tp1)}</div></div>
+    <div class="lv t2"><div class="lv-n">TP2</div><div class="lv-v">${fmtP(s.tp2)}</div></div>
+  </div>
+  <button class="add-btn" ${addDisabled} onclick="addToActive(${JSON.stringify(s).replace(/"/g, '&quot;')})">
+    ${alreadyActive ? '✅ ALREADY ACTIVE' : addDisabled ? '🔒 SLOTS FULL' : '⚡ ADD TO ACTIVE'}
+  </button>
+</div>`;
+}
+
+// ─── ACTIVE CALLS ──────────────────────────────────────────
+function addToActive(sig) {
+  if (activeCalls.length >= MAX_ACTIVE) return;
+  if (activeCalls.find(a => a.sym === sig.sym && a.phase === sig.phase)) return;
+  // Use live price as entry if available and close to signal entry
+  const liveEntry = sig.livePrice || sig.price;
+  const entryDrift = Math.abs(liveEntry - sig.entry) / sig.entry * 100;
+  const effectiveEntry = entryDrift < 2 ? liveEntry : sig.entry; // use live if within 2%
+  activeCalls.push({ ...sig, entry: effectiveEntry, addedTs: now(), currentPrice: liveEntry });
+  renderActiveCalls();
+  renderSignals(); // refresh ADD buttons
+  startPricePoller();
+  saveState();
+  document.getElementById('mCalls').textContent = activeCalls.length + '/' + MAX_ACTIVE;
+  document.getElementById('acCnt').textContent = activeCalls.length + '/' + MAX_ACTIVE;
+}
+
+function closeCall(idx, hit) {
+  const call = activeCalls[idx];
+  if (!call) return;
+  const pnlPct = ((call.currentPrice - call.entry) / call.entry) * 100
+    * (call.phase === 'DUMP' ? -1 : 1);
+
+  if (hit === 'tp') {
+    wins++;
+    sessionPnl += Math.abs(pnlPct);
+    callHistory.unshift({ ...call, result: 'WIN', pnlPct: Math.abs(pnlPct), closedTs: now() });
+  } else if (hit === 'sl') {
+    losses++;
+    sessionPnl -= Math.abs(pnlPct);
+    callHistory.unshift({ ...call, result: 'LOSS', pnlPct: -Math.abs(pnlPct), closedTs: now() });
+  } else {
+    callHistory.unshift({ ...call, result: 'EXIT', pnlPct, closedTs: now() });
+  }
+
+  activeCalls.splice(idx, 1);
+  renderActiveCalls();
+  renderSignals();
+  updatePulse();
+  saveState();
+
+  document.getElementById('mCalls').textContent = activeCalls.length + '/' + MAX_ACTIVE;
+  document.getElementById('acCnt').textContent = activeCalls.length + '/' + MAX_ACTIVE;
+  document.getElementById('mWL').textContent = wins + '/' + losses;
+
+  if (activeCalls.length === 0 && pricePoller) {
+    clearInterval(pricePoller);
+    pricePoller = null;
+  }
+}
+
+function renderActiveCalls() {
+  const list = document.getElementById('acList');
+  if (activeCalls.length === 0) {
+    list.innerHTML = '<div class="no-calls">No active calls · tap ADD on a signal</div>';
+    return;
+  }
+  list.innerHTML = activeCalls.map((c, i) => {
+    const isLong = c.phase !== 'DUMP';
+    const rawPnl = (c.currentPrice - c.entry) / c.entry * 100 * (isLong ? 1 : -1);
+    const pnlColor = rawPnl >= 0 ? 'var(--lime)' : 'var(--fire)';
+    const dirClass = c.phase === 'PUMP' ? 'dp' : c.phase === 'DUMP' ? 'dd' : 'db';
+    const cardClass = c.phase === 'PUMP' ? 'as' : c.phase === 'DUMP' ? 'ad' : 'ab';
+    const range = Math.abs((isLong ? c.tp2 : c.tp2) - c.sl);
+    const progMax = range || 1;
+    const progVal = Math.min(Math.abs(c.currentPrice - c.entry) / Math.abs(c.tp2 - c.entry) * 100, 100);
+    const progColor = rawPnl >= 0 ? 'var(--lime)' : 'var(--fire)';
+    const rr = Math.abs(c.tp2 - c.entry) / Math.abs(c.sl - c.entry);
+
+    return `<div class="ac-card ${cardClass}">
+      <div class="ac-top">
+        <span class="ac-sym">${c.sym.replace('USDT','')}</span>
+        <span class="ac-dir ${dirClass}">${c.phase}</span>
+        <span style="font-size:8px;color:var(--fog);flex:1">${ago(c.addedTs)}</span>
+        <div style="text-align:right">
+          <div class="ac-pnl" style="color:${pnlColor}">${fmtPct(rawPnl)}</div>
+          <div class="ac-pnls">${c.score}/10 score</div>
+        </div>
+      </div>
+      <div class="ac-prog"><div class="ac-progf" style="width:${progVal}%;background:${progColor}"></div></div>
+      <div class="ac-lvls">
+        <div class="ac-lv sl"><div class="ac-lv-n">SL</div><div class="ac-lv-v">${fmtP(c.sl)}</div></div>
+        <div class="ac-lv en"><div class="ac-lv-n">ENTRY</div><div class="ac-lv-v">${fmtP(c.entry)}</div></div>
+        <div class="ac-lv t1"><div class="ac-lv-n">TP1</div><div class="ac-lv-v">${fmtP(c.tp1)}</div></div>
+        <div class="ac-lv t2"><div class="ac-lv-n">TP2</div><div class="ac-lv-v">${fmtP(c.tp2)}</div></div>
+      </div>
       <div class="ac-btns">
-        ${p>=c.tp1P*.6?`<button class="btn-book" onclick="closeCall('${c.sym}','BOOKED')">📈 BOOK</button>`:p<=-c.slP*.5?`<button class="btn-cut" onclick="closeCall('${c.sym}','CUT')">✂️ CUT</button>`:`<div class="btn-hold">⏳ HOLD ${c.phase}</div>`}
+        <button class="btn-cut" style="flex:2" onclick="closeCall(${i},'exit')">✂ EXIT ${fmtPct(rawPnl)}</button>
+        <div class="btn-hold">R:R ${rr.toFixed(1)}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-function renderHistory(){
-  const wrap=document.getElementById('histWrap');
-  if(!tradeHistory.length){wrap.innerHTML='';return;}
-  wrap.innerHTML=`<div class="ac-label" style="margin:6px 0 5px">HISTORY</div><div style="background:var(--bg3);border:1px solid var(--border);border-radius:5px;margin-bottom:8px;">
-  ${tradeHistory.slice(0,10).map(r=>`<div class="hist-row"><span class="h-sym">${r.sym.replace('USDT','')}</span><span class="h-pnl ${r.pnl>=0?'pp':'pn'}">${pf(r.pnl)}</span></div>`).join('')}</div>`;
-}
-
-async function startScan(){
-  if(scanning)return;
-  scanning=true; document.getElementById('scanBtn').disabled=true;
-  try{
-    const [tickers]=await Promise.all([fetch(`${FAPI}/ticker/24hr`).then(r=>r.json()),getBTCBias()]);
-    tickerMap={};tickers.forEach(t=>tickerMap[t.symbol]=t);
-    const cands=tickers.filter(t=>t.symbol.endsWith('USDT')&&!t.symbol.includes('_')&&parseFloat(t.quoteVolume)>=MIN_VOL).slice(0,SCAN_N).map(t=>t.symbol);
-    results = [];
-    for(let i=0;i<cands.length;i+=BATCH){
-      const batch=cands.slice(i,i+BATCH);
-      const br=await Promise.allSettled(batch.map(s=>analyze(s)));
-      br.forEach(res=>{if(res.status==='fulfilled'&&res.value)results.push(res.value);});
+function startPricePoller() {
+  if (pricePoller) return;
+  pollCountdown = PRICE_POLL_SEC;
+  document.getElementById('cdSmall').textContent = PRICE_POLL_SEC + 's';
+  pricePoller = setInterval(async () => {
+    pollCountdown--;
+    document.getElementById('cdSmall').textContent = pollCountdown + 's';
+    if (pollCountdown <= 0) {
+      pollCountdown = PRICE_POLL_SEC;
+      await pollPrices();
     }
-    const ex=new Set(activeCalls.map(a=>a.sym));
-    results.filter(r=>r.pass&&!ex.has(r.sym)).slice(0,3-activeCalls.length).forEach(r=>addToActive(r));
-    renderResults();
-  }catch(e){console.error(e);}
-  scanning=false; document.getElementById('scanBtn').disabled=false;
-  if(bgEnabled) startCD(); 
+  }, 1000);
 }
 
-function renderResults(){
-  const page=document.getElementById('page');
-  let list=results.filter(r=>r.pass);
-  if(filter!=='ALL') list=list.filter(r=>r.phase===filter);
-  if(!list.length){page.innerHTML=`<div class="empty"><div class="ei">🔍</div><div class="eh">NO SIGNALS</div></div>`;return;}
-  page.innerHTML=list.map(r=>`<div class="card ${r.dir==='LONG'?'cl':'cs'}"><div class="card-top"><span class="csym">${r.sym}</span><span class="phase-tag">${r.phase}</span></div></div>`).join('');
+async function pollPrices() {
+  if (activeCalls.length === 0) return;
+  try {
+    const syms = [...new Set(activeCalls.map(c => c.sym))];
+    const prices = await Promise.all(syms.map(s =>
+      fetch(`${API}/ticker/price?symbol=${s}`).then(r => r.json())
+    ));
+    const priceMap = {};
+    prices.forEach(p => { priceMap[p.symbol] = parseFloat(p.price); });
+
+    activeCalls.forEach(c => {
+      if (priceMap[c.sym]) {
+        c.currentPrice = priceMap[c.sym];
+        // Auto-close on SL/TP
+        const isLong = c.phase !== 'DUMP';
+        if (isLong) {
+          if (c.currentPrice <= c.sl) closeCallAuto(c.sym, c.phase, 'sl');
+          else if (c.currentPrice >= c.tp2) closeCallAuto(c.sym, c.phase, 'tp');
+        } else {
+          if (c.currentPrice >= c.sl) closeCallAuto(c.sym, c.phase, 'sl');
+          else if (c.currentPrice <= c.tp2) closeCallAuto(c.sym, c.phase, 'tp');
+        }
+      }
+    });
+    renderActiveCalls();
+    updatePulse();
+    saveState();
+  } catch (e) { /* ignore poll errors */ }
 }
 
-function setFilter(f){filter=f; renderResults();}
-function startCD(){ cdVal=REFRESH; updateCD(); timerWorker.postMessage({cmd: 'start'}); }
-function clearCD(){ timerWorker.postMessage({cmd: 'stop'}); }
-function updateCD(){ document.getElementById('cdt').textContent=`↻ ${cdVal}s`; }
+function closeCallAuto(sym, phase, hit) {
+  const idx = activeCalls.findIndex(c => c.sym === sym && c.phase === phase);
+  if (idx >= 0) closeCall(idx, hit);
+}
 
-// Init Storage Renders
-renderActiveCalls();
-renderHistory();
-updateSess();
-if(activeCalls.length > 0) pricePoller=setInterval(pollPrices,5000);
+// ─── FILTER + TABS ─────────────────────────────────────────
+function setFilter(f) {
+  currentFilter = f;
+  ['ALL','PUMP','DUMP','BOUNCE','JOURNAL'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (!el) return;
+    el.className = 'ptab' + (t === f ? ' act' + (t==='PUMP'?' act-lime':t==='DUMP'?' act-fire':t==='BOUNCE'?' act-gold':t==='JOURNAL'?' act-journal':'') : '');
+  });
+  if (f === 'JOURNAL') {
+    document.getElementById('sigPage').style.display = 'none';
+    document.getElementById('journalPage').classList.add('visible');
+    renderJournal();
+  } else {
+    document.getElementById('sigPage').style.display = 'block';
+    document.getElementById('journalPage').classList.remove('visible');
+    renderSignals();
+  }
+}
 
+// ─── JOURNAL ──────────────────────────────────────────────
+function filterJournal(f) {
+  journalFilter = f;
+  ['ALL','PUMP','DUMP','BOUNCE'].forEach(t => {
+    document.getElementById('jf-' + t).className = 'jfbtn' + (t === f ? ' act' : '');
+  });
+  renderJournal();
+}
+
+function renderJournal() {
+  const hist = journalFilter === 'ALL' ? callHistory : callHistory.filter(c => c.phase === journalFilter);
+  const ws = hist.filter(c => c.result === 'WIN');
+  const ls = hist.filter(c => c.result === 'LOSS');
+  const wr = hist.length ? (ws.length / hist.length * 100).toFixed(0) : '—';
+  const avgW = ws.length ? (ws.reduce((a, c) => a + (c.pnlPct || 0), 0) / ws.length).toFixed(1) : '—';
+  const avgL = ls.length ? (ls.reduce((a, c) => a + Math.abs(c.pnlPct || 0), 0) / ls.length).toFixed(1) : '—';
+
+  document.getElementById('jWR').textContent = wr === '—' ? '—' : wr + '%';
+  document.getElementById('jAW').textContent = avgW === '—' ? '—' : '+' + avgW + '%';
+  document.getElementById('jAL').textContent = avgL === '—' ? '—' : '-' + avgL + '%';
+  document.getElementById('wrFill').style.width = (wr === '—' ? 0 : wr) + '%';
+  document.getElementById('wrLabel').textContent = ws.length + ' wins / ' + ls.length + ' losses';
+
+  if (hist.length === 0) {
+    document.getElementById('histRows').innerHTML = '<div style="padding:20px;text-align:center;font-size:10px;color:var(--fog)">No history yet</div>';
+    return;
+  }
+
+  document.getElementById('histRows').innerHTML = hist.map(c => {
+    const pnlColor = c.result === 'WIN' ? 'var(--lime)' : c.result === 'LOSS' ? 'var(--fire)' : 'var(--fog)';
+    return `<div class="full-hist-row">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--bright)">${c.sym.replace('USDT','')}</span>
+      <span style="font-size:9px;color:${c.phase==='PUMP'?'var(--lime)':c.phase==='DUMP'?'var(--fire)':'var(--gold)'}">${c.phase}</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--body)">${c.score}</span>
+      <span style="font-size:9px;color:var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.reasons[0]||'—'}</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:${pnlColor}">${typeof c.pnlPct==='number'?fmtPct(c.pnlPct):'—'}</span>
+      <span style="font-size:8px;color:var(--fog)">${ago(c.closedTs)}</span>
+    </div>`;
+  }).join('');
+}
+
+function clearHistory() {
+  if (!confirm('Clear all history?')) return;
+  callHistory = [];
+  wins = 0;
+  losses = 0;
+  sessionPnl = 0;
+  saveState();
+  renderJournal();
+  updatePulse();
+}
+
+// ─── PULSE / STATUS ────────────────────────────────────────
+function updatePulse() {
+  document.getElementById('mWL').textContent = wins + '/' + losses;
+  const pnlEl = document.getElementById('sessPnl');
+  if (wins + losses === 0) {
+    pnlEl.textContent = '—';
+    pnlEl.className = 'pulse-v';
+  } else {
+    pnlEl.textContent = fmtPct(sessionPnl);
+    pnlEl.className = 'pulse-v ' + (sessionPnl >= 0 ? 'pp' : 'pn');
+  }
+}
+
+function setProgress(p) { document.getElementById('prog').style.width = p + '%'; }
+function setStatus(t) { document.getElementById('stxt').textContent = t; }
+function setDot(mode) {
+  const d = document.getElementById('dot');
+  d.className = 'dot' + (mode === 'fast' ? ' fast' : '');
+}
+
+function showAlert(title, body) {
+  document.getElementById('alertTitle').textContent = title;
+  document.getElementById('alertBody').textContent = body;
+  const el = document.getElementById('signalAlert');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 6000);
+}
+
+// ─── BACKGROUND SCAN ───────────────────────────────────────
+document.getElementById('bgToggle').addEventListener('click', function () {
+  bgEnabled = !bgEnabled;
+  this.classList.toggle('on', bgEnabled);
+  this.textContent = bgEnabled ? 'BG ON' : 'BG OFF';
+  clearInterval(bgTimer);
+  bgTimer = null;
+  if (bgEnabled) {
+    bgTimer = setInterval(() => { if (!scanning) startScan(); }, BG_SCAN_INTERVAL);
+    setNextScan(BG_SCAN_INTERVAL);
+    document.getElementById('nextScanCd').textContent = '3:00';
+  } else {
+    document.getElementById('nextScanCd').textContent = 'OFF';
+    clearInterval(nextScanTimer);
+  }
+});
+
+// ─── CLOCK ─────────────────────────────────────────────────
+function updateClock() {
+  document.getElementById('cdt').textContent = new Date().toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── PERSISTENCE ───────────────────────────────────────────
+function saveState() {
+  try {
+    const fourH = 4 * 60 * 60 * 1000;
+    const freshCalls = activeCalls.filter(c => (now() - c.addedTs) < fourH);
+    localStorage.setItem('eden_v4_calls', JSON.stringify(freshCalls));
+    localStorage.setItem('eden_v4_history', JSON.stringify(callHistory.slice(0, 100)));
+    localStorage.setItem('eden_v4_stats', JSON.stringify({ wins, losses, sessionPnl }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const callsRaw = localStorage.getItem('eden_v4_calls');
+    if (callsRaw) {
+      const parsed = JSON.parse(callsRaw);
+      const fourH = 4 * 60 * 60 * 1000;
+      activeCalls = parsed.filter(c => (now() - c.addedTs) < fourH);
+    }
+    const histRaw = localStorage.getItem('eden_v4_history');
+    if (histRaw) callHistory = JSON.parse(histRaw);
+    const statsRaw = localStorage.getItem('eden_v4_stats');
+    if (statsRaw) {
+      const s = JSON.parse(statsRaw);
+      wins = s.wins || 0;
+      losses = s.losses || 0;
+      sessionPnl = s.sessionPnl || 0;
+    }
+  } catch (e) { activeCalls = []; callHistory = []; }
+}
+
+// ─── PWA: SERVICE WORKER REGISTRATION ──────────────────────
+let swReg = null;
+let nextScanTs = 0;      // epoch ms when next auto-scan will fire
+let nextScanTimer = null; // interval to count down
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      swReg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      console.log('[SW] registered', swReg.scope);
+
+      // Register Periodic Background Sync (Chrome Android, requires installed PWA)
+      if ('periodicSync' in swReg) {
+        try {
+          const perm = await navigator.permissions.query({ name: 'periodic-background-sync' });
+          if (perm.state === 'granted') {
+            await swReg.periodicSync.register('eden-bg-scan', { minInterval: 3 * 60 * 1000 });
+            console.log('[PeriodicSync] registered');
+          }
+        } catch (e) { console.log('[PeriodicSync] not available'); }
+      }
+    } catch (e) { console.warn('[SW] registration failed:', e); }
+  });
+}
+
+// ─── NOTIFICATION PERMISSION ────────────────────────────────
+function updateNotifBtn() {
+  const btn = document.getElementById('notifBtn');
+  if (!btn) return;
+  if (!('Notification' in window)) { btn.style.display = 'none'; return; }
+  if (Notification.permission === 'granted') {
+    btn.textContent = '🔔'; btn.className = 'notif-btn granted'; btn.title = 'Notifications ON';
+  } else if (Notification.permission === 'denied') {
+    btn.textContent = '🔕'; btn.className = 'notif-btn denied'; btn.title = 'Notifications blocked in browser settings';
+  } else {
+    btn.textContent = '🔔'; btn.className = 'notif-btn'; btn.title = 'Tap to enable notifications';
+  }
+}
+
+async function requestNotifPermission() {
+  if (!('Notification' in window)) { showAlert('Notifications', 'Not supported in this browser'); return; }
+  if (Notification.permission === 'denied') { showAlert('Blocked', 'Enable notifications in browser Settings → Site permissions'); return; }
+  const result = await Notification.requestPermission();
+  updateNotifBtn();
+  if (result === 'granted') showAlert('✅ Notifications ON', 'You will be alerted for score > 8 signals');
+}
+
+// ─── FIRE SIGNAL NOTIFICATION (score > 8) ──────────────────
+function maybeNotifySignal(sig) {
+  if (!sig || sig.score <= 8) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+  // Prefer service worker notification (works even if app goes to bg)
+  if (swReg && swReg.active) {
+    swReg.active.postMessage({ type: 'SIGNAL_NOTIFY', signal: sig });
+  } else {
+    // Fallback: direct notification
+    const coin = sig.sym.replace('USDT', '');
+    const dir  = sig.phase === 'PUMP' ? '🚀' : sig.phase === 'DUMP' ? '📉' : '↗️';
+    new Notification(`${dir} ${coin} · ${sig.phase}  ⚡ ${sig.score}`, {
+      body:    `Hit rate ${(sig.hitRate * 100).toFixed(0)}%  ·  avg ${sig.patAvg.toFixed(1)}%`,
+      icon:    '/icon-192.png'
+    });
+  }
+}
+
+// ─── NEXT SCAN COUNTDOWN ────────────────────────────────────
+function setNextScan(ms) {
+  nextScanTs = Date.now() + ms;
+  clearInterval(nextScanTimer);
+  nextScanTimer = setInterval(() => {
+    const left = nextScanTs - Date.now();
+    const el   = document.getElementById('nextScanCd');
+    if (!el) return;
+    if (left <= 0) { el.textContent = 'SCANNING…'; clearInterval(nextScanTimer); return; }
+    const m = Math.floor(left / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    el.textContent = `${m}:${String(s).padStart(2, '0')}`;
+  }, 1000);
+}
+
+// ─── LAST SCAN TIME UPDATE ──────────────────────────────────
+function markLastScan() {
+  const now = new Date();
+  const hh  = String(now.getHours()).padStart(2, '0');
+  const mm  = String(now.getMinutes()).padStart(2, '0');
+  const ss  = String(now.getSeconds()).padStart(2, '0');
+  const el  = document.getElementById('lastTime');
+  if (el) el.textContent = `${hh}:${mm}:${ss}`;
+}
+
+// ─── INSTALL PROMPT (Add to Home Screen) ───────────────────
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  installPrompt = e;
+  // Show install hint in status bar
+  setStatus('📲 Tap ⚡ to install EDEN as an app → then enable notifications');
+  setTimeout(() => setStatus('v6 · Proof Engine · Historical Hit Rate Required · No Guessing'), 6000);
+});
+
+function init() {
+  loadState();
+  renderActiveCalls();
+  updatePulse();
+  document.getElementById('mCalls').textContent = activeCalls.length + '/' + MAX_ACTIVE;
+  document.getElementById('acCnt').textContent = activeCalls.length + '/' + MAX_ACTIVE;
+  document.getElementById('mWL').textContent = wins + '/' + losses;
+  if (activeCalls.length > 0) startPricePoller();
+
+  // Update notification button state
+  updateNotifBtn();
+
+  // Auto-enable BG scan on start
+  const bgBtn = document.getElementById('bgToggle');
+  bgBtn.classList.add('on');
+  bgBtn.textContent = 'BG ON';
+  bgEnabled = true;
+
+  // BG scan timer — fires every 3 min
+  function scheduleBgScan() {
+    clearInterval(bgTimer);
+    bgTimer = setInterval(() => {
+      if (!scanning) {
+        startScan();
+      }
+      // Reset next scan countdown
+      setNextScan(BG_SCAN_INTERVAL);
+    }, BG_SCAN_INTERVAL);
+    setNextScan(BG_SCAN_INTERVAL);
+  }
+  scheduleBgScan();
+
+  // Signal expiry pruner every 30s
+  signalExpiryTimer = setInterval(pruneExpiredSignals, 30000);
+
+  // Signal card live price refresh every 30s
+  signalPriceTimer = setInterval(refreshSignalPrices, SIG_PRICE_REFRESH);
+
+  // Auto first scan on load (1.5s delay)
+  setTimeout(() => {
+    if (!scanning) {
+      startScan();
+      setNextScan(BG_SCAN_INTERVAL);
+    }
+  }, 1500);
+}
+function pruneExpiredSignals() {
+  const before = signalResults.length;
+  signalResults = signalResults.filter(s => (now() - s.ts) < SIGNAL_TTL);
+  if (signalResults.length !== before) {
+    document.getElementById('sigCnt').textContent = signalResults.length;
+    document.getElementById('mSig').textContent = signalResults.length;
+    document.getElementById('mSig').style.color = signalResults.length > 0 ? 'var(--lime)' : 'var(--fog)';
+    renderSignals();
+  }
+}
+
+// ─── LIVE SIGNAL PRICE REFRESH ─────────────────────────────
+async function refreshSignalPrices() {
+  if (signalResults.length === 0) return;
+  try {
+    const syms = [...new Set(signalResults.map(s => s.sym))].slice(0, 30);
+    const prices = await Promise.all(
+      syms.map(s => fetch(`${API}/ticker/price?symbol=${s}`).then(r => r.json()).catch(() => null))
+    );
+    let changed = false;
+    prices.forEach(p => {
+      if (!p || !p.symbol) return;
+      signalResults.forEach(sig => {
+        if (sig.sym !== p.symbol) return;
+        sig.livePrice = parseFloat(p.price);
+        // Mark stale if price moved >3% from entry (setup no longer valid)
+        const drift = Math.abs(sig.livePrice - sig.entry) / sig.entry * 100;
+        const wasPrevStale = sig.stale;
+        sig.stale = drift > 3;
+        if (sig.stale !== wasPrevStale) changed = true;
+        changed = true;
+      });
+    });
+    if (changed) renderSignals();
+  } catch (e) { /* ignore */ }
+}
+
+// ─── BOOT ──────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
-
