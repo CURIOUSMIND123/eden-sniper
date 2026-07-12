@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#10b981">
+<title>Munimo Khata — Live Demo</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../../assets/munimo-icon.svg">
+<style>
+:root{
+  --bg:#070b0a;--bg2:#0a100e;--surface:#0f1714;--s2:#15201c;--s3:#1b2920;
+  --b:rgba(255,255,255,.08);--b2:rgba(255,255,255,.14);
+  --t:#f1f6f4;--m:#93a39c;--f:#5a6b64;
+  --em:#10b981;--em2:#34d399;--em3:#6ee7b7;
+  --gold:#fbbf24;--red:#f87171;--blue:#60a5fa;
+  --r:12px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;max-width:430px;margin:0 auto;background:var(--bg);overflow:hidden}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans','Noto Sans Devanagari',sans-serif;color:var(--t);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input,select{font-family:inherit}
+
+.demo-bar{background:rgba(16,185,129,.15);border-bottom:1px solid rgba(16,185,129,.2);padding:7px 14px;font-size:11.5px;font-weight:600;color:var(--em3);text-align:center;flex-shrink:0}
+.demo-bar a{color:#fff;text-decoration:underline}
+
+.header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0;background:var(--surface)}
+.hleft{display:flex;align-items:center;gap:9px}
+.hlogo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;font-weight:800;color:#04110b;font-size:15px}
+.htitle{font-weight:800;font-size:16px;letter-spacing:-.01em}
+.hsub{font-size:10.5px;color:var(--m);margin-top:-2px}
+.bizswitch{background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:6px 12px;font-size:11.5px;font-weight:700;color:var(--em2);display:flex;align-items:center;gap:6px}
+
+.main{flex:1;overflow-y:auto;padding-bottom:calc(70px + var(--safe-bottom));position:relative;overscroll-behavior:contain}
+.screen{display:none}
+.screen.active{display:block;animation:fadein .18s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* summary */
+.summary{display:flex;gap:10px;padding:14px 16px 6px}
+.sumcard{flex:1;background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:12px 14px}
+.sumcard .lbl{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--m)}
+.sumcard .val{font-size:20px;font-weight:800;margin-top:2px;letter-spacing:-.02em}
+.val.green{color:var(--em2)}
+.val.red{color:var(--red)}
+.sumcard .hint{font-size:10.5px;color:var(--f)}
+
+/* smart entry */
+.smartwrap{padding:10px 16px 4px}
+.smart{display:flex;gap:8px;background:var(--surface);border:1px solid rgba(16,185,129,.35);border-radius:14px;padding:8px 8px 8px 14px;box-shadow:0 0 24px rgba(16,185,129,.08)}
+.smart input{flex:1;background:none;border:none;outline:none;color:var(--t);font-size:14px;min-width:0}
+.smart input::placeholder{color:var(--f)}
+.smart .go{background:linear-gradient(135deg,#10b981,#059669);color:#04110b;font-weight:800;border-radius:10px;padding:8px 14px;font-size:13px;flex-shrink:0}
+.smarthint{font-size:11px;color:var(--f);padding:6px 18px 0;line-height:1.5}
+.smarthint b{color:var(--m);font-weight:600}
+.chiprow{display:flex;gap:7px;padding:8px 16px 2px;overflow-x:auto;scrollbar-width:none}
+.chiprow::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;background:var(--s2);border:1px solid var(--b2);border-radius:18px;padding:6px 12px;font-size:11.5px;font-weight:600;color:var(--m);transition:all .15s}
+.chip:active{transform:scale(.96);border-color:var(--em);color:var(--em2)}
+
+/* parties */
+.sect-title{padding:16px 18px 8px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--f);display:flex;justify-content:space-between;align-items:center}
+.plist{padding:0 16px}
+.party{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:12px 14px;margin-bottom:9px;cursor:pointer;transition:border-color .15s,transform .1s}
+.party:active{transform:scale(.99);border-color:var(--b2)}
+.pav{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0}
+.pinfo{flex:1;min-width:0}
+.pname{font-weight:700;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pmeta{font-size:11px;color:var(--f)}
+.pbal{text-align:right}
+.pbal .amt{font-weight:800;font-size:15px}
+.pbal .tag{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--f)}
+
+/* ledger screen */
+.back{display:flex;align-items:center;gap:8px;padding:14px 18px 4px;color:var(--em2);font-weight:700;font-size:13px}
+.lhead{display:flex;align-items:center;gap:12px;padding:10px 18px}
+.lbal{margin:6px 16px 12px;background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:14px;display:flex;justify-content:space-between;align-items:center}
+.lbal .big{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.wabtn{background:rgba(37,211,102,.14);border:1px solid rgba(37,211,102,.4);color:#4ade80;border-radius:10px;padding:9px 13px;font-weight:700;font-size:12px}
+.entries{padding:0 16px}
+.entry{display:flex;justify-content:space-between;gap:10px;background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:11px 14px;margin-bottom:8px;animation:fadein .25s ease}
+.entry .note{font-size:13.5px;font-weight:600}
+.entry .date{font-size:10.5px;color:var(--f)}
+.entry .eamt{font-weight:800;font-size:15px;text-align:right}
+.entry .rb{font-size:10px;color:var(--f);text-align:right}
+
+/* reports */
+.repcard{margin:12px 16px;background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:16px}
+.repcard h3{font-size:13px;margin-bottom:10px}
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar .bl{width:64px;font-size:11px;color:var(--m);flex-shrink:0}
+.bar .bt{flex:1;height:14px;background:var(--s2);border-radius:7px;overflow:hidden}
+.bar .bf{height:100%;border-radius:7px;background:linear-gradient(90deg,#059669,#34d399);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.bar .bv{width:70px;font-size:11px;font-weight:700;text-align:right;flex-shrink:0}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(84px + var(--safe-bottom));transform:translateX(-50%) translateY(20px);background:#0c1512;border:1px solid rgba(16,185,129,.5);color:var(--em3);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:99;box-shadow:0 10px 40px rgba(0,0,0,.6);max-width:88%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* bottom nav */
+.bottomnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(62px + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:var(--surface);border-top:1px solid var(--b2);display:flex;z-index:50}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--f);font-size:10.5px;font-weight:600;transition:color .15s}
+.tab.active{color:var(--em2)}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* modal add entry */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);display:none;align-items:flex-end;justify-content:center;z-index:80}
+.sheet.open{display:flex}
+.sheetin{width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--b2);border-radius:20px 20px 0 0;padding:18px 18px calc(18px + var(--safe-bottom));animation:up .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
+.sheetin h3{font-size:15px;margin-bottom:12px}
+.gavegot{display:flex;gap:8px;margin-bottom:12px}
+.gg{flex:1;border-radius:12px;padding:12px;font-weight:800;font-size:14px;border:1px solid var(--b2);background:var(--s2);color:var(--m)}
+.gg.gave.sel{background:rgba(248,113,113,.15);border-color:var(--red);color:var(--red)}
+.gg.got.sel{background:rgba(16,185,129,.15);border-color:var(--em);color:var(--em2)}
+.field{margin-bottom:11px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--m);margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase}
+.field input,.field select{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:11px 13px;color:var(--t);font-size:15px;outline:none}
+.field input:focus{border-color:var(--em)}
+.savebtn{width:100%;background:linear-gradient(135deg,#10b981,#059669);color:#04110b;font-weight:800;font-size:15px;border-radius:12px;padding:14px;margin-top:4px}
+.cancel{width:100%;text-align:center;color:var(--f);font-size:13px;font-weight:600;padding:12px 0 0}
+
+/* fab */
+.fab{position:fixed;right:calc(50% - 215px + 16px);bottom:calc(78px + var(--safe-bottom));width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);color:#04110b;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(16,185,129,.4);z-index:60;transition:transform .15s}
+@media (max-width:430px){.fab{right:16px}}
+.fab:active{transform:scale(.93)}
+</style>
+</head>
+<body>
+<div class="demo-bar">Munimo Khata — Live Demo · sab kuch try karo, data sirf aapke phone me · <a href="../../khata.html">Get the app →</a></div>
+
+<header class="header">
+  <div class="hleft">
+    <div class="hlogo">म</div>
+    <div>
+      <div class="htitle">Munimo Khata</div>
+      <div class="hsub" id="bizname">Sharma General Store · Delhi</div>
+    </div>
+  </div>
+  <button class="bizswitch" id="bizbtn">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 3v4M16 3v4M4 11h16M4 7a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>
+    Badlo
+  </button>
+</header>
+
+<main class="main">
+  <!-- HOME -->
+  <section class="screen active" id="scr-home">
+    <div class="summary">
+      <div class="sumcard"><div class="lbl">Milega (In)</div><div class="val green" id="sum-in">₹0</div><div class="hint" id="sum-in-n"></div></div>
+      <div class="sumcard"><div class="lbl">Dena hai (Out)</div><div class="val red" id="sum-out">₹0</div><div class="hint" id="sum-out-n"></div></div>
+    </div>
+
+    <div class="smartwrap">
+      <div class="smart">
+        <input id="smartin" type="text" placeholder="Likho: 'Ramesh ko 500 diye'…" autocomplete="off">
+        <button class="go" id="smartgo">Likho ✓</button>
+      </div>
+    </div>
+    <div class="smarthint">AI समझता है — <b>hindi</b>, <b>english</b>, mix sab. Try:</div>
+    <div class="chiprow" id="chips"></div>
+
+    <div class="sect-title"><span>Parties</span><span id="pcount"></span></div>
+    <div class="plist" id="plist"></div>
+  </section>
+
+  <!-- LEDGER -->
+  <section class="screen" id="scr-ledger">
+    <button class="back" id="backbtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Sab parties
+    </button>
+    <div class="lhead">
+      <div class="pav" id="lav" style="background:rgba(16,185,129,.18);color:var(--em2)">R</div>
+      <div>
+        <div class="pname" id="lname" style="font-size:17px">—</div>
+        <div class="pmeta" id="lmeta">—</div>
+      </div>
+    </div>
+    <div class="lbal">
+      <div>
+        <div class="sumcard-lbl" style="font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--m)" id="lbal-lbl">Balance</div>
+        <div class="big" id="lbal-amt">₹0</div>
+      </div>
+      <button class="wabtn" id="remindbtn">WhatsApp yaad dilao</button>
+    </div>
+    <div class="sect-title"><span>Len-den</span></div>
+    <div class="entries" id="entries"></div>
+  </section>
+
+  <!-- REPORTS -->
+  <section class="screen" id="scr-reports">
+    <div class="sect-title" style="padding-top:20px"><span>Is mahine ka hisaab</span></div>
+    <div class="repcard">
+      <h3 id="rep-month">July 2026</h3>
+      <div id="repbars"></div>
+    </div>
+    <div class="repcard">
+      <h3>Business ki sehat</h3>
+      <div class="bar"><div class="bl">Milega</div><div class="bt"><div class="bf" id="rb-in" style="width:0%"></div></div><div class="bv green" id="rv-in">₹0</div></div>
+      <div class="bar"><div class="bl">Dena</div><div class="bt"><div class="bf" id="rb-out" style="width:0%;background:linear-gradient(90deg,#b91c1c,#f87171)"></div></div><div class="bv" id="rv-out" style="color:var(--red)">₹0</div></div>
+      <div style="font-size:11.5px;color:var(--f);margin-top:8px" id="rep-note"></div>
+    </div>
+  </section>
+</main>
+
+<button class="fab" id="fabbtn">+</button>
+
+<div class="toast" id="toast"></div>
+
+<!-- ADD ENTRY SHEET -->
+<div class="sheet" id="sheet">
+  <div class="sheetin">
+    <h3>Nayi entry</h3>
+    <div class="gavegot">
+      <button class="gg gave sel" id="gg-gave">Maine diye ↓</button>
+      <button class="gg got" id="gg-got">Mujhe mile ↑</button>
+    </div>
+    <div class="field"><label>Party</label><select id="f-party"></select></div>
+    <div class="field"><label>Amount (₹)</label><input id="f-amt" type="number" inputmode="numeric" placeholder="500"></div>
+    <div class="field"><label>Note (kya tha?)</label><input id="f-note" type="text" placeholder="udhaar / saman / payment…"></div>
+    <button class="savebtn" id="savebtn">Save karo</button>
+    <button class="cancel" id="cancelbtn">Cancel</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottomnav">
+  <button class="tab active" data-scr="home">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+    Khata
+  </button>
+  <button class="tab" data-scr="reports">
+    <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+    Reports
+  </button>
+</nav>
+
+<script>
+'use strict';
+// ─── Business presets: real, practical Indian data ───
+const BIZ = [
+ {
+  name:'Sharma General Store', place:'Karol Bagh, Delhi', type:'Kirana',
+  parties:[
+   {n:'Ramesh Yadav', tag:'Customer · Gali no. 4', e:[
+     {d:-12,note:'Udhaar — atta, tel, chini',amt:850,dir:1},
+     {d:-9,note:'Payment mila (GPay)',amt:500,dir:-1},
+     {d:-4,note:'Udhaar — doodh, bread',amt:210,dir:1},
+   ]},
+   {n:'Anita Madam', tag:'Customer · Tiffin service', e:[
+     {d:-15,note:'Mahine ka saman',amt:3400,dir:1},
+     {d:-2,note:'Cash payment',amt:2000,dir:-1},
+   ]},
+   {n:'Mehta Distributors', tag:'Supplier · FMCG', e:[
+     {d:-11,note:'Stock — biscuit, namkeen',amt:12600,dir:-1},
+     {d:-6,note:'Payment kiya (cheque)',amt:8000,dir:1},
+   ]},
+   {n:'Gupta Dairy', tag:'Supplier · Doodh-dahi', e:[
+     {d:-7,note:'Hafte ka doodh',amt:4550,dir:-1},
+     {d:-1,note:'Payment kiya (cash)',amt:4550,dir:1},
+   ]},
+   {n:'Suresh bhai', tag:'Customer · Padosi', e:[
+     {d:-3,note:'Udhaar — cold drink, chips',amt:340,dir:1},
+   ]},
+  ],
+  chips:['Ramesh ko 500 diye','Anita se 2000 mile','Mehta ko 3000 diye','Suresh se 340 aaye']
+ },
+ {
+  name:'Verma Construction', place:'Six Mile, Guwahati', type:'Contractor',
+  parties:[
+   {n:'Borah Builders', tag:'Client · Site: GS Road', e:[
+     {d:-20,note:'RA bill #3 raised',amt:250000,dir:1},
+     {d:-8,note:'Payment mila (NEFT)',amt:150000,dir:-1},
+   ]},
+   {n:'Das Cement Agency', tag:'Supplier · Cement', e:[
+     {d:-14,note:'200 bags OPC',amt:78000,dir:-1},
+     {d:-5,note:'Payment kiya',amt:50000,dir:1},
+   ]},
+   {n:'Labour — Site A', tag:'12 mazdoor', e:[
+     {d:-6,note:'Hafta — 12 log',amt:38400,dir:-1},
+     {d:-6,note:'Advance diya — Bhola',amt:2000,dir:-1},
+     {d:0,note:'Hafta paid',amt:40400,dir:1},
+   ]},
+   {n:'JCB Rental — Kalita', tag:'Machine bhada', e:[
+     {d:-9,note:'3 din JCB',amt:13500,dir:-1},
+   ]},
+  ],
+  chips:['Borah se 1 lakh mile','Das Cement ko 20000 diye','Labour ka hafta 38400','Kalita ko 13500 diye']
+ },
+ {
+  name:'Meera Fashion Boutique', place:'Ring Road, Surat', type:'Boutique',
+  parties:[
+   {n:'Kavita ben', tag:'Customer · Regular', e:[
+     {d:-10,note:'2 saree — silai ke saath',amt:5600,dir:1},
+     {d:-3,note:'Payment (UPI)',amt:3000,dir:-1},
+   ]},
+   {n:'Radhika Textiles', tag:'Supplier · Kapda', e:[
+     {d:-12,note:'Fabric — 40m',amt:18200,dir:-1},
+     {d:-4,note:'Payment kiya',amt:10000,dir:1},
+   ]},
+   {n:'Priya didi', tag:'Customer · Shaadi order', e:[
+     {d:-6,note:'Lehenga order — advance baki',amt:14500,dir:1},
+     {d:-6,note:'Advance mila',amt:5000,dir:-1},
+   ]},
+   {n:'Karigar Aslam', tag:'Silai · Piece-rate', e:[
+     {d:-2,note:'15 piece silai',amt:4500,dir:-1},
+   ]},
+  ],
+  chips:['Kavita se 2600 mile','Radhika ko 8200 diye','Priya se 9500 aaye','Aslam ko 4500 diye']
+ }
+];
+
+// ─── State ───
+let bizIdx = 0, curParty = null, ggDir = 1; // dir: 1 = they owe us more (we gave), -1 = we received/owe
+const LS='munimo-khata-demo-v1';
+let data;
+try{ data = JSON.parse(localStorage.getItem(LS)) || null; }catch(e){ data=null; }
+if(!data){ data = { bizIdx:0, biz: BIZ.map(b=>({parties:b.parties.map(p=>({n:p.n,tag:p.tag,e:p.e.map(x=>({...x}))}))})) }; }
+bizIdx = data.bizIdx || 0;
+
+const $=id=>document.getElementById(id);
+const fmt=n=>'₹'+Math.abs(Math.round(n)).toLocaleString('en-IN');
+const today=new Date();
+const dstr=off=>{const d=new Date(today.getTime()+off*864e5);return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})};
+const AVCOL=['16,185,129','96,165,250','251,191,36','248,113,113','167,139,250','45,212,191'];
+
+function parties(){ return data.biz[bizIdx].parties; }
+function bal(p){ return p.e.reduce((s,x)=>s+x.amt*x.dir,0); } // + => milega (they owe us), - => dena
+
+function save(){ try{ data.bizIdx=bizIdx; localStorage.setItem(LS,JSON.stringify(data)); }catch(e){} }
+
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2400); }
+
+// ─── Render home ───
+function renderHome(){
+  const B=BIZ[bizIdx];
+  $('bizname').textContent=B.name+' · '+B.place.split(',')[1];
+  let tin=0,tout=0,nin=0,nout=0;
+  const pl=$('plist'); pl.innerHTML='';
+  parties().forEach((p,i)=>{
+    const b=bal(p);
+    if(b>0){tin+=b;nin++;} else if(b<0){tout+=-b;nout++;}
+    const c=AVCOL[i%AVCOL.length];
+    const div=document.createElement('div'); div.className='party';
+    div.innerHTML=`<div class="pav" style="background:rgba(${c},.16);color:rgb(${c})">${p.n[0]}</div>
+      <div class="pinfo"><div class="pname">${p.n}</div><div class="pmeta">${p.tag}</div></div>
+      <div class="pbal"><div class="amt" style="color:${b>=0?'var(--em2)':'var(--red)'}">${fmt(b)}</div>
+      <div class="tag">${b>=0?'milega':'dena hai'}</div></div>`;
+    div.onclick=()=>openLedger(i);
+    pl.appendChild(div);
+  });
+  $('sum-in').textContent=fmt(tin); $('sum-out').textContent=fmt(tout);
+  $('sum-in-n').textContent=nin+' parties se'; $('sum-out-n').textContent=nout+' parties ko';
+  $('pcount').textContent=parties().length+' log';
+  const ch=$('chips'); ch.innerHTML='';
+  B.chips.forEach(c=>{ const b=document.createElement('button'); b.className='chip'; b.textContent='“'+c+'”'; b.onclick=()=>{ $('smartin').value=c; smartGo(); }; ch.appendChild(b); });
+}
+
+// ─── Ledger ───
+function openLedger(i){
+  curParty=i; const p=parties()[i]; const c=AVCOL[i%AVCOL.length];
+  $('lav').style.background=`rgba(${c},.16)`; $('lav').style.color=`rgb(${c})`; $('lav').textContent=p.n[0];
+  $('lname').textContent=p.n; $('lmeta').textContent=p.tag;
+  const b=bal(p);
+  $('lbal-amt').textContent=fmt(b);
+  $('lbal-amt').style.color=b>=0?'var(--em2)':'var(--red)';
+  $('lbal-lbl').textContent=b>=0?'Aapko milega':'Aapko dena hai';
+  const en=$('entries'); en.innerHTML='';
+  let run=0;
+  const rows=p.e.map(x=>{run+=x.amt*x.dir; return {...x,run};});
+  rows.slice().reverse().forEach(x=>{
+    const d=document.createElement('div'); d.className='entry';
+    d.innerHTML=`<div><div class="note">${x.note}</div><div class="date">${dstr(x.d)}</div></div>
+      <div><div class="eamt" style="color:${x.dir>0?'var(--em2)':'var(--red)'}">${x.dir>0?'+':'−'}${fmt(x.amt)}</div>
+      <div class="rb">bal ${fmt(x.run)}</div></div>`;
+    en.appendChild(d);
+  });
+  show('ledger');
+}
+$('backbtn').onclick=()=>show('home');
+$('remindbtn').onclick=()=>{ const p=parties()[curParty]; const b=bal(p);
+  toast(b>0?`WhatsApp reminder ready: "${p.n} ji, ₹${Math.abs(b).toLocaleString('en-IN')} baki hai 🙏" (demo)`:'Is party ka koi baki nahi!'); };
+
+// ─── Screens ───
+function show(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  $('scr-'+ (s==='ledger'?'ledger':s)).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.scr===s));
+  if(s==='reports') renderReports();
+  if(s==='home') renderHome();
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.scr));
+
+// ─── Reports ───
+function renderReports(){
+  $('rep-month').textContent=today.toLocaleDateString('en-IN',{month:'long',year:'numeric'})+' — '+BIZ[bizIdx].type;
+  let tin=0,tout=0;
+  const per=[];
+  parties().forEach(p=>{ const b=bal(p); if(b>0)tin+=b; else tout+=-b; per.push({n:p.n,v:Math.abs(b)}); });
+  per.sort((a,b)=>b.v-a.v);
+  const mx=Math.max(...per.map(x=>x.v),1);
+  $('repbars').innerHTML=per.slice(0,5).map((x,i)=>`<div class="bar"><div class="bl">${x.n.split(' ')[0]}</div><div class="bt"><div class="bf" style="width:0%" data-w="${Math.round(x.v/mx*100)}"></div></div><div class="bv">${fmt(x.v)}</div></div>`).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ document.querySelectorAll('#repbars .bf').forEach(b=>b.style.width=b.dataset.w+'%'); }));
+  const t=Math.max(tin,tout,1);
+  $('rb-in').dataset.w=Math.round(tin/t*100); $('rb-out').dataset.w=Math.round(tout/t*100);
+  $('rv-in').textContent=fmt(tin); $('rv-out').textContent=fmt(tout);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ $('rb-in').style.width=$('rb-in').dataset.w+'%'; $('rb-out').style.width=$('rb-out').dataset.w+'%'; }));
+  $('rep-note').textContent = tin>=tout ? 'Aapka business plus me hai — milne wala paisa zyada hai.' : 'Dhyan do — dena zyada hai, wasooli tez karo.';
+}
+
+// ─── Add entry sheet ───
+function openSheet(pre){
+  const sel=$('f-party'); sel.innerHTML='';
+  parties().forEach((p,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=p.n; sel.appendChild(o); });
+  if(pre&&pre.party!=null) sel.value=pre.party;
+  else if(curParty!=null && $('scr-ledger').classList.contains('active')) sel.value=curParty;
+  $('f-amt').value=pre&&pre.amt?pre.amt:''; $('f-note').value=pre&&pre.note?pre.note:'';
+  setGG(pre&&pre.dir?pre.dir:1);
+  $('sheet').classList.add('open');
+}
+function setGG(d){ ggDir=d; $('gg-gave').classList.toggle('sel',d===1); $('gg-got').classList.toggle('sel',d===-1); }
+$('gg-gave').onclick=()=>setGG(1); $('gg-got').onclick=()=>setGG(-1);
+$('fabbtn').onclick=()=>openSheet();
+$('cancelbtn').onclick=()=>$('sheet').classList.remove('open');
+$('sheet').onclick=e=>{ if(e.target===$('sheet')) $('sheet').classList.remove('open'); };
+$('savebtn').onclick=()=>{
+  const pi=+$('f-party').value, amt=+$('f-amt').value;
+  if(!amt||amt<=0){ toast('Amount likho pehle'); return; }
+  const note=$('f-note').value||(ggDir===1?'Diye':'Mile');
+  parties()[pi].e.push({d:0,note,amt,dir:ggDir});
+  save(); $('sheet').classList.remove('open');
+  toast('Entry ho gayi ✓ — '+parties()[pi].n+' '+(ggDir===1?'ko diye':'se mile')+' '+fmt(amt));
+  if($('scr-ledger').classList.contains('active')&&curParty===pi) openLedger(pi); else renderHome();
+};
+
+// ─── Smart entry: Hindi/English natural language parse (demo) ───
+function smartParse(txt){
+  const t=txt.trim(); if(!t) return null;
+  // amount: supports "1 lakh", "20 hazar", plain numbers
+  let amt=null;
+  const lakh=t.match(/([\d.]+)\s*(lakh|lac|लाख)/i); const haz=t.match(/([\d.]+)\s*(hazar|hazaar|k|हज़ार|हजार)/i);
+  if(lakh) amt=parseFloat(lakh[1])*100000; else if(haz) amt=parseFloat(haz[1])*1000;
+  else { const m=t.match(/(\d[\d,]*)/); if(m) amt=parseInt(m[1].replace(/,/g,'')); }
+  if(!amt) return null;
+  // direction: gave vs received
+  const gave=/(ko\s|diye|diya|paid|pay|de diya|दिए|दिया|को)/i.test(t);
+  const got=/(se\s|mile|mila|aaye|aya|received|got|से|मिले|आए)/i.test(t);
+  const dir = got&&!gave ? -1 : 1;
+  // party: fuzzy match first word(s) against names
+  let best=0, bi=0;
+  parties().forEach((p,i)=>{
+    const words=p.n.toLowerCase().split(/\s+/);
+    let sc=0; t.toLowerCase().split(/\s+/).forEach(w=>{ if(w.length>2 && words.some(x=>x.startsWith(w)||w.startsWith(x))) sc++; });
+    if(sc>best){best=sc;bi=i;}
+  });
+  return {party:bi,amt,dir,note:t};
+}
+function smartGo(){
+  const r=smartParse($('smartin').value);
+  if(!r){ toast('Samajh nahi aaya — amount ke saath likho, jaise "Ramesh ko 500 diye"'); return; }
+  openSheet(r);
+  toast('AI ne samjha ✓ — check karke Save dabao');
+  $('smartin').value='';
+}
+$('smartgo').onclick=smartGo;
+$('smartin').addEventListener('keydown',e=>{ if(e.key==='Enter') smartGo(); });
+
+// ─── Business switcher ───
+$('bizbtn').onclick=()=>{
+  bizIdx=(bizIdx+1)%BIZ.length; curParty=null; save();
+  renderHome(); show('home');
+  toast('Ab dekh rahe ho: '+BIZ[bizIdx].name+' ('+BIZ[bizIdx].type+')');
+};
+
+renderHome();
+</script>
+</body>
+</html>
