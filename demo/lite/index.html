@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#10b981">
+<title>Munimo Lite — Field App Demo</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../../assets/munimo-icon.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b0a;--bg2:#0a100e;--surface:#0f1714;--s2:#15201c;--s3:#1b2920;
+  --b:rgba(255,255,255,.08);--b2:rgba(255,255,255,.14);
+  --t:#f1f6f4;--m:#93a39c;--f:#5a6b64;
+  --em:#10b981;--em2:#34d399;--em3:#6ee7b7;
+  --gold:#fbbf24;--red:#f87171;--blue:#60a5fa;
+  --r:12px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;max-width:430px;margin:0 auto;background:var(--bg);overflow:hidden}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--t);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none}
+input,select,textarea{font-family:inherit}
+
+/* DEMO BANNER */
+.demo-bar{background:rgba(16,185,129,.15);border-bottom:1px solid rgba(16,185,129,.2);padding:7px 14px;font-size:11.5px;font-weight:600;color:var(--em3);text-align:center;flex-shrink:0}
+
+/* HEADER */
+.header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0;background:var(--surface)}
+.header-logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px}
+.header-logo-m{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center}
+.header-right{display:flex;align-items:center;gap:12px}
+.notif-btn{width:34px;height:34px;border-radius:50%;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:16px;position:relative}
+.notif-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--surface)}
+.avatar-sm{width:32px;height:32px;border-radius:50%;background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--em2)}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding-bottom:calc(68px + var(--safe-bottom));position:relative}
+.screen{display:none;flex-direction:column}
+.screen.active{display:flex}
+
+/* BOTTOM NAV */
+.bottomnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(60px + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:var(--surface);border-top:1px solid var(--b2);display:flex;align-items:stretch;z-index:50}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--f);font-size:10.5px;font-weight:600;transition:color .15s;padding:8px 4px 4px}
+.tab:hover{color:var(--m)}
+.tab.active{color:var(--em2)}
+.tab .ti{font-size:20px}
+.tab.active .ti{filter:drop-shadow(0 0 4px rgba(16,185,129,.5))}
+
+/* CARDS */
+.section{padding:16px}
+.card{background:var(--surface);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.card-head{padding:13px 15px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-size:13.5px;font-weight:700}
+.card-body{padding:14px 15px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;padding-bottom:0}
+.stat{background:var(--surface);border:1px solid var(--b);border-radius:var(--r);padding:14px}
+.stat .lbl{font-size:11px;color:var(--m);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.stat .val{font-size:22px;font-weight:900;letter-spacing:-.02em}
+.stat .sub{font-size:11px;color:var(--f);margin-top:4px}
+.stat.em{border-color:rgba(16,185,129,.25)}.stat.em .val{color:var(--em2)}
+.stat.red{border-color:rgba(248,113,113,.2)}.stat.red .val{color:var(--red)}
+.stat.gold{border-color:rgba(251,191,36,.2)}.stat.gold .val{color:var(--gold)}
+.stat.blue{border-color:rgba(96,165,250,.2)}.stat.blue .val{color:var(--blue)}
+
+/* WORKER CARDS */
+.worker-grid{padding:14px;display:flex;flex-direction:column;gap:8px}
+.worker{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;user-select:none}
+.worker:active{transform:scale(.98)}
+.worker.present{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.07)}
+.worker.absent{border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.06)}
+.worker-av{width:36px;height:36px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--m);flex-shrink:0}
+.worker.present .worker-av{background:rgba(16,185,129,.15);color:var(--em2)}
+.worker.absent .worker-av{background:rgba(248,113,113,.12);color:var(--red)}
+.worker-info{flex:1}
+.worker-name{font-size:14px;font-weight:600}
+.worker-role{font-size:12px;color:var(--m);margin-top:2px}
+.worker-toggle{font-size:20px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .2s;width:100%}
+.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#04110c}
+.btn-primary:active{transform:scale(.97)}
+.btn-ghost{background:var(--s2);color:var(--m);border:1px solid var(--b2)}
+.btn-ghost:active{transform:scale(.97)}
+.btn-danger{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.25)}
+.btn-sm{padding:8px 14px;font-size:12.5px;border-radius:8px}
+
+/* EXPENSE LIST */
+.exp-item{padding:14px 16px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;gap:12px}
+.exp-item:last-child{border-bottom:none}
+.exp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.exp-details{flex:1}
+.exp-desc{font-size:14px;font-weight:600}
+.exp-meta{font-size:12px;color:var(--m);margin-top:3px}
+.exp-amount{font-size:16px;font-weight:800;color:var(--em2)}
+.exp-status{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;margin-top:5px;display:inline-block}
+.status-pending{background:rgba(251,191,36,.12);color:var(--gold);border:1px solid rgba(251,191,36,.25)}
+.status-approved{background:rgba(16,185,129,.12);color:var(--em2);border:1px solid rgba(16,185,129,.25)}
+.status-rejected{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+
+/* CAMERA AREA */
+.camera-zone{background:var(--s2);border:2px dashed var(--b2);border-radius:14px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.camera-zone:hover,.camera-zone:active{border-color:var(--em);background:rgba(16,185,129,.05)}
+.camera-zone .ic{font-size:40px;margin-bottom:12px;display:block}
+.camera-zone p{color:var(--m);font-size:13.5px}
+.camera-zone .hint{color:var(--f);font-size:12px;margin-top:6px}
+#cameraInput{display:none}
+
+/* OCR OVERLAY */
+.ocr-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.ocr-box{background:var(--surface);border:1px solid var(--b2);border-radius:16px;padding:28px;width:100%;max-width:360px;text-align:center}
+.ocr-box .title{font-size:16px;font-weight:700;margin-bottom:8px}
+.ocr-box .sub{font-size:13px;color:var(--m);margin-bottom:20px}
+.progress-bar{height:4px;background:var(--b);border-radius:2px;overflow:hidden;margin-bottom:24px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:2px;width:0;transition:width .4s ease}
+.ocr-result{display:none;text-align:left}
+
+/* APPROVAL ITEMS */
+.appr-item{padding:14px 16px;border-bottom:1px solid var(--b)}
+.appr-item:last-child{border-bottom:none}
+.appr-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.appr-title{font-size:14px;font-weight:600}
+.appr-sub{font-size:12px;color:var(--m);margin-top:2px}
+.appr-amount{font-size:15px;font-weight:800;color:var(--gold)}
+.appr-actions{display:flex;gap:8px;margin-top:10px}
+.appr-actions button{flex:1}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;font-weight:600;color:var(--m)}
+.field input,.field select,.field textarea{background:var(--bg2);border:1px solid var(--b2);border-radius:8px;padding:10px 12px;color:var(--t);font-size:14px;outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--em)}
+.field textarea{resize:none;height:70px}
+
+/* PROFILE */
+.profile-head{padding:24px 16px;text-align:center;border-bottom:1px solid var(--b)}
+.profile-av{width:68px;height:68px;border-radius:50%;background:rgba(16,185,129,.2);border:2px solid rgba(16,185,129,.3);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:var(--em2);margin:0 auto 12px}
+.profile-name{font-size:18px;font-weight:800}
+.profile-role{font-size:13px;color:var(--m);margin-top:4px}
+.profile-site{font-size:12px;color:var(--em3);margin-top:6px;font-weight:600}
+.pref-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--b)}
+.pref-row .lbl{font-size:14px;font-weight:500}
+.pref-row .val{font-size:13px;color:var(--m)}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(16,185,129,.95);color:#04110c;font-size:13.5px;font-weight:700;padding:11px 22px;border-radius:30px;z-index:300;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:430px){
+  html,body{max-width:100%}
+  .bottomnav{max-width:100%;left:0;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">📱 Munimo Lite — Interactive Demo &nbsp;·&nbsp; <a href="../../index.html#quote" style="color:var(--em3);font-weight:800">Get full access →</a></div>
+
+<div class="header">
+  <div class="header-logo">
+    <div class="header-logo-m">
+      <svg width="16" height="16" viewBox="0 0 40 40" fill="none"><path d="M6 28 L6 12 L20 22 L34 12 L34 28" stroke="#022c1a" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    Munimo Lite
+  </div>
+  <div class="header-right">
+    <div class="notif-btn" onclick="goTab('approvals')">🔔<span class="notif-dot" id="notifDot"></span></div>
+    <div class="avatar-sm">R</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ─── HOME ─── -->
+  <div class="screen active" id="screen-home">
+    <div style="padding:16px;padding-bottom:8px">
+      <div style="font-size:13px;color:var(--m)">Good morning,</div>
+      <div style="font-size:19px;font-weight:800;margin-top:2px">Rajesh Kumar 👋</div>
+      <div style="font-size:12.5px;color:var(--em3);margin-top:4px;font-weight:600">Site Manager · Sector-5 Site, Guwahati</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat em">
+        <div class="lbl">Today's Attendance</div>
+        <div class="val" id="homeAttPct">92%</div>
+        <div class="sub" id="homeAttSub">22 / 24 present</div>
+      </div>
+      <div class="stat gold">
+        <div class="lbl">Pending Expenses</div>
+        <div class="val">3</div>
+        <div class="sub">₹4,850 awaiting</div>
+      </div>
+      <div class="stat blue">
+        <div class="lbl">Approved Today</div>
+        <div class="val">2</div>
+        <div class="sub">₹3,200 cleared</div>
+      </div>
+      <div class="stat red">
+        <div class="lbl">Pending Approval</div>
+        <div class="val">3</div>
+        <div class="sub">From your site</div>
+      </div>
+    </div>
+
+    <div class="section" style="padding-top:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--f);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Quick Actions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="card" style="margin-bottom:0;cursor:pointer;text-align:center;padding:18px 10px" onclick="goTab('attendance')">
+          <div style="font-size:28px;margin-bottom:8px">📅</div>
+          <div style="font-size:13px;font-weight:700">Mark Attendance</div>
+          <div style="font-size:11.5px;color:var(--m);margin-top:4px">Today: not yet submitted</div>
+        </div>
+        <div class="card" style="margin-bottom:0;cursor:pointer;text-align:center;padding:18px 10px" onclick="goTab('expenses')">
+          <div style="font-size:28px;margin-bottom:8px">📸</div>
+          <div style="font-size:13px;font-weight:700">Add Expense</div>
+          <div style="font-size:11.5px;color:var(--m);margin-top:4px">Photo → auto-fill</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:10px">
+        <div class="card-head"><h3>Recent Activity</h3></div>
+        <div>
+          <div class="exp-item">
+            <div class="exp-icon" style="background:rgba(16,185,129,.12)">✅</div>
+            <div class="exp-details">
+              <div class="exp-desc">Attendance submitted</div>
+              <div class="exp-meta">Yesterday · 22 present, 2 absent</div>
+              <span class="exp-status status-approved">Recorded</span>
+            </div>
+          </div>
+          <div class="exp-item">
+            <div class="exp-icon" style="background:rgba(251,191,36,.12)">🧾</div>
+            <div class="exp-details">
+              <div class="exp-desc">Diesel — JCB Machine</div>
+              <div class="exp-meta">Yesterday · Added by you</div>
+              <span class="exp-status status-approved">Approved ₹2,800</span>
+            </div>
+          </div>
+          <div class="exp-item">
+            <div class="exp-icon" style="background:rgba(251,191,36,.12)">🧾</div>
+            <div class="exp-details">
+              <div class="exp-desc">Cement — 20 bags</div>
+              <div class="exp-meta">12 Jun · Added by you</div>
+              <span class="exp-status status-pending">Pending approval</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ATTENDANCE ─── -->
+  <div class="screen" id="screen-attendance">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--b);background:var(--surface)">
+      <div style="font-size:16px;font-weight:800;margin-bottom:4px">📅 Today's Attendance</div>
+      <div style="font-size:12px;color:var(--m)">14 June 2026 · Sector-5 Site</div>
+      <div style="display:flex;gap:16px;margin-top:10px;font-size:13px">
+        <span style="color:var(--em2)">✅ Present: <strong id="attP">22</strong></span>
+        <span style="color:var(--red)">❌ Absent: <strong id="attA">2</strong></span>
+        <span style="color:var(--m)">Total: <strong>24</strong></span>
+      </div>
+    </div>
+    <div style="padding:10px 12px;background:var(--s2);border-bottom:1px solid var(--b);display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" style="flex:1" onclick="markAllWorkers(true)">✅ All Present</button>
+      <button class="btn btn-ghost btn-sm" style="flex:1" onclick="markAllWorkers(false)">❌ All Absent</button>
+    </div>
+    <div class="worker-grid" id="workerGrid"></div>
+    <div style="padding:14px 16px;background:var(--bg);border-top:1px solid var(--b);position:sticky;bottom:0">
+      <button class="btn btn-primary" id="submitAttBtn" onclick="submitAttendance()">Submit Attendance to Head Office</button>
+      <div style="text-align:center;font-size:11.5px;color:var(--f);margin-top:8px">Once submitted, management can see it instantly</div>
+    </div>
+  </div>
+
+  <!-- ─── EXPENSES ─── -->
+  <div class="screen" id="screen-expenses">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--b);background:var(--surface)">
+      <div style="font-size:16px;font-weight:800">📸 Expenses</div>
+    </div>
+
+    <div class="section">
+      <div class="camera-zone" onclick="triggerCamera()">
+        <span class="ic">📷</span>
+        <p><strong>Take a photo of any receipt</strong></p>
+        <div class="hint">AI reads it and fills in the details for you</div>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="startOCR(this)">
+      </div>
+      <div style="text-align:center;font-size:12px;color:var(--f);margin-top:8px">or</div>
+      <button class="btn btn-ghost" style="margin-top:8px" onclick="showManualForm()">+ Add Expense Manually</button>
+    </div>
+
+    <div id="manualForm" style="display:none;padding:0 16px 16px">
+      <div class="card" style="margin-bottom:0;padding:16px">
+        <div class="field"><label>Category</label>
+          <select id="expCat">
+            <option>Materials</option><option>Diesel / Fuel</option><option>Labour Wages</option>
+            <option>Equipment Hire</option><option>Food / Canteen</option><option>Transport</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label>Description</label><input id="expDesc" placeholder="e.g. Cement 20 bags, Tata Steel"></div>
+        <div class="field"><label>Amount (₹)</label><input id="expAmt" type="number" placeholder="0"></div>
+        <div class="field"><label>Vendor / Supplier</label><input id="expVendor" placeholder="e.g. Sharma Building Supplies"></div>
+        <div class="field"><label>Notes</label><textarea id="expNote" placeholder="Optional notes…"></textarea></div>
+        <button class="btn btn-primary" onclick="submitExpense(false)">Submit for Approval</button>
+      </div>
+    </div>
+
+    <div class="section" style="padding-top:0">
+      <div style="font-size:12px;font-weight:700;color:var(--f);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Your Expenses</div>
+      <div class="card" style="margin-bottom:0">
+        <div id="expenseList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── APPROVALS ─── -->
+  <div class="screen" id="screen-approvals">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--b);background:var(--surface)">
+      <div style="font-size:16px;font-weight:800">🔔 Approvals Inbox</div>
+      <div style="font-size:12px;color:var(--m);margin-top:3px">Expenses from your team — approve or reject</div>
+    </div>
+    <div id="approvalList"></div>
+  </div>
+
+  <!-- ─── PROFILE ─── -->
+  <div class="screen" id="screen-profile">
+    <div class="profile-head">
+      <div class="profile-av">R</div>
+      <div class="profile-name">Rajesh Kumar</div>
+      <div class="profile-role">Site Manager</div>
+      <div class="profile-site">📍 Sector-5 Site, Guwahati · Munimo ConstructPro</div>
+    </div>
+    <div class="pref-row"><span class="lbl">Organisation</span><span class="val">Sunrise Builders Ltd.</span></div>
+    <div class="pref-row"><span class="lbl">Role</span><span class="val">Site Manager</span></div>
+    <div class="pref-row"><span class="lbl">Can submit attendance</span><span style="color:var(--em2);font-weight:700">✓ Yes</span></div>
+    <div class="pref-row"><span class="lbl">Can add expenses</span><span style="color:var(--em2);font-weight:700">✓ Yes</span></div>
+    <div class="pref-row"><span class="lbl">Can approve expenses</span><span style="color:var(--em2);font-weight:700">✓ Yes (up to ₹5,000)</span></div>
+    <div class="pref-row"><span class="lbl">Offline mode</span><span style="color:var(--em2);font-weight:700">✓ Enabled</span></div>
+    <div class="pref-row"><span class="lbl">App version</span><span class="val">1.0 Demo</span></div>
+    <div class="section">
+      <button class="btn btn-ghost" onclick="alert('In the full version, this opens the full ERP in your browser for head-office tasks.')">Open Full ERP Dashboard</button>
+      <div style="height:10px"></div>
+      <a href="../../index.html#quote" style="display:block">
+        <button class="btn btn-primary">Get Munimo Lite for Your Team →</button>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottomnav">
+  <div class="tab active" id="tab-home" onclick="goTab('home')"><span class="ti">🏠</span>Home</div>
+  <div class="tab" id="tab-attendance" onclick="goTab('attendance')"><span class="ti">📅</span>Attendance</div>
+  <div class="tab" id="tab-expenses" onclick="goTab('expenses')"><span class="ti">📸</span>Expenses</div>
+  <div class="tab" id="tab-approvals" onclick="goTab('approvals')">
+    <span class="ti" style="position:relative">🔔<span id="tabBadge" style="position:absolute;top:-4px;right:-8px;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:10px">3</span></span>
+    Approvals
+  </div>
+  <div class="tab" id="tab-profile" onclick="goTab('profile')"><span class="ti">👤</span>Profile</div>
+</nav>
+
+<!-- OCR OVERLAY -->
+<div class="ocr-overlay" id="ocrOverlay">
+  <div class="ocr-box">
+    <div class="title" id="ocrTitle">Analysing your receipt…</div>
+    <div class="sub" id="ocrSub">Reading vendor, amount and date</div>
+    <div class="progress-bar"><div class="progress-fill" id="ocrProgress"></div></div>
+    <div class="ocr-result" id="ocrResult">
+      <div style="font-size:13px;font-weight:700;color:var(--em3);margin-bottom:14px">✅ Receipt read successfully</div>
+      <div class="field"><label>Category</label>
+        <select id="ocrCat"><option>Materials</option><option selected>Diesel / Fuel</option><option>Equipment Hire</option><option>Other</option></select>
+      </div>
+      <div class="field"><label>Description</label><input id="ocrDesc" value="Diesel — JCB Excavator"></div>
+      <div class="field"><label>Amount (₹)</label><input id="ocrAmt" type="number" value="2850"></div>
+      <div class="field"><label>Vendor</label><input id="ocrVendor" value="HP Petrol Pump, Guwahati"></div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="closeOCR()">Cancel</button>
+        <button class="btn btn-primary btn-sm" style="flex:1" onclick="submitExpense(true)">Submit for Approval</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WORKERS = [
+  {id:1,name:"Ramesh Mondal",role:"Mason",present:true},
+  {id:2,name:"Suresh Yadav",role:"Labourer",present:true},
+  {id:3,name:"Bikash Dey",role:"Carpenter",present:true},
+  {id:4,name:"Arun Singh",role:"Labourer",present:false},
+  {id:5,name:"Prakash Nath",role:"Painter",present:true},
+  {id:6,name:"Dilip Bora",role:"Labourer",present:true},
+  {id:7,name:"Mithun Das",role:"Welder",present:true},
+  {id:8,name:"Rajan Kumar",role:"Labourer",present:true},
+  {id:9,name:"Sajal Roy",role:"Mason",present:true},
+  {id:10,name:"Tapan Goswami",role:"Supervisor",present:true},
+  {id:11,name:"Dinesh Patel",role:"Labourer",present:false},
+  {id:12,name:"Biren Hazarika",role:"Electrician",present:true},
+  {id:13,name:"Sanjay Gupta",role:"Labourer",present:true},
+  {id:14,name:"Ravi Sharma",role:"Mason",present:true},
+  {id:15,name:"Hemanta Kalita",role:"Labourer",present:true},
+  {id:16,name:"Nikhil Boruah",role:"Plumber",present:true},
+  {id:17,name:"Dipak Sarma",role:"Labourer",present:true},
+  {id:18,name:"Badal Boro",role:"Driver",present:true},
+  {id:19,name:"Pradeep Tanti",role:"Labourer",present:true},
+  {id:20,name:"Sunil Garg",role:"Accountant (Site)",present:true},
+  {id:21,name:"Krishn Kumar",role:"Labourer",present:true},
+  {id:22,name:"Manoj Singh",role:"Labourer",present:true},
+  {id:23,name:"Ashok Verma",role:"Labourer",present:true},
+  {id:24,name:"Rohan Das",role:"Labourer",present:true},
+];
+
+let expenses = [
+  {id:1,cat:"Materials",desc:"Cement — 20 bags (Ambuja 53 grade)",amount:4800,vendor:"Sharma Building Supplies",status:"pending",time:"12 Jun, 3:42 pm"},
+  {id:2,cat:"Diesel / Fuel",desc:"Diesel — JCB Machine",amount:2800,vendor:"HP Petrol Pump",status:"approved",time:"11 Jun, 11:15 am"},
+  {id:3,cat:"Equipment Hire",desc:"Crane hire — 4 hours",amount:6500,vendor:"Gupta Equipment Rentals",status:"approved",time:"10 Jun, 2:00 pm"},
+];
+
+let approvals = [
+  {id:10,from:"Manoj (Labour)",desc:"Food — Canteen June 12",amount:1200,time:"Today 9:30 am",status:"pending"},
+  {id:11,from:"Bikash Dey",desc:"Transport — Materials from depot",amount:850,time:"Today 8:45 am",status:"pending"},
+  {id:12,from:"Arun Singh",desc:"Safety equipment — helmets ×6",amount:2800,time:"Yesterday",status:"pending"},
+  {id:13,from:"Ramesh Mondal",desc:"Sand — 3 trolleys",amount:3600,time:"12 Jun",status:"approved"},
+  {id:14,from:"Suresh Yadav",desc:"Welding rods",amount:720,time:"12 Jun",status:"rejected"},
+];
+
+function goTab(t){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+t).classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+  if(t==='attendance') renderWorkers();
+  if(t==='expenses') renderExpenses();
+  if(t==='approvals') renderApprovals();
+}
+
+function initials(name){ return name.split(' ').map(w=>w[0]).join('').substring(0,2); }
+
+function renderWorkers(){
+  const p = WORKERS.filter(w=>w.present).length;
+  document.getElementById('attP').textContent = p;
+  document.getElementById('attA').textContent = WORKERS.length - p;
+  document.getElementById('workerGrid').innerHTML = WORKERS.map(w=>`
+    <div class="worker ${w.present?'present':'absent'}" id="w-${w.id}" onclick="toggleWorker(${w.id})">
+      <div class="worker-av">${initials(w.name)}</div>
+      <div class="worker-info">
+        <div class="worker-name">${w.name}</div>
+        <div class="worker-role">${w.role}</div>
+      </div>
+      <div class="worker-toggle">${w.present?'✅':'❌'}</div>
+    </div>`).join('');
+}
+
+function toggleWorker(id){
+  const w = WORKERS.find(x=>x.id===id);
+  w.present = !w.present;
+  const el = document.getElementById('w-'+id);
+  el.classList.toggle('present', w.present);
+  el.classList.toggle('absent', !w.present);
+  el.querySelector('.worker-toggle').textContent = w.present?'✅':'❌';
+  const p = WORKERS.filter(x=>x.present).length;
+  document.getElementById('attP').textContent = p;
+  document.getElementById('attA').textContent = WORKERS.length - p;
+  document.getElementById('homeAttPct').textContent = Math.round(p/WORKERS.length*100)+'%';
+  document.getElementById('homeAttSub').textContent = `${p} / ${WORKERS.length} present`;
+}
+
+function markAllWorkers(val){
+  WORKERS.forEach(w=>w.present=val);
+  renderWorkers();
+}
+
+function submitAttendance(){
+  const p = WORKERS.filter(w=>w.present).length;
+  showToast(`Attendance submitted — ${p} present, ${WORKERS.length-p} absent`);
+  document.getElementById('submitAttBtn').textContent = '✅ Submitted to Head Office';
+  document.getElementById('submitAttBtn').disabled = true;
+}
+
+function renderExpenses(){
+  const cats = {Materials:'🧱',Diesel:'⛽','Diesel / Fuel':'⛽','Equipment Hire':'🚜',Food:'🍱','Food / Canteen':'🍱',Transport:'🚛',Other:'📦',Labour:'👷'};
+  document.getElementById('expenseList').innerHTML = expenses.map(e=>`
+    <div class="exp-item">
+      <div class="exp-icon" style="background:rgba(251,191,36,.12)">${cats[e.cat]||'📋'}</div>
+      <div class="exp-details">
+        <div class="exp-desc">${e.desc}</div>
+        <div class="exp-meta">${e.vendor} · ${e.time}</div>
+        <span class="exp-status status-${e.status}">${e.status==='approved'?'✓ Approved':'⏳ Pending approval'}</span>
+      </div>
+      <div class="exp-amount">₹${e.amount.toLocaleString('en-IN')}</div>
+    </div>`).join('');
+}
+
+function renderApprovals(){
+  const pending = approvals.filter(a=>a.status==='pending');
+  document.getElementById('tabBadge').textContent = pending.length;
+  document.getElementById('notifDot').style.display = pending.length?'block':'none';
+  document.getElementById('approvalList').innerHTML = approvals.map(a=>`
+    <div class="appr-item" id="appr-${a.id}">
+      <div class="appr-header">
+        <div>
+          <div class="appr-title">${a.desc}</div>
+          <div class="appr-sub">From: ${a.from} · ${a.time}</div>
+        </div>
+        <div class="appr-amount">₹${a.amount.toLocaleString('en-IN')}</div>
+      </div>
+      ${a.status==='pending'?`
+      <div class="appr-actions">
+        <button class="btn btn-danger btn-sm" onclick="decide(${a.id}, false)">Reject</button>
+        <button class="btn btn-primary btn-sm" onclick="decide(${a.id}, true)">Approve</button>
+      </div>`:`<span class="exp-status status-${a.status}">${a.status==='approved'?'✓ Approved':'Rejected'}</span>`}
+    </div>`).join('');
+}
+
+function decide(id, approve){
+  const a = approvals.find(x=>x.id===id);
+  a.status = approve?'approved':'rejected';
+  renderApprovals();
+  showToast(approve?`✅ ₹${a.amount.toLocaleString('en-IN')} approved`:`❌ Expense rejected`);
+}
+
+function triggerCamera(){
+  document.getElementById('cameraInput').click();
+}
+
+function startOCR(input){
+  if(!input.files||!input.files[0]) return;
+  document.getElementById('ocrOverlay').style.display='flex';
+  document.getElementById('ocrResult').style.display='none';
+  document.getElementById('ocrTitle').textContent='Analysing your receipt…';
+  document.getElementById('ocrSub').textContent='Reading vendor, amount and date';
+  const fill = document.getElementById('ocrProgress');
+  fill.style.width='0';
+  let p = 0;
+  const iv = setInterval(()=>{
+    p += Math.random()*18 + 8;
+    if(p>92) p=92;
+    fill.style.width=p+'%';
+  },200);
+  setTimeout(()=>{
+    clearInterval(iv);
+    fill.style.width='100%';
+    document.getElementById('ocrTitle').textContent='Receipt read successfully ✅';
+    document.getElementById('ocrSub').textContent='Please review and confirm';
+    setTimeout(()=>{ document.getElementById('ocrResult').style.display='block'; },300);
+  }, 2400);
+}
+
+function closeOCR(){
+  document.getElementById('ocrOverlay').style.display='none';
+  document.getElementById('cameraInput').value='';
+}
+
+function showManualForm(){
+  const f = document.getElementById('manualForm');
+  f.style.display = f.style.display==='none'?'block':'none';
+}
+
+function submitExpense(fromOCR){
+  let exp;
+  if(fromOCR){
+    exp={id:Date.now(),cat:document.getElementById('ocrCat').value,desc:document.getElementById('ocrDesc').value,amount:+document.getElementById('ocrAmt').value||0,vendor:document.getElementById('ocrVendor').value,status:'pending',time:'Just now'};
+    closeOCR();
+  } else {
+    const desc=document.getElementById('expDesc').value.trim();
+    const amt=+document.getElementById('expAmt').value||0;
+    if(!desc||!amt){alert('Please enter description and amount.');return;}
+    exp={id:Date.now(),cat:document.getElementById('expCat').value,desc,amount:amt,vendor:document.getElementById('expVendor').value||'—',status:'pending',time:'Just now'};
+    document.getElementById('manualForm').style.display='none';
+  }
+  expenses.unshift(exp);
+  renderExpenses();
+  showToast(`₹${exp.amount.toLocaleString('en-IN')} expense submitted for approval`);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+renderWorkers();
+renderExpenses();
+renderApprovals();
+</script>
+</body>
+</html>

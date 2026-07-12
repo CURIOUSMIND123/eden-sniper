@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Munimo School ERP — Interactive Demo</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../../assets/munimo-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b0a;--bg2:#0a100e;--surface:#0f1714;--surface2:#15201c;--surface3:#1b2920;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --text:#f1f6f4;--muted:#93a39c;--faint:#5a6b64;
+  --em:#10b981;--em2:#34d399;--em3:#6ee7b7;
+  --gold:#fbbf24;--red:#f87171;--blue:#60a5fa;--violet:#a78bfa;
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+
+/* DEMO BANNER */
+.demo-bar{background:linear-gradient(90deg,rgba(16,185,129,.18),rgba(45,212,191,.12));border-bottom:1px solid rgba(16,185,129,.25);padding:8px 20px;font-size:12px;font-weight:600;color:var(--em3);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.demo-bar span{display:flex;align-items:center;gap:8px}
+.demo-bar a{background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.35);color:var(--em2);padding:5px 14px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.demo-bar a:hover{background:rgba(16,185,129,.3)}
+
+/* APP SHELL */
+.shell{flex:1;display:flex;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px}
+.sb-logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-school{padding:12px 16px;border-bottom:1px solid var(--border)}
+.sb-school .nm{font-weight:700;font-size:13px;color:var(--text)}
+.sb-school .info{font-size:11px;color:var(--muted);margin-top:3px}
+.sb-nav{flex:1;padding:10px 8px;overflow-y:auto}
+.sb-section{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:16px 8px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:2px}
+.sb-item:hover{background:var(--surface2);color:var(--text)}
+.sb-item.active{background:rgba(16,185,129,.12);color:var(--em2);font-weight:600}
+.sb-item .ic{font-size:15px;width:20px;text-align:center}
+.sb-item .badge{margin-left:auto;background:rgba(251,191,36,.2);color:var(--gold);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--faint);display:flex;align-items:center;gap:8px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--em2);flex-shrink:0}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.topbar{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg);flex-shrink:0;position:sticky;top:0;z-index:10}
+.topbar h1{font-size:17px;font-weight:800}
+.topbar .actions{display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#04110c}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(16,185,129,.35)}
+.btn-ghost{background:var(--surface);color:var(--muted);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}
+.btn-danger{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.25)}
+.btn-danger:hover{background:rgba(248,113,113,.25)}
+
+.content{padding:24px;flex:1}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.stat .lbl{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.stat .val{font-size:26px;font-weight:900;letter-spacing:-.02em}
+.stat .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.stat.em{border-color:rgba(16,185,129,.25)}
+.stat.em .val{color:var(--em2)}
+.stat.gold{border-color:rgba(251,191,36,.2)}
+.stat.gold .val{color:var(--gold)}
+.stat.blue{border-color:rgba(96,165,250,.2)}
+.stat.blue .val{color:var(--blue)}
+.stat.red{border-color:rgba(248,113,113,.2)}
+.stat.red .val{color:var(--red)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-head h3{font-size:14px;font-weight:700}
+.card-body{padding:0}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface2);text-transform:uppercase;letter-spacing:.05em}
+td{padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+
+/* STATUS PILLS */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:700}
+.pill-green{background:rgba(16,185,129,.15);color:var(--em2);border:1px solid rgba(16,185,129,.25)}
+.pill-red{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+.pill-gold{background:rgba(251,191,36,.12);color:var(--gold);border:1px solid rgba(251,191,36,.2)}
+.pill-blue{background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.2)}
+.pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* SEARCH BAR */
+.search-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.search-bar input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:7px 12px;color:var(--text);font-size:13px;outline:none}
+.search-bar input::placeholder{color:var(--faint)}
+.search-bar input:focus{border-color:var(--em)}
+.search-bar select{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:7px 12px;color:var(--text);font-size:13px;outline:none;cursor:pointer}
+
+/* ATTENDANCE GRID */
+.att-grid{padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.att-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;user-select:none}
+.att-card:hover{border-color:var(--border2)}
+.att-card.present{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.06)}
+.att-card.absent{border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.06)}
+.att-card .roll{font-size:11px;color:var(--faint);font-weight:600;margin-bottom:3px}
+.att-card .name{font-size:13px;font-weight:600;color:var(--text)}
+.att-card .status{margin-left:auto;font-size:18px}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,.7)}
+.modal h2{font-size:17px;font-weight:800;margin-bottom:20px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:12px;font-weight:600;color:var(--muted)}
+.field input,.field select{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13.5px;outline:none}
+.field input:focus,.field select:focus{border-color:var(--em)}
+.modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* RECEIPT */
+.receipt{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:18px;margin-top:16px;font-size:13px}
+.receipt .r-head{text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--border2)}
+.receipt .r-head h4{font-size:16px;font-weight:900;color:var(--em2)}
+.receipt .r-head p{color:var(--muted);font-size:12px;margin-top:4px}
+.receipt .r-row{display:flex;justify-content:space-between;margin-bottom:8px}
+.receipt .r-row.total{border-top:1px solid var(--border2);padding-top:10px;margin-top:6px;font-weight:700;font-size:14px}
+.receipt .r-row.total .val{color:var(--em2)}
+
+/* DASHBOARD RECENT */
+.activity-list{padding:4px 0}
+.act-item{display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border)}
+.act-item:last-child{border-bottom:none}
+.act-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.act-text{flex:1}
+.act-text .t{font-size:13px;font-weight:500;color:var(--text)}
+.act-text .s{font-size:12px;color:var(--faint);margin-top:2px}
+.act-time{font-size:11.5px;color:var(--faint);white-space:nowrap}
+
+/* SCREEN TRANSITIONS */
+.screen{display:none}
+.screen.active{display:flex;flex-direction:column;min-height:100%}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 24px;color:var(--faint)}
+.empty .ic{font-size:40px;margin-bottom:14px}
+.empty p{font-size:15px;color:var(--muted)}
+
+@media(max-width:900px){
+  .sidebar{width:56px}
+  .sb-logo span,.sb-school,.sb-item span:not(.ic),.sb-foot span{display:none}
+  .sb-logo{justify-content:center;padding:14px 8px}
+  .sb-item{justify-content:center;padding:10px}
+  .sb-foot{justify-content:center;padding:12px}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- DEMO BANNER -->
+<div class="demo-bar">
+  <span>🎓 <strong>Munimo School ERP</strong> — Interactive Demo &nbsp;·&nbsp; Sample data pre-loaded &nbsp;·&nbsp; All changes are local to this session</span>
+  <a href="../../index.html#quote">Get Full Access →</a>
+</div>
+
+<!-- APP SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">
+        <svg width="17" height="17" viewBox="0 0 40 40" fill="none"><path d="M6 28 L6 12 L20 22 L34 12 L34 28" stroke="#022c1a" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span>Munimo School</span>
+    </div>
+    <div class="sb-school">
+      <div class="nm">Sunrise Academy</div>
+      <div class="info">Guwahati, Assam · Est. 2003</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Main</div>
+      <div class="sb-item active" data-screen="dashboard" onclick="nav(this)">
+        <span class="ic">📊</span><span>Dashboard</span>
+      </div>
+      <div class="sb-item" data-screen="students" onclick="nav(this)">
+        <span class="ic">🎓</span><span>Students</span>
+      </div>
+      <div class="sb-item" data-screen="fees" onclick="nav(this)">
+        <span class="ic">💳</span><span>Fee Collection</span>
+        <span class="badge" id="pendingBadge">4</span>
+      </div>
+      <div class="sb-item" data-screen="attendance" onclick="nav(this)">
+        <span class="ic">📅</span><span>Attendance</span>
+      </div>
+      <div class="sb-section">Management</div>
+      <div class="sb-item" data-screen="staff" onclick="nav(this)">
+        <span class="ic">👩‍🏫</span><span>Staff &amp; Payroll</span>
+      </div>
+      <div class="sb-item" data-screen="reports" onclick="nav(this)">
+        <span class="ic">📈</span><span>Reports</span>
+      </div>
+      <div class="sb-item" data-screen="settings" onclick="nav(this)">
+        <span class="ic">⚙️</span><span>Settings</span>
+      </div>
+    </nav>
+    <div class="sb-foot">
+      <div class="avatar">A</div>
+      <span>Admin</span>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ─── DASHBOARD ─── -->
+    <div class="screen active" id="screen-dashboard">
+      <div class="topbar">
+        <h1>📊 Dashboard</h1>
+        <div style="font-size:12px;color:var(--faint)">Saturday, 14 June 2026</div>
+      </div>
+      <div class="content">
+        <div class="stat-row">
+          <div class="stat em">
+            <div class="lbl">Total Students</div>
+            <div class="val" id="stat-students">247</div>
+            <div class="sub">Across 8 classes</div>
+          </div>
+          <div class="stat gold">
+            <div class="lbl">Fees Collected</div>
+            <div class="val" id="stat-collected">₹2,06,500</div>
+            <div class="sub">April–June term</div>
+          </div>
+          <div class="stat red">
+            <div class="lbl">Fees Pending</div>
+            <div class="val" id="stat-pending">₹28,000</div>
+            <div class="sub"><span id="stat-pending-count">4</span> students</div>
+          </div>
+          <div class="stat blue">
+            <div class="lbl">Today's Attendance</div>
+            <div class="val" id="stat-att">94%</div>
+            <div class="sub" id="stat-att-sub">Present: 14 / 15</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-head"><h3>Recent Fee Payments</h3></div>
+            <div class="activity-list" id="recentFees"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Recent Activity</h3></div>
+            <div class="activity-list">
+              <div class="act-item"><div class="act-icon" style="background:rgba(16,185,129,.12);color:var(--em2)">📅</div><div class="act-text"><div class="t">Attendance marked — Class VIII-A</div><div class="s">14 present, 1 absent</div></div><div class="act-time">Today 9:15 am</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(96,165,250,.12);color:var(--blue)">🎓</div><div class="act-text"><div class="t">New student admitted</div><div class="s">Arjun Dey — Class VII-B</div></div><div class="act-time">Yesterday</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(251,191,36,.12);color:var(--gold)">💳</div><div class="act-text"><div class="t">Fee received — ₹8,500</div><div class="s">Priya Sharma, Class VIII-A</div></div><div class="act-time">Yesterday</div></div>
+              <div class="act-item"><div class="act-icon" style="background:rgba(167,139,250,.12);color:var(--violet)">📑</div><div class="act-text"><div class="t">Timetable updated — Class IX</div><div class="s">Admin</div></div><div class="act-time">12 Jun</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:0">
+          <div class="card-head">
+            <h3>Class-wise Snapshot</h3>
+            <span style="font-size:12px;color:var(--faint)">April–June 2026 Term</span>
+          </div>
+          <table>
+            <thead><tr><th>Class</th><th>Students</th><th>Fees Collected</th><th>Pending</th><th>Attendance Today</th></tr></thead>
+            <tbody>
+              <tr><td>Class VI</td><td>28</td><td><span style="color:var(--em2);font-weight:600">₹2,38,000</span></td><td>₹0</td><td><span class="pill pill-green">100%</span></td></tr>
+              <tr><td>Class VII</td><td>32</td><td><span style="color:var(--em2);font-weight:600">₹2,72,000</span></td><td>₹8,500</td><td><span class="pill pill-green">97%</span></td></tr>
+              <tr><td>Class VIII-A</td><td>15</td><td><span style="color:var(--em2);font-weight:600">₹1,06,250</span></td><td>₹19,500</td><td><span class="pill pill-gold">93%</span></td></tr>
+              <tr><td>Class VIII-B</td><td>30</td><td><span style="color:var(--em2);font-weight:600">₹2,55,000</span></td><td>₹0</td><td><span class="pill pill-green">100%</span></td></tr>
+              <tr><td>Class IX</td><td>34</td><td><span style="color:var(--em2);font-weight:600">₹3,23,000</span></td><td>₹0</td><td><span class="pill pill-green">97%</span></td></tr>
+              <tr><td>Class X</td><td>38</td><td><span style="color:var(--em2);font-weight:600">₹3,80,000</span></td><td>₹0</td><td><span class="pill pill-green">95%</span></td></tr>
+              <tr><td>Class XI-Science</td><td>36</td><td><span style="color:var(--em2);font-weight:600">₹3,96,000</span></td><td>₹0</td><td><span class="pill pill-green">92%</span></td></tr>
+              <tr><td>Class XII-Science</td><td>34</td><td><span style="color:var(--em2);font-weight:600">₹3,57,000</span></td><td>₹0</td><td><span class="pill pill-green">97%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STUDENTS ─── -->
+    <div class="screen" id="screen-students">
+      <div class="topbar">
+        <h1>🎓 Students</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openAddStudent()">+ Add Student</button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input id="studentSearch" type="text" placeholder="Search by name or roll number…" oninput="renderStudents()">
+        <select id="classFilter" onchange="renderStudents()">
+          <option value="">All Classes</option>
+          <option>Class VI</option>
+          <option>Class VII</option>
+          <option>Class VIII-A</option>
+          <option>Class VIII-B</option>
+          <option>Class IX</option>
+          <option>Class X</option>
+          <option>Class XI-Science</option>
+          <option>Class XII-Science</option>
+        </select>
+        <select id="feeFilter" onchange="renderStudents()">
+          <option value="">All Fee Status</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="card" style="margin:16px;border-radius:var(--r)">
+        <table>
+          <thead><tr><th>Roll</th><th>Student Name</th><th>Class</th><th>Guardian</th><th>Phone</th><th>Fee Status</th><th></th></tr></thead>
+          <tbody id="studentTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── FEE COLLECTION ─── -->
+    <div class="screen" id="screen-fees">
+      <div class="topbar">
+        <h1>💳 Fee Collection</h1>
+        <div style="font-size:12px;color:var(--muted)">Term: April – June 2026 &nbsp;·&nbsp; Fee: ₹8,500 per student</div>
+      </div>
+      <div class="search-bar">
+        <input id="feeSearch" type="text" placeholder="Search student…" oninput="renderFees()">
+        <select id="feeClassFilter" onchange="renderFees()">
+          <option value="">All Classes</option>
+          <option>Class VI</option><option>Class VII</option><option>Class VIII-A</option>
+          <option>Class VIII-B</option><option>Class IX</option><option>Class X</option>
+          <option>Class XI-Science</option><option>Class XII-Science</option>
+        </select>
+        <select id="feeStatusFilter" onchange="renderFees()">
+          <option value="">All Status</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="card" style="margin:16px">
+        <table>
+          <thead><tr><th>Roll</th><th>Student</th><th>Class</th><th>Fee Amount</th><th>Status</th><th>Date Paid</th><th></th></tr></thead>
+          <tbody id="feeTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── ATTENDANCE ─── -->
+    <div class="screen" id="screen-attendance">
+      <div class="topbar">
+        <h1>📅 Attendance</h1>
+        <div class="actions">
+          <select id="attClass" onchange="renderAttendance()" style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:7px 12px;color:var(--text);font-size:13px">
+            <option>Class VIII-A</option><option>Class VI</option><option>Class VII</option>
+            <option>Class VIII-B</option><option>Class IX</option><option>Class X</option>
+          </select>
+          <button class="btn btn-ghost" onclick="markAll(true)">✓ All Present</button>
+          <button class="btn btn-primary" onclick="submitAttendance()">Submit Attendance</button>
+        </div>
+      </div>
+      <div style="padding:14px 20px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:24px;font-size:13px">
+        <span>Date: <strong>14 June 2026</strong></span>
+        <span>Total: <strong id="attTotal">15</strong></span>
+        <span style="color:var(--em2)">Present: <strong id="attPresent">14</strong></span>
+        <span style="color:var(--red)">Absent: <strong id="attAbsent">1</strong></span>
+        <span style="color:var(--muted);font-size:12px">Click a student card to toggle present / absent</span>
+      </div>
+      <div class="att-grid" id="attGrid"></div>
+    </div>
+
+    <!-- ─── STAFF ─── -->
+    <div class="screen" id="screen-staff">
+      <div class="topbar"><h1>👩‍🏫 Staff &amp; Payroll</h1></div>
+      <div class="content">
+        <div class="stat-row">
+          <div class="stat em"><div class="lbl">Total Staff</div><div class="val">18</div><div class="sub">Teaching + Non-teaching</div></div>
+          <div class="stat gold"><div class="lbl">Monthly Payroll</div><div class="val">₹4,82,000</div><div class="sub">June 2026</div></div>
+          <div class="stat blue"><div class="lbl">Paid This Month</div><div class="val">18</div><div class="sub">All processed</div></div>
+          <div class="stat"><div class="lbl">On Leave Today</div><div class="val">2</div><div class="sub">Approved</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Staff List</h3><button class="btn btn-primary btn-sm">+ Add Staff</button></div>
+          <table>
+            <thead><tr><th>Name</th><th>Designation</th><th>Subject</th><th>Monthly Salary</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Mrs. Anita Borah</td><td>Senior Teacher</td><td>Mathematics</td><td>₹42,000</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr><td>Mr. Rakesh Dey</td><td>Teacher</td><td>Science</td><td>₹38,000</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr><td>Mrs. Sunita Choudhury</td><td>Teacher</td><td>English</td><td>₹36,000</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr><td>Mr. Dipak Hazarika</td><td>Teacher</td><td>Social Science</td><td>₹34,000</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr><td>Mrs. Rima Saikia</td><td>Teacher</td><td>Hindi</td><td>₹32,000</td><td><span class="pill pill-green">Active</span></td></tr>
+              <tr><td>Mr. Nirjal Das</td><td>Lab Assistant</td><td>Science</td><td>₹22,000</td><td><span class="pill pill-gold">On Leave</span></td></tr>
+              <tr><td>Mrs. Poonam Gupta</td><td>Teacher</td><td>Class VI Homeroom</td><td>₹30,000</td><td><span class="pill pill-green">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── REPORTS ─── -->
+    <div class="screen" id="screen-reports">
+      <div class="topbar"><h1>📈 Reports</h1></div>
+      <div class="content">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+          <div class="card" style="margin-bottom:0;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(16,185,129,.4)'" onmouseout="this.style.borderColor=''">
+            <div style="padding:22px;text-align:center">
+              <div style="font-size:28px;margin-bottom:10px">💳</div>
+              <h3 style="font-size:14px;margin-bottom:6px">Fee Collection Report</h3>
+              <p style="font-size:12px;color:var(--muted)">Term-wise, class-wise and student-wise</p>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="alert('Report generated — in the full version, this downloads as PDF or Excel.')">Generate Report</button>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:0;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(16,185,129,.4)'" onmouseout="this.style.borderColor=''">
+            <div style="padding:22px;text-align:center">
+              <div style="font-size:28px;margin-bottom:10px">📅</div>
+              <h3 style="font-size:14px;margin-bottom:6px">Attendance Report</h3>
+              <p style="font-size:12px;color:var(--muted)">Monthly, class-wise and student-wise</p>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="alert('Report generated — in the full version, this downloads as PDF or Excel.')">Generate Report</button>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:0;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(16,185,129,.4)'" onmouseout="this.style.borderColor=''">
+            <div style="padding:22px;text-align:center">
+              <div style="font-size:28px;margin-bottom:10px">👩‍🏫</div>
+              <h3 style="font-size:14px;margin-bottom:6px">Staff Payroll Report</h3>
+              <p style="font-size:12px;color:var(--muted)">Monthly salary sheets and payslips</p>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="alert('Report generated — in the full version, this downloads as PDF or Excel.')">Generate Report</button>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:0;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(16,185,129,.4)'" onmouseout="this.style.borderColor=''">
+            <div style="padding:22px;text-align:center">
+              <div style="font-size:28px;margin-bottom:10px">📋</div>
+              <h3 style="font-size:14px;margin-bottom:6px">Defaulter List</h3>
+              <p style="font-size:12px;color:var(--muted)">Students with pending fees for follow-up</p>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="showDefaulters()">View Defaulters</button>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:0;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(16,185,129,.4)'" onmouseout="this.style.borderColor=''">
+            <div style="padding:22px;text-align:center">
+              <div style="font-size:28px;margin-bottom:10px">📊</div>
+              <h3 style="font-size:14px;margin-bottom:6px">Term Summary</h3>
+              <p style="font-size:12px;color:var(--muted)">Complete term snapshot for management</p>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="alert('Term summary generated — in the full version, this prints or exports to Excel.')">Generate</button>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:0;cursor:pointer;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(16,185,129,.4)'" onmouseout="this.style.borderColor=''">
+            <div style="padding:22px;text-align:center">
+              <div style="font-size:28px;margin-bottom:10px">💬</div>
+              <h3 style="font-size:14px;margin-bottom:6px">Parent Notices</h3>
+              <p style="font-size:12px;color:var(--muted)">SMS / WhatsApp fee reminders and notices</p>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="alert('In the full version, this sends WhatsApp or SMS reminders to all parents with pending fees.')">Send Reminders</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SETTINGS ─── -->
+    <div class="screen" id="screen-settings">
+      <div class="topbar"><h1>⚙️ Settings</h1></div>
+      <div class="content" style="max-width:620px">
+        <div class="card">
+          <div class="card-head"><h3>School Information</h3></div>
+          <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+            <div class="field"><label>School Name</label><input value="Sunrise Academy"></div>
+            <div class="field"><label>Affiliation Board</label><select><option>CBSE</option><option>ICSE</option><option>State Board</option><option selected>SEBA (Assam)</option></select></div>
+            <div class="field"><label>Affiliation Number</label><input value="AS-2003-0847"></div>
+            <div class="field"><label>Address</label><input value="Ganeshguri, Guwahati, Assam — 781006"></div>
+            <div class="field"><label>Phone</label><input value="+91 98765 00100"></div>
+            <div class="field"><label>Email</label><input value="admin@sunriseacademy.edu.in"></div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content" onclick="alert('Settings saved.')">Save Settings</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-head"><h3>Current Term</h3></div>
+          <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+            <div class="field"><label>Term Name</label><input value="April – June 2026"></div>
+            <div class="field"><label>Fee per Student</label><input value="₹8,500"></div>
+            <div class="field"><label>Late Fee (per month)</label><input value="₹200"></div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content" onclick="alert('Term settings saved.')">Save</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-head"><h3>Data</h3></div>
+          <div style="padding:18px;display:flex;gap:10px">
+            <button class="btn btn-ghost btn-sm" onclick="alert('In the full version, this downloads all your data as a ZIP file — students, fees, attendance.')">Export All Data</button>
+            <button class="btn btn-ghost btn-sm" onclick="alert('In the full version, this imports students from an Excel file.')">Import from Excel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODALS -->
+<div class="modal-bg" id="feeModal" style="display:none">
+  <div class="modal">
+    <h2>Record Fee Payment</h2>
+    <div id="feeModalContent"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('feeModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmFee()">Confirm &amp; Print Receipt</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="addStudentModal" style="display:none">
+  <div class="modal">
+    <h2>Add New Student</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="field"><label>Full Name</label><input id="ns-name" placeholder="Student's full name"></div>
+      <div class="field"><label>Class</label><select id="ns-class"><option>Class VI</option><option>Class VII</option><option selected>Class VIII-A</option><option>Class VIII-B</option><option>Class IX</option><option>Class X</option><option>Class XI-Science</option><option>Class XII-Science</option></select></div>
+      <div class="field"><label>Roll Number</label><input id="ns-roll" type="number" placeholder="e.g. 16"></div>
+      <div class="field"><label>Date of Birth</label><input id="ns-dob" type="date"></div>
+      <div class="field"><label>Guardian Name</label><input id="ns-guardian" placeholder="Father/Mother name"></div>
+      <div class="field"><label>Guardian Phone</label><input id="ns-phone" type="tel" placeholder="+91 98765 00000"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('addStudentModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addStudent()">Add Student</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="receiptModal" style="display:none">
+  <div class="modal">
+    <h2>Fee Receipt</h2>
+    <div id="receiptContent"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('receiptModal')">Close</button>
+      <button class="btn btn-primary" onclick="alert('In the full version, this prints the receipt on your school letterhead.')">🖨 Print Receipt</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="defaulterModal" style="display:none">
+  <div class="modal" style="max-width:540px">
+    <h2>Fee Defaulters — April–June 2026</h2>
+    <div id="defaulterList"></div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="closeModal('defaulterModal');alert('In the full version, this sends WhatsApp reminders to all 4 parents instantly.')">📱 Send WhatsApp Reminders</button><button class="btn btn-ghost" onclick="closeModal('defaulterModal')">Close</button></div>
+  </div>
+</div>
+
+<script>
+const STUDENTS = [
+  {id:1,name:"Priya Sharma",cls:"Class VIII-A",roll:1,guardian:"Rajesh Sharma",phone:"+91 98765 43210",fee:"paid",datePaid:"3 Apr 2026"},
+  {id:2,name:"Aryan Boruah",cls:"Class VIII-A",roll:2,guardian:"Manoj Boruah",phone:"+91 94352 11200",fee:"paid",datePaid:"4 Apr 2026"},
+  {id:3,name:"Sneha Das",cls:"Class VIII-A",roll:3,guardian:"Sunil Das",phone:"+91 99541 78900",fee:"pending",datePaid:""},
+  {id:4,name:"Rahul Choudhury",cls:"Class VIII-A",roll:4,guardian:"Anil Choudhury",phone:"+91 86374 52100",fee:"paid",datePaid:"5 Apr 2026"},
+  {id:5,name:"Anjali Borah",cls:"Class VIII-A",roll:5,guardian:"Dipak Borah",phone:"+91 97060 33900",fee:"paid",datePaid:"6 Apr 2026"},
+  {id:6,name:"Rohan Saikia",cls:"Class VIII-A",roll:6,guardian:"Jiten Saikia",phone:"+91 88225 99100",fee:"paid",datePaid:"7 Apr 2026"},
+  {id:7,name:"Pallavi Dey",cls:"Class VIII-A",roll:7,guardian:"Satya Dey",phone:"+91 94012 44500",fee:"paid",datePaid:"7 Apr 2026"},
+  {id:8,name:"Bishal Nath",cls:"Class VIII-A",roll:8,guardian:"Suren Nath",phone:"+91 70990 11200",fee:"paid",datePaid:"8 Apr 2026"},
+  {id:9,name:"Asha Gogoi",cls:"Class VIII-A",roll:9,guardian:"Tarun Gogoi",phone:"+91 90855 77300",fee:"paid",datePaid:"9 Apr 2026"},
+  {id:10,name:"Deepak Boro",cls:"Class VIII-A",roll:10,guardian:"Hemanta Boro",phone:"+91 98641 22100",fee:"pending",datePaid:""},
+  {id:11,name:"Nisha Kalita",cls:"Class VIII-A",roll:11,guardian:"Pranab Kalita",phone:"+91 86012 55500",fee:"paid",datePaid:"10 Apr 2026"},
+  {id:12,name:"Arun Phukan",cls:"Class VIII-A",roll:12,guardian:"Mridul Phukan",phone:"+91 92072 88800",fee:"paid",datePaid:"11 Apr 2026"},
+  {id:13,name:"Riya Bezbaruah",cls:"Class VIII-A",roll:13,guardian:"Nipen Bezbaruah",phone:"+91 63541 11200",fee:"paid",datePaid:"12 Apr 2026"},
+  {id:14,name:"Saurav Medhi",cls:"Class VIII-A",roll:14,guardian:"Tapan Medhi",phone:"+91 97060 44400",fee:"pending",datePaid:""},
+  {id:15,name:"Arjun Dey",cls:"Class VIII-A",roll:15,guardian:"Suresh Dey",phone:"+91 88760 22100",fee:"pending",datePaid:""},
+
+  {id:20,name:"Reema Singh",cls:"Class VII",roll:1,guardian:"Amar Singh",phone:"+91 94352 77800",fee:"paid",datePaid:"2 Apr 2026"},
+  {id:21,name:"Kunal Tiwari",cls:"Class VII",roll:2,guardian:"Ramesh Tiwari",phone:"+91 99541 33200",fee:"paid",datePaid:"3 Apr 2026"},
+  {id:22,name:"Simran Kaur",cls:"Class VII",roll:3,guardian:"Harbhajan Singh",phone:"+91 86374 66700",fee:"paid",datePaid:"4 Apr 2026"},
+
+  {id:30,name:"Abhinav Das",cls:"Class IX",roll:1,guardian:"Pranab Das",phone:"+91 97060 55500",fee:"paid",datePaid:"1 Apr 2026"},
+  {id:31,name:"Priti Sarma",cls:"Class IX",roll:2,guardian:"Biren Sarma",phone:"+91 88225 44400",fee:"paid",datePaid:"2 Apr 2026"},
+
+  {id:40,name:"Ramesh Sharma",cls:"Class X",roll:1,guardian:"Vijay Sharma",phone:"+91 94012 33300",fee:"paid",datePaid:"1 Apr 2026"},
+  {id:41,name:"Kavita Nair",cls:"Class X",roll:2,guardian:"Suresh Nair",phone:"+91 70990 88800",fee:"paid",datePaid:"2 Apr 2026"},
+];
+
+let attendance = {};
+STUDENTS.filter(s=>s.cls==="Class VIII-A").forEach(s=>{ attendance[s.id] = s.id!==3; });
+
+let pendingPayee = null;
+
+function nav(el){
+  document.querySelectorAll('.sb-item').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  const sc = el.dataset.screen;
+  document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));
+  document.getElementById('screen-'+sc).classList.add('active');
+  if(sc==='students') renderStudents();
+  if(sc==='fees') renderFees();
+  if(sc==='attendance') renderAttendance();
+}
+
+function renderStudents(){
+  const q = document.getElementById('studentSearch').value.toLowerCase();
+  const cls = document.getElementById('classFilter').value;
+  const fs = document.getElementById('feeFilter').value;
+  const filtered = STUDENTS.filter(s=>{
+    if(q && !s.name.toLowerCase().includes(q) && !String(s.roll).includes(q)) return false;
+    if(cls && s.cls!==cls) return false;
+    if(fs && s.fee!==fs) return false;
+    return true;
+  });
+  const tb = document.getElementById('studentTable');
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--faint)">No students found</td></tr>';return;}
+  tb.innerHTML = filtered.map(s=>`
+    <tr>
+      <td style="color:var(--muted)">${s.roll}</td>
+      <td style="font-weight:600">${s.name}</td>
+      <td>${s.cls}</td>
+      <td style="color:var(--muted)">${s.guardian}</td>
+      <td style="color:var(--muted)">${s.phone}</td>
+      <td><span class="pill ${s.fee==='paid'?'pill-green':'pill-red'}">${s.fee==='paid'?'Paid':'Pending'}</span></td>
+      <td><button class="btn btn-ghost btn-sm" onclick='viewStudent(${s.id})'>View</button></td>
+    </tr>`).join('');
+}
+
+function viewStudent(id){
+  const s = STUDENTS.find(x=>x.id===id);
+  alert(`Student: ${s.name}\nClass: ${s.cls} · Roll: ${s.roll}\nGuardian: ${s.guardian}\nPhone: ${s.phone}\nFee: ${s.fee==='paid'?'Paid on '+s.datePaid:'Pending — ₹8,500 due'}`);
+}
+
+function renderFees(){
+  const q = document.getElementById('feeSearch').value.toLowerCase();
+  const cls = document.getElementById('feeClassFilter').value;
+  const fs = document.getElementById('feeStatusFilter').value;
+  const filtered = STUDENTS.filter(s=>{
+    if(q && !s.name.toLowerCase().includes(q)) return false;
+    if(cls && s.cls!==cls) return false;
+    if(fs && s.fee!==fs) return false;
+    return true;
+  });
+  document.getElementById('feeTable').innerHTML = filtered.map(s=>`
+    <tr>
+      <td style="color:var(--muted)">${s.roll}</td>
+      <td style="font-weight:600">${s.name}</td>
+      <td>${s.cls}</td>
+      <td>₹8,500</td>
+      <td><span class="pill ${s.fee==='paid'?'pill-green':'pill-red'}">${s.fee==='paid'?'Paid':'Pending'}</span></td>
+      <td style="color:var(--muted)">${s.datePaid||'—'}</td>
+      <td>${s.fee==='pending'?`<button class="btn btn-primary btn-sm" onclick="openFeeModal(${s.id})">Receive Fee</button>`:`<button class="btn btn-ghost btn-sm" onclick="showReceipt(${s.id})">Receipt</button>`}</td>
+    </tr>`).join('');
+}
+
+function openFeeModal(id){
+  pendingPayee = id;
+  const s = STUDENTS.find(x=>x.id===id);
+  document.getElementById('feeModalContent').innerHTML = `
+    <div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:16px">
+      <div style="font-weight:700;font-size:15px;margin-bottom:4px">${s.name}</div>
+      <div style="color:var(--muted);font-size:13px">${s.cls} · Roll ${s.roll} · Guardian: ${s.guardian}</div>
+    </div>
+    <div class="field"><label>Fee Amount</label><input value="₹8,500" readonly style="color:var(--em2);font-weight:700"></div>
+    <div class="field"><label>Payment Mode</label>
+      <select><option>Cash</option><option>UPI / PhonePe</option><option>Bank Transfer</option><option>Cheque</option></select>
+    </div>
+    <div class="field"><label>Date</label><input type="date" value="2026-06-14"></div>
+    <div class="field"><label>Remarks (optional)</label><input placeholder="e.g. Late fee included"></div>`;
+  document.getElementById('feeModal').style.display='flex';
+}
+
+function confirmFee(){
+  if(!pendingPayee) return;
+  const s = STUDENTS.find(x=>x.id===pendingPayee);
+  s.fee = 'paid';
+  s.datePaid = '14 Jun 2026';
+  closeModal('feeModal');
+  updateStats();
+  renderFees();
+  showReceipt(pendingPayee);
+  pendingPayee = null;
+}
+
+function showReceipt(id){
+  const s = STUDENTS.find(x=>x.id===id);
+  document.getElementById('receiptContent').innerHTML = `
+    <div class="receipt">
+      <div class="r-head">
+        <h4>Sunrise Academy</h4>
+        <p>Ganeshguri, Guwahati, Assam · +91 98765 00100</p>
+        <p style="margin-top:6px;font-size:11px;color:var(--faint)">FEE RECEIPT · Receipt No: SR-2026-${String(id).padStart(4,'0')}</p>
+      </div>
+      <div class="r-row"><span style="color:var(--muted)">Student</span><span style="font-weight:600">${s.name}</span></div>
+      <div class="r-row"><span style="color:var(--muted)">Class</span><span>${s.cls} · Roll ${s.roll}</span></div>
+      <div class="r-row"><span style="color:var(--muted)">Term</span><span>April – June 2026</span></div>
+      <div class="r-row"><span style="color:var(--muted)">Date</span><span>${s.datePaid}</span></div>
+      <div class="r-row"><span style="color:var(--muted)">Tuition Fee</span><span>₹8,000</span></div>
+      <div class="r-row"><span style="color:var(--muted)">Activities &amp; Sports</span><span>₹500</span></div>
+      <div class="r-row total"><span>Total Received</span><span class="val">₹8,500</span></div>
+    </div>`;
+  document.getElementById('receiptModal').style.display='flex';
+}
+
+function renderAttendance(){
+  const cls = document.getElementById('attClass').value;
+  const students = STUDENTS.filter(s=>s.cls===cls);
+  if(!students.length){
+    document.getElementById('attGrid').innerHTML = '<div class="empty"><div class="ic">📅</div><p>No students in this class</p></div>';
+    return;
+  }
+  students.forEach(s=>{ if(attendance[s.id]===undefined) attendance[s.id]=true; });
+  document.getElementById('attGrid').innerHTML = students.map(s=>`
+    <div class="att-card ${attendance[s.id]?'present':'absent'}" id="att-${s.id}" onclick="toggleAtt(${s.id})">
+      <div style="flex:1">
+        <div class="roll">Roll ${s.roll}</div>
+        <div class="name">${s.name}</div>
+      </div>
+      <div class="status">${attendance[s.id]?'✅':'❌'}</div>
+    </div>`).join('');
+  updateAttCounts(students);
+}
+
+function toggleAtt(id){
+  attendance[id] = !attendance[id];
+  const card = document.getElementById('att-'+id);
+  card.classList.toggle('present', attendance[id]);
+  card.classList.toggle('absent', !attendance[id]);
+  card.querySelector('.status').textContent = attendance[id]?'✅':'❌';
+  const cls = document.getElementById('attClass').value;
+  updateAttCounts(STUDENTS.filter(s=>s.cls===cls));
+}
+
+function markAll(val){
+  const cls = document.getElementById('attClass').value;
+  STUDENTS.filter(s=>s.cls===cls).forEach(s=>{ attendance[s.id]=val; });
+  renderAttendance();
+}
+
+function updateAttCounts(students){
+  const p = students.filter(s=>attendance[s.id]).length;
+  const tot = students.length;
+  document.getElementById('attTotal').textContent = tot;
+  document.getElementById('attPresent').textContent = p;
+  document.getElementById('attAbsent').textContent = tot-p;
+}
+
+function submitAttendance(){
+  const cls = document.getElementById('attClass').value;
+  const students = STUDENTS.filter(s=>s.cls===cls);
+  const p = students.filter(s=>attendance[s.id]).length;
+  alert(`Attendance submitted for ${cls}\n\nPresent: ${p}\nAbsent: ${students.length-p}\n\nIn the full version, this is saved to the server and visible to management instantly.`);
+}
+
+function updateStats(){
+  const pending = STUDENTS.filter(s=>s.fee==='pending');
+  document.getElementById('stat-pending-count').textContent = pending.length;
+  document.getElementById('stat-pending').textContent = '₹'+(pending.length*8500).toLocaleString('en-IN');
+  const paid = STUDENTS.filter(s=>s.fee==='paid');
+  document.getElementById('stat-collected').textContent = '₹'+(paid.length*8500).toLocaleString('en-IN');
+  document.getElementById('pendingBadge').textContent = pending.length;
+}
+
+function openAddStudent(){
+  document.getElementById('addStudentModal').style.display='flex';
+}
+
+function addStudent(){
+  const name = document.getElementById('ns-name').value.trim();
+  const cls  = document.getElementById('ns-class').value;
+  const roll = document.getElementById('ns-roll').value;
+  const guardian = document.getElementById('ns-guardian').value.trim();
+  const phone = document.getElementById('ns-phone').value.trim();
+  if(!name||!roll){alert('Please enter at least name and roll number.');return;}
+  STUDENTS.push({id:Date.now(),name,cls,roll:+roll,guardian:guardian||'—',phone:phone||'—',fee:'pending',datePaid:''});
+  document.getElementById('stat-students').textContent = STUDENTS.length;
+  closeModal('addStudentModal');
+  renderStudents();
+  alert(`${name} added to ${cls}.`);
+}
+
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+function showDefaulters(){
+  const d = STUDENTS.filter(s=>s.fee==='pending');
+  document.getElementById('defaulterList').innerHTML = `
+    <table style="width:100%;margin-bottom:8px">
+      <thead><tr><th>Student</th><th>Class</th><th>Amount Due</th><th>Guardian Phone</th></tr></thead>
+      <tbody>${d.map(s=>`<tr><td style="font-weight:600">${s.name}</td><td>${s.cls}</td><td style="color:var(--red);font-weight:700">₹8,500</td><td style="color:var(--muted)">${s.phone}</td></tr>`).join('')}</tbody>
+    </table>
+    <p style="font-size:12px;color:var(--faint)">Total pending: ₹${(d.length*8500).toLocaleString('en-IN')} from ${d.length} students</p>`;
+  document.getElementById('defaulterModal').style.display='flex';
+}
+
+function buildRecentFees(){
+  const paid = STUDENTS.filter(s=>s.fee==='paid').slice(0,5);
+  document.getElementById('recentFees').innerHTML = paid.map(s=>`
+    <div class="act-item">
+      <div class="act-icon" style="background:rgba(16,185,129,.12);color:var(--em2)">💳</div>
+      <div class="act-text"><div class="t">₹8,500 — ${s.name}</div><div class="s">${s.cls}</div></div>
+      <div class="act-time">${s.datePaid}</div>
+    </div>`).join('');
+}
+
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) m.style.display='none'; });
+});
+
+buildRecentFees();
+renderStudents();
+renderFees();
+renderAttendance();
+</script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Munimo — Smart Business Software, Built in India</title>
+<meta name="description" content="Munimo builds affordable, enterprise-quality business software for small and growing companies — construction, schools, coaching and more. Simple to use. Built in India.">
+<meta name="author" content="Munimo">
+<meta property="og:title" content="About Munimo — Smart Business Software">
+<meta property="og:description" content="We build software that small businesses actually use — complete, affordable, and ready on day one.">
+<meta property="og:type" content="website">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/svg+xml" href="assets/munimo-icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="canonical" href="https://munimo.online/about">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b0a; --bg2:#0a100e; --surface:#0f1714; --surface2:#15201c;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.14);
+  --text:#f1f6f4; --muted:#93a39c; --faint:#5a6b64;
+  --em:#10b981; --em2:#34d399; --em3:#6ee7b7;
+  --teal:#2dd4bf; --gold:#fbbf24; --red:#f87171; --blue:#60a5fa; --violet:#a78bfa;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(16,185,129,.3)}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(16px);background:rgba(7,11,10,.72);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 24px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;gap:28px;align-items:center;font-size:14px;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--em2)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:#04110c;box-shadow:0 4px 24px rgba(16,185,129,.35)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(16,185,129,.5)}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border2)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-lg{padding:15px 30px;font-size:16px;border-radius:12px}
+.nav-cta{padding:9px 18px;font-size:13px}
+@media(max-width:880px){.nav-links{display:none}}
+
+.hero{position:relative;padding:150px 24px 80px;text-align:center;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:1100px;height:700px;background:radial-gradient(ellipse,rgba(16,185,129,.14) 0%,rgba(5,150,105,.05) 40%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 70% 55% at 50% 0%,#000 50%,transparent 100%);pointer-events:none}
+.hero-inner{position:relative;max-width:900px;margin:0 auto;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:var(--em2);font-size:13px;font-weight:600;padding:7px 16px;border-radius:30px;margin-bottom:28px}
+.hero h1{font-size:clamp(34px,5.5vw,60px);font-weight:900;line-height:1.1;letter-spacing:-.02em;margin-bottom:22px}
+.hero h1 .grad{background:linear-gradient(100deg,#34d399,#10b981 50%,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:680px;margin:0 auto;font-weight:500}
+
+.sec{max-width:1180px;margin:0 auto;padding:100px 24px 0}
+.sec-tag{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:14px}
+.sec h2{font-size:clamp(26px,3.8vw,42px);font-weight:900;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px;max-width:760px}
+.sec-sub{font-size:17px;color:var(--muted);max-width:660px;margin-bottom:48px}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:860px){.two-col{grid-template-columns:1fr}}
+
+.body-text p{font-size:16.5px;line-height:1.85;color:var(--muted);margin-bottom:22px}
+.body-text p:last-child{margin-bottom:0}
+
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.scard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;transition:border-color .25s}
+.scard:hover{border-color:rgba(16,185,129,.3)}
+.scard .ic{font-size:24px;margin-bottom:13px}
+.scard h3{font-size:16px;font-weight:700;margin-bottom:7px}
+.scard p{font-size:13.8px;color:var(--muted);line-height:1.55}
+@media(max-width:860px){.sgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.sgrid{grid-template-columns:1fr}}
+
+.values-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.val{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:border-color .25s}
+.val:hover{border-color:rgba(16,185,129,.3)}
+.val .ic{font-size:26px;margin-bottom:14px}
+.val h3{font-size:17px;font-weight:800;margin-bottom:8px}
+.val p{font-size:14.5px;color:var(--muted);line-height:1.6}
+@media(max-width:680px){.values-grid{grid-template-columns:1fr}}
+
+.team-box{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:40px;max-width:820px}
+.team-box p{font-size:16px;line-height:1.85;color:var(--muted);margin-bottom:18px}
+.team-box p:last-child{margin-bottom:0}
+.team-box .em-line{color:var(--em3);font-weight:600;font-style:italic}
+
+.final{position:relative;max-width:1180px;margin:100px auto 0;padding:0 24px 90px}
+.final-box{position:relative;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#08130e,#0a100e 60%);border:1px solid rgba(16,185,129,.3);padding:72px 40px;text-align:center}
+.final-box::before{content:'';position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:600px;height:380px;background:radial-gradient(ellipse,rgba(16,185,129,.25),transparent 70%);pointer-events:none}
+.final-box h2{position:relative;font-size:clamp(26px,4vw,40px);font-weight:900;margin-bottom:14px;letter-spacing:-.02em}
+.final-box p{position:relative;color:var(--muted);font-size:16.5px;max-width:540px;margin:0 auto 34px}
+.final-contacts{position:relative;display:flex;gap:36px;justify-content:center;flex-wrap:wrap;margin-top:38px;font-size:14.5px;color:var(--muted)}
+.final-contacts b{color:var(--text)}
+
+footer{border-top:1px solid var(--border);padding:34px 24px;text-align:center;color:var(--faint);font-size:13px}
+footer .f-logo{font-weight:800;color:var(--muted);margin-bottom:6px}
+footer a{color:var(--faint)}
+footer a:hover{color:var(--muted)}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+
+.wa{position:fixed;bottom:26px;right:26px;z-index:90;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(37,211,102,.45);transition:transform .2s}
+.wa:hover{transform:scale(1.1)}
+.wa svg{width:30px;height:30px;fill:#fff}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M6 28 L6 12 L20 22 L34 12 L34 28" stroke="#022c1a" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      Munimo
+    </a>
+    <div class="nav-links">
+      <a href="index.html#products">Products</a>
+      <a href="index.html#demo">Live Demo</a>
+      <a href="index.html#security">Security</a>
+      <a href="about.html" class="active">About</a>
+    </div>
+    <a href="index.html#quote" class="btn btn-primary nav-cta">Get a Quote</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">About Munimo</div>
+    <h1>Software small businesses<br><span class="grad">actually use</span></h1>
+    <p class="hero-sub">No bloated feature lists. No six-figure price tags. No "implementation partner" required. Just software that works on day one — for businesses that have real work to do.</p>
+  </div>
+</header>
+
+<section class="sec">
+  <div class="rv">
+    <span class="sec-tag">Why We Built This</span>
+    <h2>The gap between what enterprise software can do and what small businesses actually get</h2>
+    <p class="sec-sub">The best business software runs inside large companies. Small businesses get Tally, Excel, and a WhatsApp group. We set out to close that gap.</p>
+  </div>
+  <div class="two-col rv">
+    <div class="body-text">
+      <p>We have worked inside organisations that run high-end business systems — payroll engines processing tens of thousands of employees, accounting software reconciling hundreds of accounts a day, compliance tools that talk directly to government portals. We have seen what those systems can do.</p>
+      <p>We have also seen what they cost: large licence fees, months of implementation, specialist consultants, and then more fees every year. All of it priced for companies that can absorb it. A construction firm with 40 workers or a school managing 600 students never gets access to this quality of software — not at any price they can actually afford.</p>
+      <p>We believe that is wrong. The work a construction company does is real. The books a school needs to keep are real. The GST a coaching centre has to file is real. The software that helps them should be real too — complete, reliable, and priced for the actual world.</p>
+      <p>So we built Munimo: the software your munim (your trusted bookkeeper) would have built if they were a software engineer. Understands your industry. Works on day one. Priced to what your business can invest.</p>
+    </div>
+    <div class="sgrid" style="grid-template-columns:1fr;gap:14px">
+      <div class="scard"><div class="ic">🎯</div><h3>Purpose-built per industry</h3><p>Every screen in Munimo is built for a specific sector — construction, schools, coaching. No wading through features that don't apply to you.</p></div>
+      <div class="scard"><div class="ic">💸</div><h3>You set the budget</h3><p>Tell us what you can invest. We come back with the most powerful software we can build for it. One-time price, minimal AMC.</p></div>
+      <div class="scard"><div class="ic">🇮🇳</div><h3>Built for India from scratch</h3><p>GST, TDS, BOCW registers, Indian banking — not an afterthought. Designed around how Indian businesses actually work.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="rv">
+    <span class="sec-tag">What We Stand For</span>
+    <h2>Four things we will not compromise on</h2>
+    <p class="sec-sub">We have seen too many software products that cut corners in the wrong places. These are the things we do not negotiate on, regardless of price tier or project size.</p>
+  </div>
+  <div class="values-grid rv">
+    <div class="val">
+      <div class="ic">📥</div>
+      <h3>Your data is always yours</h3>
+      <p>Download everything, any time. We delete our copy on request. You should be able to walk away from any software vendor without losing a single record — and with us, you can.</p>
+    </div>
+    <div class="val">
+      <div class="ic">🔒</div>
+      <h3>Security is built in, not bolted on</h3>
+      <p>Bank-grade HTTPS encryption, one-way bcrypt password hashing, per-client data isolation, encrypted daily backups. These are standard in every Munimo system. Not a premium add-on you pay extra for.</p>
+    </div>
+    <div class="val">
+      <div class="ic">📖</div>
+      <h3>Honest about what exists today</h3>
+      <p>We will tell you exactly what Munimo can do and what it cannot. We won't sell a module that isn't built or promise a feature on the roadmap without being clear it isn't live yet.</p>
+    </div>
+    <div class="val">
+      <div class="ic">🛠️</div>
+      <h3>Works on day one, without a consultant</h3>
+      <p>We set it up, migrate your data, and train your team. You should not need an "implementation partner" just to start using business software. Implementation is part of what you buy.</p>
+    </div>
+    <div class="val">
+      <div class="ic">💬</div>
+      <h3>Support that picks up the phone</h3>
+      <p>Phone and WhatsApp support — not a ticket queue with a 48-hour SLA. When something isn't working right, you talk to someone who built the system and knows how to fix it.</p>
+    </div>
+    <div class="val">
+      <div class="ic">🔄</div>
+      <h3>One-time price, no rental trap</h3>
+      <p>You buy a lifetime licence and own it. We have seen too many businesses locked into annual subscriptions they can't afford to leave. That is not how we work — and never will be.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="rv">
+    <span class="sec-tag">The Team</span>
+    <h2>Enterprise software experience. Startup honesty.</h2>
+  </div>
+  <div class="team-box rv">
+    <p>Munimo is built by software professionals who have spent years designing and implementing business systems for large organisations across manufacturing, financial services, and enterprise IT. We know what good business software looks like from the inside — and what it takes to make it reliable.</p>
+    <p>Our expertise spans financial accounting engines, GST and tax compliance automation, workforce management, and cloud infrastructure security. Every feature in Munimo has been shaped by one question: will a busy business owner who is not a software person actually find this useful?</p>
+    <p>We are based in India. We understand rupees, GST, BOCW registers, TDS challans, and the language your accountant speaks. Munimo was not translated from a Western product. It was built from scratch, for Indian businesses, Indian regulations, and the pace of work in Indian markets.</p>
+    <p class="em-line">We do not put names and photos on the website. We would rather you judge us by the software — and by the conversation you have with us before you buy. Book a demo; you will be talking to the people who built it.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="rv">
+    <span class="sec-tag">Our Products</span>
+    <h2>We build for the businesses that keep India running</h2>
+    <p class="sec-sub">One platform, purpose-built per sector. Construction is live today — schools, coaching and more are on the way.</p>
+  </div>
+  <div class="sgrid rv">
+    <div class="scard"><div class="ic">🏗️</div><h3>Construction ERP <span style="font-size:11px;background:rgba(16,185,129,.15);color:var(--em2);padding:3px 8px;border-radius:20px;font-weight:700;vertical-align:middle">Live</span></h3><p>Invoicing, GST, labour wages, payroll, purchase orders, subcontractor RA bills, site-wise P&amp;L and bank reconciliation. Available as a cloud app (any browser) or a Windows desktop install.</p></div>
+    <div class="scard"><div class="ic">🎓</div><h3>School &amp; Institute ERP <span style="font-size:11px;background:rgba(251,191,36,.12);color:var(--gold);padding:3px 8px;border-radius:20px;font-weight:700;vertical-align:middle">Soon</span></h3><p>Student records, fee collection, attendance, timetable, staff payroll and parent communication. Built for schools of 300–1,000 students.</p></div>
+    <div class="scard"><div class="ic">📚</div><h3>Coaching &amp; Tuition <span style="font-size:11px;background:rgba(251,191,36,.12);color:var(--gold);padding:3px 8px;border-radius:20px;font-weight:700;vertical-align:middle">Soon</span></h3><p>Batches, admissions, fee plans, attendance, test scores and staff salaries — for coaching centres and tuition academies.</p></div>
+    <div class="scard"><div class="ic">📱</div><h3>Munimo Lite <span style="font-size:11px;background:rgba(251,191,36,.12);color:var(--gold);padding:3px 8px;border-radius:20px;font-weight:700;vertical-align:middle">Soon</span></h3><p>A lightweight app for field teams and site staff — mark attendance, capture expenses by photo, and send records for head-office approval. Keeps your accountant's books clean without training every worker on the full ERP.</p></div>
+    <div class="scard"><div class="ic">🧩</div><h3>Custom ERP</h3><p>If your business keeps books, manages staff, and bills customers, we can build Munimo for it. Clinics, dealerships, traders, manufacturers — tell us what you do.</p></div>
+    <div class="scard"><div class="ic">🌐</div><h3>Cloud or offline</h3><p>Every Munimo product is available as cloud software (access from any browser, any city) or as a Windows desktop install for locations with unreliable internet. Same codebase, same data quality.</p></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="final-box rv">
+    <h2>See what Munimo can do for your business</h2>
+    <p>Book a free demo. We show the software live — with real business data, not presentation slides. No obligation, no hard sell.</p>
+    <a href="mailto:hello@munimo.online?subject=Demo%20request%20—%20Munimo" class="btn btn-primary btn-lg">Email us for a demo</a>
+    <a href="https://wa.me/919599942248?text=Hi%2C%20I%20want%20to%20know%20more%20about%20Munimo" target="_blank" rel="noopener" class="btn btn-ghost btn-lg" style="margin-left:10px">Chat on WhatsApp</a>
+    <div class="final-contacts">
+      <span>Email: <b>hello@munimo.online</b></span>
+      <span><b>munimo.online</b> · Made in India</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">Munimo</div>
+  © 2026 Munimo · Made in India 🇮🇳<br>
+  <a href="index.html">Home</a> · <a href="constructpro.html">Construction ERP</a> · <a href="about.html">About</a>
+</footer>
+
+<a class="wa" href="https://wa.me/919599942248?text=Hi%2C%20I%20want%20to%20know%20more%20about%20Munimo" target="_blank" rel="noopener" aria-label="WhatsApp us">
+  <svg viewBox="0 0 32 32"><path d="M16 0C7.2 0 0 7.2 0 16c0 2.8.7 5.5 2.1 7.9L0 32l8.3-2.2c2.3 1.3 4.9 1.9 7.7 1.9 8.8 0 16-7.2 16-16S24.8 0 16 0zm0 29.2c-2.4 0-4.8-.6-6.9-1.8l-.5-.3-5 1.3 1.3-4.8-.3-.5C3.3 21 2.7 18.5 2.7 16 2.7 8.7 8.7 2.7 16 2.7S29.3 8.7 29.3 16 23.3 29.2 16 29.2zm7.3-9.8c-.4-.2-2.4-1.2-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.3-2.2-2.7-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7-.1-.2-.9-2.2-1.2-3-.3-.8-.7-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.4 3.9 1.6 4.2c.2.3 2.8 4.3 6.8 6 .9.4 1.7.7 2.3.9 1 .3 1.8.3 2.5.2.8-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5z"/></svg>
+</a>
+
+<script>
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Munimo">
+  <defs>
+    <linearGradient id="mg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="0.55" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#mg)"/>
+  <path d="M120 372 L120 160 L256 270 L392 160 L392 372"
+        fill="none" stroke="#022c1a" stroke-width="52"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
