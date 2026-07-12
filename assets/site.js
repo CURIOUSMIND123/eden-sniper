@@ -68,16 +68,20 @@ $$('[data-ttabs]').forEach(group=>{
 /* ─── self-writing multilingual ledger (AI showcase) ─── */
 $$('[data-ai]').forEach(box=>{
   const SCRIPTS={
+    en:{chip:'English', text:'Paid diesel 3,200 for JCB and got 50,000 from Borah Builders',
+        rows:[['Diesel — JCB','Expense ▸ Machinery','−₹3,200'],['Borah Builders','Receivable ▸ Payment','+₹50,000']]},
     hi:{chip:'हिन्दी', text:'आज मज़दूरी ₹4,500 दी और सीमेंट ₹12,000 का आया',
         rows:[['मज़दूरी — 12 लोग','Labour ▸ Wages','−₹4,500'],['सीमेंट — 40 बैग','Purchase ▸ Material','−₹12,000']]},
+    mr:{chip:'मराठी', text:'आज मजुरी ₹4,500 दिली आणि सिमेंट ₹12,000 चा आला',
+        rows:[['मजुरी — 12 माणसं','Labour ▸ Wages','−₹4,500'],['सिमेंट — 40 बॅग','Purchase ▸ Material','−₹12,000']]},
     ta:{chip:'தமிழ்', text:'இன்று கடை வாடகை ₹8,000 கட்டினேன்',
         rows:[['கடை வாடகை — ஜூலை','Expense ▸ Rent','−₹8,000']]},
+    te:{chip:'తెలుగు', text:'ఈ రోజు కూలీ ₹4,500 ఇచ్చాను',
+        rows:[['కూలీ — 12 మంది','Labour ▸ Wages','−₹4,500']]},
     gu:{chip:'ગુજરાતી', text:'રમેશભાઈ પાસેથી ₹15,000 ઉધારી આવી',
         rows:[['રમેશભાઈ — ઉધાર વસૂલી','Receivable ▸ Collection','+₹15,000']]},
     bn:{chip:'বাংলা', text:'আজ স্কুল ফি ₹22,500 জমা হয়েছে',
-        rows:[['স্কুল ফি — ক্লাস ৫','Income ▸ Fees','+₹22,500']]},
-    en:{chip:'English', text:'Paid diesel 3,200 for JCB and got 50,000 from Borah Builders',
-        rows:[['Diesel — JCB','Expense ▸ Machinery','−₹3,200'],['Borah Builders','Receivable ▸ Payment','+₹50,000']]}
+        rows:[['স্কুল ফি — ক্লাস ৫','Income ▸ Fees','+₹22,500']]}
   };
   const chipwrap=box.querySelector('.langchips'), bub=box.querySelector('.bubble-u'), entry=box.querySelector('.ai-entry'), rowsEl=box.querySelector('.ae-rows');
   let cur='hi', timer=null, started=false;
@@ -106,6 +110,21 @@ $$('[data-ai]').forEach(box=>{
   new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting && !started){ started=true; play(); o.disconnect(); } },{threshold:.35}).observe(box);
 });
 
+/* ─── 3D language flip word ─── */
+$$('[data-flip]').forEach(el=>{
+  const words=el.dataset.flip.split('|');
+  let i=0; el.textContent=words[0];
+  el.style.display='inline-block'; el.style.transformStyle='preserve-3d';
+  if(reduced) return;
+  setInterval(()=>{
+    el.style.transition='transform .28s ease-in, opacity .28s'; el.style.transform='rotateX(88deg) translateY(-6px)'; el.style.opacity='0';
+    setTimeout(()=>{ i=(i+1)%words.length; el.textContent=words[i];
+      el.style.transition='none'; el.style.transform='rotateX(-88deg) translateY(6px)';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.style.transition='transform .32s cubic-bezier(.22,1,.36,1), opacity .32s'; el.style.transform='rotateX(0)'; el.style.opacity='1'; }));
+    },290);
+  },2600);
+});
+
 /* ─── number tickers ─── */
 $$('[data-count]').forEach(el=>{
   const end=parseFloat(el.dataset.count), pre=el.dataset.pre||'', suf=el.dataset.suf||'';
@@ -123,18 +142,18 @@ const bs=$('#budget-range');
 if(bs){
   const out=$('#budget-val'), desc=$('#budget-desc'), wa=$('#budget-wa');
   const TIERS=[
-    [15000,'Munimo Khata + Lite — poori team ke liye, setup ke saath'],
-    [40000,'Munimo Lite full setup + aapke hisaab se custom reports'],
+    [15000,'Munimo Khata + Lite — for your whole team, setup included'],
+    [40000,'Munimo Lite full setup + custom reports built for you'],
     [90000,'ConstructPro core — billing, GST, labour, site P&L'],
-    [200000,'Full ConstructPro ERP — sab modules, AI bookkeeper, training'],
-    [500000,'Custom ERP — aapke business ke liye scratch se, jitna budget utna kaam']
+    [200000,'Full ConstructPro ERP — all modules, AI bookkeeper, training'],
+    [500000,'Custom ERP — built for your business from scratch']
   ];
   const upd=()=>{
     const v=+bs.value; bs.style.setProperty('--fill',((v-bs.min)/(bs.max-bs.min)*100)+'%');
     out.textContent='₹'+(+v).toLocaleString('en-IN');
     const t=TIERS.find(t=>v<=t[0])||TIERS[TIERS.length-1];
     desc.textContent=t[1];
-    wa.href='https://wa.me/919599942248?text='+encodeURIComponent(`Hi Munimo! Mera budget hai ₹${(+v).toLocaleString('en-IN')}. Mere business ke liye kya ban sakta hai? Business: ____ City: ____`);
+    wa.href='https://wa.me/919599942248?text='+encodeURIComponent(`Hi Munimo! My budget is ₹${(+v).toLocaleString('en-IN')}. What can you build for my business? Business: ____ City: ____`);
   };
   bs.addEventListener('input',upd); upd();
 }

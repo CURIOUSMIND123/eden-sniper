@@ -131,7 +131,7 @@ input,select{font-family:inherit}
 </style>
 </head>
 <body>
-<div class="demo-bar">Munimo Khata — Live Demo · sab kuch try karo, data sirf aapke phone me · <a href="../../khata.html">Get the app →</a></div>
+<div class="demo-bar">Munimo Khata — Live Demo · try everything, data stays on your phone · <a href="../../khata.html">Get the app →</a></div>
 
 <header class="header">
   <div class="hleft">
@@ -143,7 +143,7 @@ input,select{font-family:inherit}
   </div>
   <button class="bizswitch" id="bizbtn">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M8 3v4M16 3v4M4 11h16M4 7a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/></svg>
-    Badlo
+    Switch
   </button>
 </header>
 
@@ -151,17 +151,17 @@ input,select{font-family:inherit}
   <!-- HOME -->
   <section class="screen active" id="scr-home">
     <div class="summary">
-      <div class="sumcard"><div class="lbl">Milega (In)</div><div class="val green" id="sum-in">₹0</div><div class="hint" id="sum-in-n"></div></div>
-      <div class="sumcard"><div class="lbl">Dena hai (Out)</div><div class="val red" id="sum-out">₹0</div><div class="hint" id="sum-out-n"></div></div>
+      <div class="sumcard"><div class="lbl">To collect</div><div class="val green" id="sum-in">₹0</div><div class="hint" id="sum-in-n"></div></div>
+      <div class="sumcard"><div class="lbl">To pay</div><div class="val red" id="sum-out">₹0</div><div class="hint" id="sum-out-n"></div></div>
     </div>
 
     <div class="smartwrap">
       <div class="smart">
-        <input id="smartin" type="text" placeholder="Likho: 'Ramesh ko 500 diye'…" autocomplete="off">
-        <button class="go" id="smartgo">Likho ✓</button>
+        <input id="smartin" type="text" placeholder="Type: 'Ramesh ko 500 diye'…" autocomplete="off">
+        <button class="go" id="smartgo">Add ✓</button>
       </div>
     </div>
-    <div class="smarthint">AI समझता है — <b>hindi</b>, <b>english</b>, mix sab. Try:</div>
+    <div class="smarthint">The AI understands <b>Hindi</b>, <b>English</b> and mixes. Try:</div>
     <div class="chiprow" id="chips"></div>
 
     <div class="sect-title"><span>Parties</span><span id="pcount"></span></div>
@@ -172,7 +172,7 @@ input,select{font-family:inherit}
   <section class="screen" id="scr-ledger">
     <button class="back" id="backbtn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-      Sab parties
+      All parties
     </button>
     <div class="lhead">
       <div class="pav" id="lav" style="background:rgba(16,185,129,.18);color:var(--em2)">R</div>
@@ -186,23 +186,23 @@ input,select{font-family:inherit}
         <div class="sumcard-lbl" style="font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--m)" id="lbal-lbl">Balance</div>
         <div class="big" id="lbal-amt">₹0</div>
       </div>
-      <button class="wabtn" id="remindbtn">WhatsApp yaad dilao</button>
+      <button class="wabtn" id="remindbtn">WhatsApp reminder</button>
     </div>
-    <div class="sect-title"><span>Len-den</span></div>
+    <div class="sect-title"><span>Entries</span></div>
     <div class="entries" id="entries"></div>
   </section>
 
   <!-- REPORTS -->
   <section class="screen" id="scr-reports">
-    <div class="sect-title" style="padding-top:20px"><span>Is mahine ka hisaab</span></div>
+    <div class="sect-title" style="padding-top:20px"><span>This month</span></div>
     <div class="repcard">
       <h3 id="rep-month">July 2026</h3>
       <div id="repbars"></div>
     </div>
     <div class="repcard">
-      <h3>Business ki sehat</h3>
-      <div class="bar"><div class="bl">Milega</div><div class="bt"><div class="bf" id="rb-in" style="width:0%"></div></div><div class="bv green" id="rv-in">₹0</div></div>
-      <div class="bar"><div class="bl">Dena</div><div class="bt"><div class="bf" id="rb-out" style="width:0%;background:linear-gradient(90deg,#b91c1c,#f87171)"></div></div><div class="bv" id="rv-out" style="color:var(--red)">₹0</div></div>
+      <h3>Business health</h3>
+      <div class="bar"><div class="bl">Collect</div><div class="bt"><div class="bf" id="rb-in" style="width:0%"></div></div><div class="bv green" id="rv-in">₹0</div></div>
+      <div class="bar"><div class="bl">Pay</div><div class="bt"><div class="bf" id="rb-out" style="width:0%;background:linear-gradient(90deg,#b91c1c,#f87171)"></div></div><div class="bv" id="rv-out" style="color:var(--red)">₹0</div></div>
       <div style="font-size:11.5px;color:var(--f);margin-top:8px" id="rep-note"></div>
     </div>
   </section>
@@ -215,15 +215,15 @@ input,select{font-family:inherit}
 <!-- ADD ENTRY SHEET -->
 <div class="sheet" id="sheet">
   <div class="sheetin">
-    <h3>Nayi entry</h3>
+    <h3>New entry</h3>
     <div class="gavegot">
-      <button class="gg gave sel" id="gg-gave">Maine diye ↓</button>
-      <button class="gg got" id="gg-got">Mujhe mile ↑</button>
+      <button class="gg gave sel" id="gg-gave">I gave ↓</button>
+      <button class="gg got" id="gg-got">I received ↑</button>
     </div>
     <div class="field"><label>Party</label><select id="f-party"></select></div>
     <div class="field"><label>Amount (₹)</label><input id="f-amt" type="number" inputmode="numeric" placeholder="500"></div>
-    <div class="field"><label>Note (kya tha?)</label><input id="f-note" type="text" placeholder="udhaar / saman / payment…"></div>
-    <button class="savebtn" id="savebtn">Save karo</button>
+    <div class="field"><label>Note (what was it?)</label><input id="f-note" type="text" placeholder="udhaar / goods / payment…"></div>
+    <button class="savebtn" id="savebtn">Save</button>
     <button class="cancel" id="cancelbtn">Cancel</button>
   </div>
 </div>
@@ -355,8 +355,8 @@ function renderHome(){
     pl.appendChild(div);
   });
   $('sum-in').textContent=fmt(tin); $('sum-out').textContent=fmt(tout);
-  $('sum-in-n').textContent=nin+' parties se'; $('sum-out-n').textContent=nout+' parties ko';
-  $('pcount').textContent=parties().length+' log';
+  $('sum-in-n').textContent='from '+nin+' parties'; $('sum-out-n').textContent='to '+nout+' parties';
+  $('pcount').textContent=parties().length+' people';
   const ch=$('chips'); ch.innerHTML='';
   B.chips.forEach(c=>{ const b=document.createElement('button'); b.className='chip'; b.textContent='“'+c+'”'; b.onclick=()=>{ $('smartin').value=c; smartGo(); }; ch.appendChild(b); });
 }
@@ -369,7 +369,7 @@ function openLedger(i){
   const b=bal(p);
   $('lbal-amt').textContent=fmt(b);
   $('lbal-amt').style.color=b>=0?'var(--em2)':'var(--red)';
-  $('lbal-lbl').textContent=b>=0?'Aapko milega':'Aapko dena hai';
+  $('lbal-lbl').textContent=b>=0?'You will collect':'You need to pay';
   const en=$('entries'); en.innerHTML='';
   let run=0;
   const rows=p.e.map(x=>{run+=x.amt*x.dir; return {...x,run};});
@@ -384,7 +384,7 @@ function openLedger(i){
 }
 $('backbtn').onclick=()=>show('home');
 $('remindbtn').onclick=()=>{ const p=parties()[curParty]; const b=bal(p);
-  toast(b>0?`WhatsApp reminder ready: "${p.n} ji, ₹${Math.abs(b).toLocaleString('en-IN')} baki hai 🙏" (demo)`:'Is party ka koi baki nahi!'); };
+  toast(b>0?`WhatsApp reminder ready: "${p.n} ji, ₹${Math.abs(b).toLocaleString('en-IN')} is pending 🙏" (demo)`:'Nothing pending for this party!'); };
 
 // ─── Screens ───
 function show(s){
@@ -410,7 +410,7 @@ function renderReports(){
   $('rb-in').dataset.w=Math.round(tin/t*100); $('rb-out').dataset.w=Math.round(tout/t*100);
   $('rv-in').textContent=fmt(tin); $('rv-out').textContent=fmt(tout);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{ $('rb-in').style.width=$('rb-in').dataset.w+'%'; $('rb-out').style.width=$('rb-out').dataset.w+'%'; }));
-  $('rep-note').textContent = tin>=tout ? 'Aapka business plus me hai — milne wala paisa zyada hai.' : 'Dhyan do — dena zyada hai, wasooli tez karo.';
+  $('rep-note').textContent = tin>=tout ? 'Your business is in the green — more money is coming in than going out.' : 'Watch out — you owe more than you will collect. Speed up recovery.';
 }
 
 // ─── Add entry sheet ───
@@ -430,11 +430,11 @@ $('cancelbtn').onclick=()=>$('sheet').classList.remove('open');
 $('sheet').onclick=e=>{ if(e.target===$('sheet')) $('sheet').classList.remove('open'); };
 $('savebtn').onclick=()=>{
   const pi=+$('f-party').value, amt=+$('f-amt').value;
-  if(!amt||amt<=0){ toast('Amount likho pehle'); return; }
+  if(!amt||amt<=0){ toast('Enter an amount first'); return; }
   const note=$('f-note').value||(ggDir===1?'Diye':'Mile');
   parties()[pi].e.push({d:0,note,amt,dir:ggDir});
   save(); $('sheet').classList.remove('open');
-  toast('Entry ho gayi ✓ — '+parties()[pi].n+' '+(ggDir===1?'ko diye':'se mile')+' '+fmt(amt));
+  toast('Entry saved ✓ — '+(ggDir===1?'gave ':'received ')+fmt(amt)+(ggDir===1?' to ':' from ')+parties()[pi].n);
   if($('scr-ledger').classList.contains('active')&&curParty===pi) openLedger(pi); else renderHome();
 };
 
@@ -462,9 +462,9 @@ function smartParse(txt){
 }
 function smartGo(){
   const r=smartParse($('smartin').value);
-  if(!r){ toast('Samajh nahi aaya — amount ke saath likho, jaise "Ramesh ko 500 diye"'); return; }
+  if(!r){ toast('Could not understand — include an amount, like "Ramesh ko 500 diye"'); return; }
   openSheet(r);
-  toast('AI ne samjha ✓ — check karke Save dabao');
+  toast('The AI understood ✓ — check it and press Save');
   $('smartin').value='';
 }
 $('smartgo').onclick=smartGo;
@@ -474,7 +474,7 @@ $('smartin').addEventListener('keydown',e=>{ if(e.key==='Enter') smartGo(); });
 $('bizbtn').onclick=()=>{
   bizIdx=(bizIdx+1)%BIZ.length; curParty=null; save();
   renderHome(); show('home');
-  toast('Ab dekh rahe ho: '+BIZ[bizIdx].name+' ('+BIZ[bizIdx].type+')');
+  toast('Now viewing: '+BIZ[bizIdx].name+' ('+BIZ[bizIdx].type+')');
 };
 
 renderHome();
