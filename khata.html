@@ -8,7 +8,7 @@
 <meta name="keywords" content="khata app, udhar khata app, free khata app, digital khata, ledger app India, udhaar app, खाता ऐप, उधार खाता, दुकान का हिसाब, kirana shop app">
 <link rel="canonical" href="https://munimo.online/khata.html">
 <meta property="og:title" content="Munimo Khata — Free Khata App for Udhar & Payments">
-<meta property="og:image" content="https://munimo.online/assets/demo/lite-home.jpg">
+<meta property="og:image" content="https://munimo.online/assets/demo/khata-web.jpg">
 <meta name="theme-color" content="#0a0f0d">
 <link rel="icon" type="image/svg+xml" href="assets/munimo-icon.svg">
 <link rel="stylesheet" href="assets/site.css">
@@ -28,13 +28,19 @@
 .step .n{width:34px;height:34px;border-radius:50%;background:rgba(232,184,75,.14);border:1px solid rgba(232,184,75,.4);color:var(--gold);font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
 .step h3{font-size:17px;margin-bottom:6px}
 .step p{font-size:14px;color:var(--m)}
+
+.duo2{position:relative;max-width:900px;margin:0 auto}
+.duo2 .phone-mini{position:absolute;right:max(-2vw,-16px);bottom:-28px;width:min(168px,24vw);aspect-ratio:340/700;border-radius:22px;background:#0c1210;border:1px solid #2a3a32;box-shadow:0 30px 70px rgba(0,0,0,.7),0 0 0 4px #060a08;overflow:hidden;z-index:5}
+.duo2 .phone-mini img{width:100%;height:100%;object-fit:cover;object-position:top}
+.dwrap{position:relative;aspect-ratio:1200/760;background:#0a0f0d}
+.dwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 </style>
 </head>
 <body>
 
 <header class="hd">
   <div class="hd-in">
-    <a class="logo" href="index.html"><span class="logo-m">म</span> Munimo</a>
+    <a class="logo" href="index.html"><img class="logo-m" src="assets/munimo-icon.svg" alt="Munimo logo"> Munimo</a>
     <nav class="nav">
       <a href="khata.html" class="on">Khata</a><a href="lite.html">Lite</a><a href="constructpro.html">ConstructPro</a><a href="custom.html">Custom ERP</a><a href="ai.html">AI</a><a href="pricing.html">Pricing</a>
     </nav>
@@ -47,34 +53,36 @@
 
 <section class="phero">
   <div class="glow"></div>
-  <div class="wrap grid2">
-    <div>
-      <span class="pill">Step 1 · For everyone · Free to try</span>
-      <h1 class="h1" style="margin-top:18px">The old khata book.<br><span class="gold">With a new brain.</span></h1>
-      <p class="lead" style="margin-top:16px">Your full credit and payment book, on your phone. Type <b style="color:var(--t)">“Ramesh ko 500 diye”</b> in any of 7 languages — the AI makes the entry. Who owes you, whom you owe — one look.</p>
-      <ul class="checks">
-        <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>AI smart entry</b> — type the way you speak, in 7 languages</span></li>
-        <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>WhatsApp reminders</b> — “₹850 is pending” sent in one tap</span></li>
-        <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>Works offline</b> — your data stays on your phone</span></li>
-        <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>For every trade</b> — kirana, contractor, boutique, dairy…</span></li>
-      </ul>
-      <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
-        <a class="btn btn-em btn-big" href="demo/khata/">Use it now — free</a>
-        <a class="btn btn-wa btn-big" href="https://wa.me/919599942248?text=Hi!%20I%20want%20Munimo%20Khata%20for%20my%20business.%20Business:%20____" target="_blank" rel="noopener">Make it yours — WhatsApp</a>
-      </div>
+  <div class="wrap center">
+    <span class="pill">Step 1 · For everyone · Free to try</span>
+    <h1 class="h1" style="margin-top:18px">The old khata book.<br><span class="gold">With a new brain.</span></h1>
+    <p class="lead" style="max-width:660px;margin:16px auto 0">On your computer and on your phone — same khata, same data. Type <b style="color:var(--t)">“Ramesh ko 500 diye”</b> in any of 7 languages. The AI makes the entry.</p>
+    <div style="display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;justify-content:center">
+      <a class="btn btn-em btn-big" href="demo/khata/">Use it now — free</a>
+      <a class="btn btn-wa btn-big" href="https://wa.me/919599942248?text=Hi!%20I%20want%20Munimo%20Khata%20for%20my%20business.%20Business:%20____" target="_blank" rel="noopener">Make it yours — WhatsApp</a>
     </div>
-    <div style="display:flex;justify-content:center">
-      <div class="stage">
-        <div class="phone" data-demo="demo/khata/">
+  </div>
+  <div class="wrap" style="margin-top:44px">
+    <div class="duo2">
+      <div class="browser">
+        <div class="browser-bar"><span class="bdot" style="background:#f87171"></span><span class="bdot" style="background:#fbbf24"></span><span class="bdot" style="background:#34d399"></span><span class="burl">Munimo Khata on the web — live demo, click and use it</span></div>
+        <div class="dwrap" data-demo="demo/khata/">
           <div class="demo-ov">
-            <img src="assets/demo/khata-home.jpg" alt="">
+            <img src="assets/demo/khata-web.jpg" alt="Munimo Khata web view — parties and ledger side by side">
             <div class="playring"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            <b>Live app — tap to use it</b>
+            <b>Click — this is the live web app</b>
           </div>
         </div>
-        <div class="center" style="margin-top:14px;font-size:12.5px;color:var(--em3);font-weight:700">Kirana → Contractor → Boutique — tap “Switch” to change business</div>
       </div>
+      <div class="phone-mini"><img src="assets/demo/khata-home.jpg" alt="Munimo Khata on the phone" loading="lazy"></div>
     </div>
+    <p class="center" style="margin-top:52px;font-size:13.5px;color:var(--f);font-weight:600">Web on your computer · app on your phone · <b style="color:var(--em2)">same khata, always in sync</b> · tap “Switch” inside to change business</p>
+    <ul class="checks" style="max-width:640px;margin:26px auto 0">
+      <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>AI smart entry</b> — type the way you speak, in 7 languages</span></li>
+      <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>WhatsApp reminders</b> — “₹850 is pending” sent in one tap</span></li>
+      <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>Works offline</b> — your data stays with you</span></li>
+      <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>For every trade</b> — kirana, contractor, boutique, dairy…</span></li>
+    </ul>
   </div>
 </section>
 
@@ -120,7 +128,7 @@
 <footer class="ft">
   <div class="wrap">
     <div class="ft-grid">
-      <div><a class="logo" href="index.html"><span class="logo-m">म</span> Munimo</a><p class="muted" style="font-size:13.5px;max-width:280px;margin-top:12px">Business software for India. Khata app to full ERP.</p></div>
+      <div><a class="logo" href="index.html"><img class="logo-m" src="assets/munimo-icon.svg" alt="Munimo logo"> Munimo</a><p class="muted" style="font-size:13.5px;max-width:280px;margin-top:12px">Business software for India. Khata app to full ERP.</p></div>
       <div><h4>Products</h4><a href="khata.html">Munimo Khata</a><a href="lite.html">Munimo Lite</a><a href="constructpro.html">ConstructPro ERP</a><a href="custom.html">Custom ERP</a></div>
       <div><h4>Try it</h4><a href="demo/khata/">Khata live demo</a><a href="demo/lite/">Lite live demo</a><a href="demo/school/">School demo</a><a href="ai.html">AI features</a></div>
       <div><h4>Company</h4><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="https://wa.me/919599942248" target="_blank" rel="noopener">WhatsApp us</a><a href="mailto:hello@munimo.online">hello@munimo.online</a></div>

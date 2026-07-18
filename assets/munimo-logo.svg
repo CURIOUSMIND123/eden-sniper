@@ -1,23 +1,16 @@
-<svg width="360" height="96" viewBox="0 0 360 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Munimo — Smart Accounting for Every Business">
+<svg width="360" height="96" viewBox="0 0 360 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Munimo">
   <defs>
-    <linearGradient id="mark" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#34d399"/>
-      <stop offset="0.55" stop-color="#10b981"/>
-      <stop offset="1" stop-color="#059669"/>
-    </linearGradient>
-    <linearGradient id="word" x1="92" y1="0" x2="300" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f1f6f4"/>
-      <stop offset="1" stop-color="#9fe7cd"/>
+    <linearGradient id="mg" x1="16" y1="16" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34d399"/><stop offset="0.55" stop-color="#10b981"/><stop offset="1" stop-color="#059669"/>
     </linearGradient>
   </defs>
-  <!-- icon -->
-  <rect x="8" y="16" width="64" height="64" rx="17" fill="url(#mark)"/>
-  <path d="M22 62 L22 34 L40 50 L58 34 L58 62"
-        fill="none" stroke="#022c1a" stroke-width="6.5"
-        stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- wordmark -->
-  <text x="92" y="52" font-family="Inter, 'Segoe UI', system-ui, sans-serif"
-        font-size="40" font-weight="800" letter-spacing="-1" fill="url(#word)">Munimo</text>
-  <text x="94" y="74" font-family="Inter, 'Segoe UI', system-ui, sans-serif"
-        font-size="14.5" font-weight="600" letter-spacing="0.5" fill="#10b981">Smart Accounting for Every Business</text>
+  <g transform="translate(16,16)">
+    <rect x="0" y="0" width="64" height="64" rx="17" fill="url(#mg)"/>
+    <path d="M32 21 C26.5 17.5 18.5 16.5 13 19 L13 43 C18.5 40.5 26.5 41.5 32 45.5 Z" fill="#04291b"/>
+    <path d="M32 21 C37.5 17.5 45.5 16.5 51 19 L51 43 C45.5 40.5 37.5 41.5 32 45.5 Z" fill="#04291b"/>
+    <path d="M32 21 L32 45.5" stroke="#0b3f2a" stroke-width="2" stroke-linecap="round"/>
+    <path d="M17.5 25.5 C21 24.2 25 24.4 28 25.8 M17.5 31 C21 29.7 25 29.9 28 31.3 M17.5 36.5 C21 35.2 25 35.4 28 36.8" stroke="#0e5e42" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M36.5 32.5 L41 37 L48.5 26.5" stroke="#f5c95c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <text x="98" y="62" font-family="system-ui,-apple-system,'Segoe UI',Roboto,sans-serif" font-size="42" font-weight="800" letter-spacing="-1" fill="#f1f6f4">Munimo</text>
 </svg>

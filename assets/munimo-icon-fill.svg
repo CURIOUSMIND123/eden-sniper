@@ -1,13 +1,18 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Munimo">
+<svg width="512" height="512" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Munimo">
   <defs>
-    <linearGradient id="mg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+    <linearGradient id="mg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#34d399"/>
       <stop offset="0.55" stop-color="#10b981"/>
       <stop offset="1" stop-color="#059669"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" fill="url(#mg)"/>
-  <path d="M120 372 L120 160 L256 270 L392 160 L392 372"
-        fill="none" stroke="#022c1a" stroke-width="52"
-        stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#mg)"/>
+  <!-- open bahi-khata: two pages + spine -->
+  <path d="M32 20 C26.5 16.5 18.5 15.5 13 18 L13 42 C18.5 39.5 26.5 40.5 32 44.5 Z" fill="#04291b"/>
+  <path d="M32 20 C37.5 16.5 45.5 15.5 51 18 L51 42 C45.5 39.5 37.5 40.5 32 44.5 Z" fill="#04291b"/>
+  <path d="M32 20 L32 44.5" stroke="#0b3f2a" stroke-width="2" stroke-linecap="round"/>
+  <!-- ruled line on left page -->
+  <path d="M17.5 24.5 C21 23.2 25 23.4 28 24.8 M17.5 30 C21 28.7 25 28.9 28 30.3 M17.5 35.5 C21 34.2 25 34.4 28 35.8" stroke="#0e5e42" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- gold tick on right page: books checked -->
+  <path d="M36.5 31.5 L41 36 L48.5 25.5" stroke="#f5c95c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>

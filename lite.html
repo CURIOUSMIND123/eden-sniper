@@ -30,13 +30,23 @@
 .daycard .tm{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
 .daycard h3{font-size:16px;margin:4px 0 4px}
 .daycard p{font-size:13.5px;color:var(--m)}
+
+.combo{position:relative;padding-bottom:10px}
+.combo .laptop{width:100%;max-width:620px;margin:0 auto}
+.combo .laptop-screen img{width:100%;display:block}
+.combo .phonewrap{position:absolute;right:clamp(-6px,1vw,10px);bottom:10px;z-index:4}
+.combo .phone{width:clamp(150px,16vw,200px);aspect-ratio:340/700;border-radius:26px;box-shadow:0 30px 70px rgba(0,0,0,.75),0 0 0 5px #060a08,0 0 60px rgba(16,185,129,.14)}
+.combo .phone::before{width:66px;height:16px;top:8px}
+@media(max-width:960px){.combo{max-width:560px;margin:0 auto}.combo .phonewrap{right:0;bottom:8px}.combo .phone{width:clamp(140px,34vw,180px)}}
+.combo-cap{margin-top:22px;font-size:12.5px;color:var(--f);font-weight:700;max-width:58%}
+.combo-cap b{color:var(--em2)}
 </style>
 </head>
 <body>
 
 <header class="hd">
   <div class="hd-in">
-    <a class="logo" href="index.html"><span class="logo-m">म</span> Munimo</a>
+    <a class="logo" href="index.html"><img class="logo-m" src="assets/munimo-icon.svg" alt="Munimo logo"> Munimo</a>
     <nav class="nav">
       <a href="khata.html">Khata</a><a href="lite.html" class="on">Lite</a><a href="constructpro.html">ConstructPro</a><a href="custom.html">Custom ERP</a><a href="ai.html">AI</a><a href="pricing.html">Pricing</a>
     </nav>
@@ -52,8 +62,8 @@
   <div class="wrap grid2">
     <div>
       <span class="pill">Step 2 · For small teams</span>
-      <h1 class="h1" style="margin-top:18px">As simple as a khata.<br><span class="gold">As capable as an ERP.</span></h1>
-      <p class="lead" style="margin-top:16px">Shop or site — when 5 to 25 people work for you, paper and WhatsApp groups stop working. Munimo Lite puts attendance, expenses, approvals and the cashbook in one app, on everyone’s phone. It is also the field app of ConstructPro — what your site enters, your office sees.</p>
+      <h1 class="h1" style="margin-top:18px">Your team on phones.<br><span class="gold">You on the web.</span></h1>
+      <p class="lead" style="margin-top:16px">As simple as a khata, as capable as an ERP. Your team marks attendance and expenses on their phones; you see and approve everything on the web dashboard — live. Munimo Lite is also the field app of ConstructPro, so site data flows straight into the full ERP.</p>
       <ul class="checks">
         <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>Staff attendance</b> — 24 people marked in 30 seconds</span></li>
         <li><span class="ck"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></span><span><b>Expenses with proof</b> — photo the bill, the entry fills itself</span></li>
@@ -65,16 +75,23 @@
         <a class="btn btn-wa btn-big" href="https://wa.me/919599942248?text=Hi!%20I%20want%20Munimo%20Lite.%20Team%20size:%20____%20Business:%20____" target="_blank" rel="noopener">Quote on WhatsApp</a>
       </div>
     </div>
-    <div style="display:flex;justify-content:center">
-      <div class="stage">
-        <div class="phone" data-demo="demo/lite/">
-          <div class="demo-ov">
-            <img src="assets/demo/lite-home.jpg" alt="">
-            <div class="playring"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            <b>Live app — tap to use it</b>
+    <div>
+      <div class="combo">
+        <div class="laptop">
+          <div class="laptop-screen"><img src="assets/dashboard.jpg" alt="Owner's web dashboard — everything the field app records" loading="eager"></div>
+          <div class="laptop-base"></div>
+        </div>
+        <div class="phonewrap">
+          <div class="phone" data-demo="demo/lite/">
+            <div class="demo-ov">
+              <img src="assets/demo/lite-home.jpg" alt="">
+              <div class="playring"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+              <b>Live app — tap to use it</b>
+            </div>
           </div>
         </div>
       </div>
+      <div class="combo-cap"><b>You</b> — web dashboard in the office · <b>Your team</b> — this app on their phones (tap it, it works)</div>
     </div>
   </div>
 </section>
@@ -122,7 +139,7 @@
 <footer class="ft">
   <div class="wrap">
     <div class="ft-grid">
-      <div><a class="logo" href="index.html"><span class="logo-m">म</span> Munimo</a><p class="muted" style="font-size:13.5px;max-width:280px;margin-top:12px">Business software for India. Khata app to full ERP.</p></div>
+      <div><a class="logo" href="index.html"><img class="logo-m" src="assets/munimo-icon.svg" alt="Munimo logo"> Munimo</a><p class="muted" style="font-size:13.5px;max-width:280px;margin-top:12px">Business software for India. Khata app to full ERP.</p></div>
       <div><h4>Products</h4><a href="khata.html">Munimo Khata</a><a href="lite.html">Munimo Lite</a><a href="constructpro.html">ConstructPro ERP</a><a href="custom.html">Custom ERP</a></div>
       <div><h4>Try it</h4><a href="demo/khata/">Khata live demo</a><a href="demo/lite/">Lite live demo</a><a href="demo/school/">School demo</a><a href="ai.html">AI features</a></div>
       <div><h4>Company</h4><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="https://wa.me/919599942248" target="_blank" rel="noopener">WhatsApp us</a><a href="mailto:hello@munimo.online">hello@munimo.online</a></div>

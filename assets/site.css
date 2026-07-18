@@ -40,7 +40,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .hd{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,13,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--hair)}
 .hd-in{max-width:var(--maxw);margin:0 auto;padding:0 22px;height:60px;display:flex;align-items:center;gap:26px}
 .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:17px;letter-spacing:-.01em;flex-shrink:0}
-.logo-m{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;color:#04110b;font-weight:900;font-size:15px;box-shadow:0 2px 14px rgba(16,185,129,.35)}
+.logo-m{width:30px;height:30px;border-radius:9px;display:block;box-shadow:0 2px 14px rgba(16,185,129,.35)}
 .nav{display:flex;gap:22px;align-items:center;font-size:14px;font-weight:600;color:var(--m);margin-left:6px}
 .nav a{padding:6px 2px;transition:color .18s}
 .nav a:hover,.nav a.on{color:var(--t)}

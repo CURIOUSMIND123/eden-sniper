@@ -30,7 +30,7 @@ input,select{font-family:inherit}
 
 .header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0;background:var(--surface)}
 .hleft{display:flex;align-items:center;gap:9px}
-.hlogo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;font-weight:800;color:#04110b;font-size:15px}
+.hlogo{width:30px;height:30px;border-radius:9px;display:block}
 .htitle{font-weight:800;font-size:16px;letter-spacing:-.01em}
 .hsub{font-size:10.5px;color:var(--m);margin-top:-2px}
 .bizswitch{background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:6px 12px;font-size:11.5px;font-weight:700;color:var(--em2);display:flex;align-items:center;gap:6px}
@@ -128,6 +128,22 @@ input,select{font-family:inherit}
 .fab{position:fixed;right:calc(50% - 215px + 16px);bottom:calc(78px + var(--safe-bottom));width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#10b981,#059669);color:#04110b;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(16,185,129,.4);z-index:60;transition:transform .15s}
 @media (max-width:430px){.fab{right:16px}}
 .fab:active{transform:scale(.93)}
+
+/* ─── desktop web view ─── */
+.dtabs{display:none}
+@media(min-width:840px){
+  html,body{max-width:1100px;border-left:1px solid var(--b);border-right:1px solid var(--b)}
+  .main{display:grid;grid-template-columns:400px 1fr;padding-bottom:0}
+  .screen{height:100%;overflow-y:auto}
+  #scr-home{display:block!important;grid-column:1;grid-row:1;border-right:1px solid var(--b)}
+  #scr-ledger,#scr-reports{grid-column:2;grid-row:1}
+  .bottomnav{display:none}
+  .back{display:none}
+  .fab{right:26px;bottom:26px}
+  .dtabs{display:flex;gap:8px;padding:14px 18px 2px;justify-content:flex-end}
+  .dtab{padding:7px 16px;border-radius:18px;font-size:12px;font-weight:700;color:var(--m);border:1px solid var(--b2);cursor:pointer}
+  .dtab.active{color:#04110b;background:linear-gradient(135deg,#10b981,#059669);border-color:transparent}
+}
 </style>
 </head>
 <body>
@@ -135,7 +151,7 @@ input,select{font-family:inherit}
 
 <header class="header">
   <div class="hleft">
-    <div class="hlogo">म</div>
+    <img class="hlogo" src="../../assets/munimo-icon.svg" alt="" style="padding:0;background:none">
     <div>
       <div class="htitle">Munimo Khata</div>
       <div class="hsub" id="bizname">Sharma General Store · Delhi</div>
@@ -170,6 +186,7 @@ input,select{font-family:inherit}
 
   <!-- LEDGER -->
   <section class="screen" id="scr-ledger">
+    <div class="dtabs"><button class="dtab active" data-scr="ledger">Ledger</button><button class="dtab" data-scr="reports">Reports</button></div>
     <button class="back" id="backbtn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       All parties
@@ -194,6 +211,7 @@ input,select{font-family:inherit}
 
   <!-- REPORTS -->
   <section class="screen" id="scr-reports">
+    <div class="dtabs"><button class="dtab" data-scr="ledger">Ledger</button><button class="dtab active" data-scr="reports">Reports</button></div>
     <div class="sect-title" style="padding-top:20px"><span>This month</span></div>
     <div class="repcard">
       <h3 id="rep-month">July 2026</h3>
@@ -327,6 +345,7 @@ const $=id=>document.getElementById(id);
 const fmt=n=>'₹'+Math.abs(Math.round(n)).toLocaleString('en-IN');
 const today=new Date();
 const dstr=off=>{const d=new Date(today.getTime()+off*864e5);return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})};
+const isDesk=()=>matchMedia('(min-width:840px)').matches;
 const AVCOL=['16,185,129','96,165,250','251,191,36','248,113,113','167,139,250','45,212,191'];
 
 function parties(){ return data.biz[bizIdx].parties; }
@@ -388,13 +407,17 @@ $('remindbtn').onclick=()=>{ const p=parties()[curParty]; const b=bal(p);
 
 // ─── Screens ───
 function show(s){
+  if(isDesk()&&s==='home')s='ledger';
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-  $('scr-'+ (s==='ledger'?'ledger':s)).classList.add('active');
+  $('scr-'+(s==='ledger'?'ledger':s)).classList.add('active');
+  if(isDesk()) $('scr-home').classList.add('active');
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.scr===s));
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.toggle('active',t.dataset.scr===s));
   if(s==='reports') renderReports();
   if(s==='home') renderHome();
 }
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.scr));
+document.querySelectorAll('.dtab').forEach(t=>t.onclick=()=>show(t.dataset.scr));
 
 // ─── Reports ───
 function renderReports(){
@@ -415,9 +438,11 @@ function renderReports(){
 
 // ─── Add entry sheet ───
 function openSheet(pre){
-  const sel=$('f-party'); sel.innerHTML='';
+  const sel=$('f-party'); sel.innerHTML=''; pendingNewName=null;
   parties().forEach((p,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=p.n; sel.appendChild(o); });
-  if(pre&&pre.party!=null) sel.value=pre.party;
+  if(pre&&pre.newName){ pendingNewName=pre.newName;
+    const o=document.createElement('option'); o.value='new'; o.textContent='+ New party: '+pre.newName; sel.appendChild(o); sel.value='new'; }
+  else if(pre&&pre.party!=null&&pre.party>=0) sel.value=pre.party;
   else if(curParty!=null && $('scr-ledger').classList.contains('active')) sel.value=curParty;
   $('f-amt').value=pre&&pre.amt?pre.amt:''; $('f-note').value=pre&&pre.note?pre.note:'';
   setGG(pre&&pre.dir?pre.dir:1);
@@ -429,42 +454,57 @@ $('fabbtn').onclick=()=>openSheet();
 $('cancelbtn').onclick=()=>$('sheet').classList.remove('open');
 $('sheet').onclick=e=>{ if(e.target===$('sheet')) $('sheet').classList.remove('open'); };
 $('savebtn').onclick=()=>{
-  const pi=+$('f-party').value, amt=+$('f-amt').value;
+  let pi;
+  if($('f-party').value==='new'&&pendingNewName){ parties().push({n:pendingNewName,tag:'New party',e:[]}); pi=parties().length-1; }
+  else pi=+$('f-party').value;
+  const amt=+$('f-amt').value;
   if(!amt||amt<=0){ toast('Enter an amount first'); return; }
   const note=$('f-note').value||(ggDir===1?'Diye':'Mile');
   parties()[pi].e.push({d:0,note,amt,dir:ggDir});
   save(); $('sheet').classList.remove('open');
   toast('Entry saved ✓ — '+(ggDir===1?'gave ':'received ')+fmt(amt)+(ggDir===1?' to ':' from ')+parties()[pi].n);
-  if($('scr-ledger').classList.contains('active')&&curParty===pi) openLedger(pi); else renderHome();
+  renderHome(); if($('scr-ledger').classList.contains('active')){ curParty=pi; openLedger(pi); }
 };
 
-// ─── Smart entry: Hindi/English natural language parse (demo) ───
+// ─── Smart entry: natural language parse (demo) ───
+let pendingNewName=null;
 function smartParse(txt){
-  const t=txt.trim(); if(!t) return null;
-  // amount: supports "1 lakh", "20 hazar", plain numbers
+  let t=txt.trim(); if(!t) return null;
+  t=t.replace(/[०-९]/g,d=>'०१२३४५६७८९'.indexOf(d));
   let amt=null;
-  const lakh=t.match(/([\d.]+)\s*(lakh|lac|लाख)/i); const haz=t.match(/([\d.]+)\s*(hazar|hazaar|k|हज़ार|हजार)/i);
-  if(lakh) amt=parseFloat(lakh[1])*100000; else if(haz) amt=parseFloat(haz[1])*1000;
-  else { const m=t.match(/(\d[\d,]*)/); if(m) amt=parseInt(m[1].replace(/,/g,'')); }
-  if(!amt) return null;
-  // direction: gave vs received
-  const gave=/(ko\s|diye|diya|paid|pay|de diya|दिए|दिया|को)/i.test(t);
-  const got=/(se\s|mile|mila|aaye|aya|received|got|से|मिले|आए)/i.test(t);
-  const dir = got&&!gave ? -1 : 1;
-  // party: fuzzy match first word(s) against names
-  let best=0, bi=0;
-  parties().forEach((p,i)=>{
+  const lakh=t.match(/([\d.]+)\s*(lakh|lac|लाख)/i), haz=t.match(/([\d.]+)\s*(hazar|hazaar|k\b|हज़ार|हजार)/i);
+  if(lakh) amt=parseFloat(lakh[1])*100000;
+  else if(haz) amt=parseFloat(haz[1])*1000;
+  else { const m=t.match(/(\d[\d,]*(?:\.\d+)?)/); if(m) amt=parseFloat(m[1].replace(/,/g,'')); }
+  if(!amt||amt<=0) return null;
+  const L=t.toLowerCase();
+  const gaveRe=/(\bko\b|diye|diya|\bdi\b|\bdii\b|paid|\bpay\b|\bgave\b|liye|liya|le gaya|दिए|दिया|दी|लिए|लिया|को)/g;
+  const gotRe=/(\bse\b|mile|mila|mili|aaye|aaya|aayi|received|\bgot\b|jama|credit|वापस|से|मिले|मिला|मिली|आए|आया|जमा)/g;
+  let lastGave=-1,lastGot=-1,m2;
+  while((m2=gaveRe.exec(L))) lastGave=m2.index;
+  while((m2=gotRe.exec(L))) lastGot=m2.index;
+  const dir = lastGot>lastGave ? -1 : 1;
+  let best=0,bi=-1;
+  parties().forEach((p,i)=>{ let sc=0;
     const words=p.n.toLowerCase().split(/\s+/);
-    let sc=0; t.toLowerCase().split(/\s+/).forEach(w=>{ if(w.length>2 && words.some(x=>x.startsWith(w)||w.startsWith(x))) sc++; });
+    L.split(/[^\p{L}]+/u).forEach(w=>{ if(w.length>2 && words.some(x=>x.startsWith(w)||w.startsWith(x))) sc++; });
     if(sc>best){best=sc;bi=i;}
   });
-  return {party:bi,amt,dir,note:t};
+  let newName=null;
+  if(bi<0){
+    const mm=t.match(/^(.{2,30}?)\s+(ko|se|ne|को|से|ने)\s/iu);
+    let cand=mm?mm[1]:t.split(/\s+/).slice(0,2).join(' ');
+    cand=cand.replace(/[\d₹.,]+/g,'').replace(/\b(paid|got|received|today|aaj|आज)\b/gi,'').trim();
+    if(cand) newName=cand.split(/\s+/).slice(0,3).map(w=>w? w[0].toUpperCase()+w.slice(1):w).join(' ');
+  }
+  return {party:bi,newName,amt,dir,note:txt.trim()};
 }
 function smartGo(){
   const r=smartParse($('smartin').value);
   if(!r){ toast('Could not understand — include an amount, like "Ramesh ko 500 diye"'); return; }
   openSheet(r);
-  toast('The AI understood ✓ — check it and press Save');
+  toast(r.newName ? 'New party "'+r.newName+'" will be created — check and press Save'
+                  : 'The AI understood ✓ — check it and press Save');
   $('smartin').value='';
 }
 $('smartgo').onclick=smartGo;
@@ -478,6 +518,7 @@ $('bizbtn').onclick=()=>{
 };
 
 renderHome();
+if(isDesk()) openLedger(0);
 </script>
 </body>
 </html>
