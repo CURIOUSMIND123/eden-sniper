@@ -1,0 +1,15 @@
+{
+  "name": "Munimo Lite — Mobile Cashbook",
+  "short_name": "Munimo Lite",
+  "description": "Record money in and out, create heads, see your cash position — sent to your office for approval.",
+  "start_url": "/field/",
+  "scope": "/field/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1611",
+  "theme_color": "#0c1f17",
+  "icons": [
+    { "src": "/field/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/field/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

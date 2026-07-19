@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1f17">
+  <title>Munimo Lite — Mobile Cashbook</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Login -->
+  <section id="login" class="screen active">
+    <div class="login-box">
+      <div class="brand"><span class="brand-mark" style="background:none;padding:0"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:100%;height:100%;display:block"><defs><linearGradient id="bmg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#34d399"/><stop offset="0.55" stop-color="#10b981"/><stop offset="1" stop-color="#059669"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bmg)"/><path d="M32 20 C26.5 16.5 18.5 15.5 13 18 L13 42 C18.5 39.5 26.5 40.5 32 44.5 Z" fill="#04291b"/><path d="M32 20 C37.5 16.5 45.5 15.5 51 18 L51 42 C45.5 39.5 37.5 40.5 32 44.5 Z" fill="#04291b"/><path d="M32 20 L32 44.5" stroke="#0b3f2a" stroke-width="2" stroke-linecap="round"/><path d="M36.5 31.5 L41 36 L48.5 25.5" stroke="#f5c95c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span><div><b>Munimo Lite</b><small>Mobile Cashbook</small></div></div>
+      <h1>Sign in</h1>
+      <p class="muted">Use the login your office gave you.</p>
+      <!-- Universal connect: one app for every company. When this link/app is
+           opened outside a company address, ask the company code once and jump
+           to <code>.munimo.online — after that it's a normal login. -->
+      <div id="connectBox" hidden>
+        <label>Company code<input id="companyCode" placeholder="e.g. adidev" autocapitalize="none" autocomplete="organization"></label>
+        <button class="btn primary" type="button" id="connectBtn">Connect to my company</button>
+        <p class="muted small" style="margin-top:10px">Your office gave you a company code — it is the first part of your company address (<b>code</b>.munimo.online).</p>
+        <p id="connectErr" class="err" hidden></p>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <label>Username<input id="username" name="username" autocomplete="username" required></label>
+        <label>Password<input id="password" name="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn primary" type="submit">Sign in</button>
+        <p id="loginErr" class="err" hidden></p>
+      </form>
+
+      <!-- Shown only on a desktop-width screen: how to get the app onto a phone -->
+      <div class="phone-cta" id="phoneCta">
+        <div class="pc-title">📱 Built for the phone</div>
+        <p class="pc-sub">This works best as an app on your phone. Send yourself the link, open it on the phone, and install it:</p>
+        <div class="pc-url"><span id="pcUrl">…</span><button type="button" id="pcCopy" onclick="copyAppLink()">Copy</button></div>
+        <a class="pc-wa" id="pcWa" target="_blank" rel="noopener">Send link to WhatsApp</a>
+        <p class="pc-help">On the phone: <b>Android</b> → tap <b>Install</b> when it appears. <b>iPhone</b> → Share → <b>Add to Home Screen</b>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- App shell -->
+  <section id="app" class="screen">
+    <header class="topbar">
+      <div class="who"><b id="whoName">—</b><small id="whoSite">Lite</small></div>
+      <div class="net" id="netDot" title="Connection"></div>
+      <button id="logoutBtn" class="link">Logout</button>
+    </header>
+
+    <main id="views">
+      <!-- Home -->
+      <div class="view active" data-view="home">
+        <div class="card hero">
+          <small>Today</small>
+          <b id="todayDate">—</b>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><b id="stPresent">0</b><small>Present</small></div>
+          <div class="stat"><b id="stAbsent">0</b><small>Absent</small></div>
+          <div class="stat"><b id="stWorkers">0</b><small>Workers</small></div>
+          <div class="stat"><b id="stPending">0</b><small>Pending</small></div>
+        </div>
+        <!-- Cash summary (money-in/out persona). Hidden if the signed-in role
+             may not read the books. -->
+        <div id="cashCard" class="card cash-card" hidden>
+          <div class="cash-head"><small>This month</small><b id="cashInHand">₹0</b><span class="cash-sub">in hand</span></div>
+          <div class="cash-flow">
+            <div class="cf-in"><small>Money in</small><b id="cashIn">₹0</b></div>
+            <div class="cf-out"><small>Money out</small><b id="cashOut">₹0</b></div>
+          </div>
+        </div>
+        <div class="money-cta">
+          <button class="big-money in"  data-money="credit"><span>⬇️</span>Money In</button>
+          <button class="big-money out" data-money="debit"><span>⬆️</span>Money Out</button>
+        </div>
+        <!-- Smart entry: speak or type one line — "diesel 500 ka" — get a draft,
+             confirm, and it goes to the office for approval. -->
+        <div class="smart" id="smartBox" hidden>
+          <div class="smart-lbl">⚡ Quick entry — type it, or tap ➤</div>
+          <form class="smart-row" id="smartForm">
+            <input id="smartText" placeholder="e.g. diesel 500 paid" autocomplete="off" autocapitalize="none" enterkeyhint="go">
+            <button type="submit" id="goBtn" aria-label="Go">➤</button>
+          </form>
+          <div class="smart-tip">To speak: tap the box, then use the <b>🎤 on your keyboard</b> — say “diesel 500 paid”.</div>
+          <div id="smartPrev" class="smart-prev" hidden></div>
+        </div>
+        <div class="actions-grid">
+          <button class="action" data-go="newhead"><span>🏷️</span>New Head</button>
+          <button class="action" data-go="attendance"><span>📋</span>Mark Attendance</button>
+          <button class="action" data-go="addworker"><span>➕</span>Add Worker</button>
+          <button class="action" data-go="expense"><span>📸</span>Site Expense</button>
+          <button class="action" data-go="advance"><span>💸</span>Give Advance</button>
+          <button class="action" data-go="grn"><span>📦</span>Material Received</button>
+        </div>
+        <p id="queueNote" class="queue-note" hidden></p>
+        <div class="section-label">Your recent entries</div>
+        <div id="subList" class="sub-list"></div>
+      </div>
+
+      <!-- Money in / out -->
+      <div class="view" data-view="money">
+        <div class="view-head"><button class="back" data-back>‹</button><h2 id="moneyTitle">Money</h2></div>
+        <form id="moneyForm" class="form">
+          <label>Amount (₹)<input id="mAmt" name="amount" type="number" inputmode="decimal" min="0" step="0.01" required></label>
+          <label>Head (what for)<select id="mHead" name="head"></select></label>
+          <label id="mLoanWrap" style="display:none;">Which loan?<select id="mLoan" name="loan"></select></label>
+          <label id="mBankWrap">Account / Bank<select id="mBank" name="bank"></select></label>
+          <label>Party — who (optional)<input id="mParty" name="party" list="partyList" placeholder="Client or vendor name"><datalist id="partyList"></datalist></label>
+          <label id="mSiteWrap">Site (optional)<select id="mSite" name="site"></select></label>
+          <label>Date<input id="mDate" name="date" type="date" required></label>
+          <label>Note (optional)<input id="mNote" name="note" placeholder="What it was for"></label>
+          <button class="btn primary" type="submit" id="moneySubmit">Submit for approval</button>
+          <p class="muted small">Saved to the office for approval before it posts to the books.</p>
+        </form>
+      </div>
+
+      <!-- New head (Dr / Cr) -->
+      <div class="view" data-view="newhead">
+        <div class="view-head"><button class="back" data-back>‹</button><h2>New Head</h2></div>
+        <form id="headForm" class="form">
+          <label>Head name<input id="hName" name="name" placeholder="e.g. Diesel, Rent, Brokerage" required></label>
+          <label>Type<select id="hKind" name="kind">
+            <option value="expense">Money out — expense (Dr)</option>
+            <option value="income">Money in — income (Cr)</option>
+          </select></label>
+          <button class="btn primary" type="submit">Create Head</button>
+          <p class="muted small">Heads organise your money-in/out. Sent to the office for approval.</p>
+        </form>
+      </div>
+
+      <!-- Attendance -->
+      <div class="view" data-view="attendance">
+        <div class="view-head"><button class="back" data-back>‹</button><h2>Attendance</h2></div>
+        <div class="field"><label>Site</label><select id="attSite"></select></div>
+        <p class="muted small">Tap a worker to cycle: Present → Half day → Overtime → Absent.</p>
+        <div id="attList" class="worker-list"></div>
+        <button id="saveAtt" class="btn primary sticky">Save Attendance</button>
+      </div>
+
+      <!-- Add worker -->
+      <div class="view" data-view="addworker">
+        <div class="view-head"><button class="back" data-back>‹</button><h2>Add Worker</h2></div>
+        <form id="workerForm" class="form">
+          <label>Name<input name="name" required></label>
+          <label>Trade / Skill<input name="trade" placeholder="Mason, Helper, Carpenter…"></label>
+          <label>Mobile<input name="mobile" inputmode="numeric"></label>
+          <label>Daily wage (₹)<input name="daily_rate" type="number" inputmode="numeric" min="0"></label>
+          <label>Site<select name="site_id" id="wkSite"></select></label>
+          <button class="btn primary" type="submit">Save Worker</button>
+        </form>
+      </div>
+
+      <!-- Site expense -->
+      <div class="view" data-view="expense">
+        <div class="view-head"><button class="back" data-back>‹</button><h2>Site Expense</h2></div>
+        <form id="expenseForm" class="form">
+          <label>What was it for?<input name="description" placeholder="Diesel, tea, small material…" required></label>
+          <label>Paid to<input name="vendor_name" placeholder="Shop / person name"></label>
+          <label>Amount (₹)<input name="amount" type="number" inputmode="decimal" min="0" required></label>
+          <label>Category<select name="category">
+            <option>Fuel</option><option>Material</option><option>Food / Tea</option>
+            <option>Transport</option><option>Tools</option><option>Misc</option></select></label>
+          <label>Site<select name="site_id" id="exSite"></select></label>
+          <label class="photo-label">Bill photo (optional)
+            <input id="expPhoto" name="photo" type="file" accept="image/*" capture="environment">
+          </label>
+          <img id="expPreview" class="preview" hidden alt="bill preview">
+          <button class="btn primary" type="submit">Save Expense</button>
+        </form>
+      </div>
+
+      <!-- Advance -->
+      <div class="view" data-view="advance">
+        <div class="view-head"><button class="back" data-back>‹</button><h2>Give Advance</h2></div>
+        <form id="advanceForm" class="form">
+          <label>Worker<select name="worker_id" id="advWorker" required></select></label>
+          <label>Amount (₹)<input name="amount" type="number" inputmode="numeric" min="0" required></label>
+          <label>Note<input name="notes" placeholder="Reason (optional)"></label>
+          <button class="btn primary" type="submit">Record Advance</button>
+        </form>
+      </div>
+
+      <!-- Material received (GRN) -->
+      <div class="view" data-view="grn">
+        <div class="view-head"><button class="back" data-back>‹</button><h2>Material Received</h2></div>
+        <form id="grnForm" class="form">
+          <label>Received from (vendor)<input name="vendor_name" placeholder="Supplier / shop name" required></label>
+          <label>Site<select name="site_id" id="grnSite"></select></label>
+          <label>Challan / bill no.<input name="bill_no" placeholder="Optional"></label>
+          <div class="section-label">Items received</div>
+          <div id="grnItems" class="grn-items"></div>
+          <button type="button" id="grnAddItem" class="btn ghost small">+ Add item</button>
+          <label class="photo-label">Challan photo (optional)
+            <input id="grnPhoto" name="photo" type="file" accept="image/*" capture="environment">
+          </label>
+          <img id="grnPreview" class="preview" hidden alt="challan preview">
+          <button class="btn primary" type="submit">Submit Material Receipt</button>
+        </form>
+      </div>
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab active" data-go="home"><span>🏠</span>Home</button>
+      <button class="tab" data-money="credit"><span>⬇️</span>In</button>
+      <button class="tab" data-money="debit"><span>⬆️</span>Out</button>
+      <button class="tab" data-go="attendance"><span>📋</span>Attend</button>
+    </nav>
+  </section>
+
+  <!-- Install prompt (Android/desktop Chrome shows the button; iOS shows the
+       Share → Add to Home Screen hint). Hidden until installable / dismissed. -->
+  <div id="installBanner" class="install-banner" hidden>
+    <img src="icons/icon-192.png" alt="" class="ib-icon">
+    <div class="ib-text"><b>Install Munimo Lite</b><small id="ibSub">Add to your phone — opens like an app, works offline.</small></div>
+    <button id="ibInstall" class="ib-btn">Install</button>
+    <button id="ibClose" class="ib-close" aria-label="Dismiss">✕</button>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="demo-backend.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
