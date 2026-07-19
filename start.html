@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Your 15-Day Free Trial — Munimo</title>
+<meta name="description" content="Create your Munimo account in one minute. 15 days free — Book, Full ERP or School. Your own private address, email and password. No card needed.">
+<link rel="canonical" href="https://munimo.online/start.html">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0a0f0d">
+<link rel="icon" type="image/svg+xml" href="assets/munimo-icon.svg">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.swrap{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:100px 18px 60px;position:relative;overflow:hidden}
+.swrap .glow{width:900px;height:600px;top:-220px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(16,185,129,.15),transparent 65%)}
+.scard{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--hair2);border-radius:24px;padding:30px 28px;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+.scard h1{font-size:24px;font-weight:800;letter-spacing:-.01em}
+.scard .sub{font-size:13.5px;color:var(--m);margin-top:6px}
+.planpick{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:18px 0 4px}
+.pp{border:1px solid var(--hair2);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.pp b{display:block;font-size:13px}
+.pp small{font-size:10.5px;color:var(--f)}
+.pp.on{border-color:var(--em);background:rgba(16,185,129,.08)}
+.pp.on b{color:var(--em2)}
+.f{margin-top:14px}
+.f label{display:block;font-size:11.5px;font-weight:700;color:var(--m);margin-bottom:6px;letter-spacing:.05em;text-transform:uppercase}
+.f input{width:100%;background:var(--ink2);border:1px solid var(--hair2);border-radius:11px;padding:12px 14px;color:var(--t);font-size:15px;outline:none;font-family:inherit}
+.f input:focus{border-color:var(--em)}
+.err{display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4);color:var(--red);font-size:13px;border-radius:10px;padding:10px 14px;margin-top:14px}
+.ok{display:none;text-align:center;padding:10px 0}
+.ok .big{font-size:40px}
+.ok h2{font-size:20px;margin:8px 0 4px}
+.ok p{font-size:13.5px;color:var(--m)}
+.ok .url{display:block;margin:14px 0;background:var(--ink2);border:1px solid rgba(16,185,129,.4);border-radius:11px;padding:12px;color:var(--em2);font-weight:700;font-size:15px;word-break:break-all}
+.steps3{display:flex;justify-content:center;gap:18px;margin-top:22px;font-size:11.5px;color:var(--f);font-weight:700;flex-wrap:wrap}
+.steps3 b{color:var(--em2)}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-in">
+    <a class="logo" href="index.html"><img class="logo-m" src="assets/munimo-icon.svg" alt="Munimo logo"> Munimo</a>
+    <div class="hd-cta" style="margin-left:auto">
+      <a class="btn btn-wa" href="https://wa.me/919599942248?text=Hi!%20Help%20with%20my%20free%20trial." target="_blank" rel="noopener">Need help?</a>
+    </div>
+  </div>
+</header>
+
+<div class="swrap">
+  <div class="glow"></div>
+  <div class="scard">
+    <div id="formview">
+      <span class="pill">15 days free · no card · cancel anytime</span>
+      <h1 style="margin-top:14px">Create your Munimo</h1>
+      <p class="sub">One minute. Your own private account at <b style="color:var(--em2)">yourname.munimo.online</b> — ready instantly.</p>
+
+      <div class="planpick" id="planpick">
+        <div class="pp on" data-plan="book"><b>Book</b><small>₹1,999/mo after</small></div>
+        <div class="pp" data-plan="erp"><b>Full ERP</b><small>₹2,999/mo after</small></div>
+        <div class="pp" data-plan="school"><b>School</b><small>Quote</small></div>
+      </div>
+
+      <div class="f"><label>Business name</label><input id="f-company" type="text" placeholder="e.g. Sharma Traders" autocomplete="organization"></div>
+      <div class="f"><label>Email</label><input id="f-email" type="email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="f"><label>Phone (WhatsApp)</label><input id="f-phone" type="tel" placeholder="98765 43210" autocomplete="tel"></div>
+      <div class="f"><label>Choose a password (min 8 characters)</label><input id="f-pass" type="password" placeholder="••••••••" autocomplete="new-password"></div>
+
+      <div class="err" id="err"></div>
+      <button class="btn btn-em btn-big" id="go" style="width:100%;margin-top:18px">Create my account — free</button>
+      <p class="trialnote">By continuing you agree to a 15-day free trial. After that, the plan price applies — we remind you first on WhatsApp. Your data stays yours, always.</p>
+      <div class="steps3"><span><b>1.</b> Create</span><span><b>2.</b> Log in instantly</span><span><b>3.</b> 15 days free</span></div>
+    </div>
+
+    <div class="ok" id="okview">
+      <div class="big">🎉</div>
+      <h2>Your Munimo is ready!</h2>
+      <p>Log in with username <b style="color:var(--t)">admin</b> and the password you just chose.</p>
+      <a class="url" id="ok-url" href="#" target="_blank" rel="noopener"></a>
+      <p style="font-size:12.5px">On your phone, open the link and tap “Add to home screen” — it installs like an app.<br>Field app for your staff: <a id="ok-field" href="#" target="_blank" rel="noopener" style="color:var(--em2)"></a></p>
+      <p style="margin-top:16px"><a class="btn btn-em btn-big" id="ok-open" href="#" target="_blank" rel="noopener">Open my Munimo →</a></p>
+      <p class="trialnote">Trial ends in 15 days — we will message you on WhatsApp before anything is charged.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+(function(){
+  var API='https://app.munimo.online/api/public/signup';
+  var plan=(new URLSearchParams(location.search).get('plan'))||'book';
+  var picks=document.querySelectorAll('.pp');
+  function setPlan(p){ plan=p; picks.forEach(function(x){ x.classList.toggle('on',x.dataset.plan===p); }); }
+  if(['book','erp','school'].indexOf(plan)<0) plan='book';
+  setPlan(plan);
+  picks.forEach(function(x){ x.addEventListener('click',function(){ setPlan(x.dataset.plan); }); });
+  var $=function(id){ return document.getElementById(id); };
+  function fail(msg){ var e=$('err'); e.textContent=msg; e.style.display='block'; }
+  $('go').addEventListener('click', function(){
+    $('err').style.display='none';
+    var company=$('f-company').value.trim(), email=$('f-email').value.trim(),
+        phone=$('f-phone').value.trim(), pass=$('f-pass').value;
+    if(company.length<2) return fail('Please enter your business name.');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail('Please enter a valid email.');
+    if(pass.length<8) return fail('Password must be at least 8 characters.');
+    var btn=$('go'); btn.textContent='Creating your account…'; btn.disabled=true;
+    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({company:company,email:email,phone:phone,password:pass,plan:plan})})
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+    .then(function(res){
+      if(res.ok && res.j.success){
+        $('formview').style.display='none'; $('okview').style.display='block';
+        $('ok-url').textContent=res.j.url; $('ok-url').href=res.j.url;
+        $('ok-open').href=res.j.url;
+        $('ok-field').textContent=res.j.fieldUrl; $('ok-field').href=res.j.fieldUrl;
+      } else {
+        btn.textContent='Create my account — free'; btn.disabled=false;
+        fail((res.j&&res.j.error)||'Could not create the account. Please try WhatsApp below.');
+      }
+    })
+    .catch(function(){
+      btn.textContent='Create my account — free'; btn.disabled=false;
+      // server unreachable → warm handover to WhatsApp (never send the password)
+      var msg='Hi! I want a 15-day free trial of Munimo '+(plan==='erp'?'Full ERP':plan==='school'?'for Schools':'Book')+'. Business: '+company+' · Email: '+email+' · Phone: '+phone;
+      var e=$('err'); e.style.display='block';
+      e.innerHTML='Our signup server is being set up. One tap and we create your account personally, usually within the hour: <a style="color:#4ade80;font-weight:700" target="_blank" rel="noopener" href="https://wa.me/919599942248?text='+encodeURIComponent(msg)+'">Continue on WhatsApp →</a>';
+    });
+  });
+})();
+</script>
+</body>
+</html>
