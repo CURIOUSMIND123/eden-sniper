@@ -88,6 +88,37 @@
 .faq summary::after{content:'+';color:var(--em2);font-size:20px;font-weight:400;flex-shrink:0}
 .faq details[open] summary::after{content:'−'}
 .faq .fa{padding:0 22px 18px;color:var(--m);font-size:14.5px}
+/* ─── WEB hero: the real web Cash Book in a laptop, phone tucked in corner ─── */
+.webhero{position:relative;display:flex;justify-content:center;perspective:1800px}
+.webglow{position:absolute;width:88%;height:78%;top:6%;left:6%;background:radial-gradient(ellipse,rgba(16,185,129,.26),transparent 66%);filter:blur(64px);pointer-events:none}
+.laptop3d{position:relative;width:min(660px,94vw);transform:rotateX(6deg) rotateY(-5deg);transform-style:preserve-3d;transition:transform .6s var(--ease)}
+.webhero:hover .laptop3d{transform:rotateX(0) rotateY(0)}
+@media(max-width:960px){.laptop3d{transform:none}.webhero:hover .laptop3d{transform:none}}
+.lidbar{height:26px;background:linear-gradient(180deg,#11201a,#0a1512);border:1px solid #26362e;border-bottom:0;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:7px;padding:0 14px}
+.lidbar i{width:10px;height:10px;border-radius:50%;display:block}
+.lidbar .r{background:#ff5f57}.lidbar .y{background:#febc2e}.lidbar .g{background:#28c840}
+.urlbar{margin-left:12px;flex:1;height:15px;background:#0c1512;border:1px solid #26362e;border-radius:8px;display:flex;align-items:center;gap:6px;padding:0 9px;font-size:9.5px;color:var(--em3);font-weight:700;letter-spacing:.02em;overflow:hidden;white-space:nowrap}
+.urlbar svg{width:9px;height:9px;flex-shrink:0}
+.screen{position:relative;background:#070b0a;border:1px solid #26362e;border-top:0;aspect-ratio:1280/820;overflow:hidden}
+.screen iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#0a0f0d}
+.screen .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left}
+.laptop3d::after{content:'';display:block;height:15px;margin:0 -34px;background:linear-gradient(180deg,#1a2a23,#0c1512);border:1px solid #26362e;border-radius:0 0 16px 16px;box-shadow:0 40px 90px rgba(0,0,0,.7)}
+.webdot{position:absolute;top:-13px;left:16px;z-index:6;background:#0c1512;border:1px solid rgba(16,185,129,.6);color:var(--em2);font-size:10.5px;font-weight:800;letter-spacing:.09em;padding:5px 12px;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+.launch{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;background:linear-gradient(180deg,rgba(7,11,10,.28),rgba(7,11,10,.62));transition:opacity .4s,visibility .4s;padding-right:26%}
+@media(max-width:520px){.launch{padding-right:0}}
+.launch.gone{opacity:0;visibility:hidden}
+.launch .ring{width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,.96);display:flex;align-items:center;justify-content:center;animation:pulse 2.2s infinite;box-shadow:0 12px 40px rgba(16,185,129,.4)}
+.launch .ring svg{width:24px;height:24px;fill:#04110b;margin-left:3px}
+.launch b{font-size:14px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.85)}
+.launch small{font-size:11.5px;color:#bfe9d6;font-weight:700}
+/* phone tucked into the laptop's lower-right */
+.webhero .miniphone{position:absolute;right:clamp(-34px,-3.4vw,-16px);bottom:-14px;z-index:7;width:clamp(116px,14vw,156px);aspect-ratio:340/720;border-radius:24px;background:#04110b;border:1px solid #2a3a32;padding:8px 6px;box-shadow:0 30px 66px rgba(0,0,0,.78),0 0 0 5px #060a08,0 0 54px rgba(16,185,129,.16);transform:rotate(2deg)}
+.webhero .miniphone::before{content:'';position:absolute;top:14px;left:50%;transform:translateX(-50%);width:52px;height:13px;background:#04110b;border-radius:9px;z-index:3}
+.webhero .miniphone iframe{width:100%;height:100%;border:0;border-radius:18px;background:#070b0a;display:block}
+.webhero .miniphone .plabel{position:absolute;top:-11px;right:8px;z-index:5;background:#0c1512;border:1px solid var(--hair2);color:var(--em2);font-size:8.5px;font-weight:800;letter-spacing:.08em;padding:3px 8px;border-radius:14px}
+@media(max-width:520px){.webhero .miniphone{display:none}}
+.webhint{text-align:center;margin-top:22px;font-size:13px;color:var(--em3);font-weight:700}
+.webhint b{color:var(--t)}
 </style>
 </head>
 <body>
@@ -110,32 +141,65 @@
   </div>
 </header>
 
-<!-- ═══ HERO — the real Munimo Lite app, running live ═══ -->
+<!-- ═══ HERO — the real WEB Cash Book, running live in the browser ═══ -->
 <section class="hero">
   <div class="glow"></div>
   <div class="wrap hero-grid">
     <div>
-      <span class="pill">Munimo Lite · the real app is running here →</span>
-      <h1 class="h1" style="margin-top:18px">Run your site's<br>money & workers<br><span class="gold">from your phone.</span></h1>
-      <span class="hero-sub"><b style="color:var(--t)">This is Munimo Lite — live, not a video.</b> Tap the phone: add money in or out, mark attendance, ask in your language. The exact app your team uses every day.</span>
+      <span class="pill">The real software · running live on this page →</span>
+      <h1 class="h1" style="margin-top:18px">Your whole business,<br>one clean<br><span class="gold">Cash Book.</span></h1>
+      <span class="hero-sub"><b style="color:var(--t)">This is the real Munimo web app — not a picture.</b> Money in, money out, who owes you, GST alerts, worker attendance. Use it right here before you sign up. Your own account starts empty and private.</span>
       <div class="hero-ctas">
         <a class="btn btn-em btn-big" href="start.html?plan=book">Start 15-day free trial</a>
-        <a class="btn btn-ghost btn-big" href="lite-app/?demo=1" target="_blank" rel="noopener">Open full screen</a>
+        <a class="btn btn-ghost btn-big" href="https://demo.munimo.online/app/app.html" target="_blank" rel="noopener">Open the live demo ↗</a>
       </div>
-      <div class="hero-trust">Works on phone &amp; computer · offline · your team's logins · ₹1,999/mo · 15 days free</div>
+      <div class="hero-trust">Runs in any browser &amp; on phone · your team's logins · from ₹1,999/mo · 15 days free · no card</div>
     </div>
     <div>
-      <div class="livephone-wrap">
-        <div class="liveglow"></div>
-        <div class="livephone">
-          <span class="livedot">● LIVE</span>
-          <iframe src="lite-app/?demo=1" title="Munimo Lite — live demo" loading="eager"></iframe>
+      <div class="webhero">
+        <div class="webglow"></div>
+        <div class="laptop3d">
+          <span class="webdot">● LIVE DEMO</span>
+          <div class="lidbar"><i class="r"></i><i class="y"></i><i class="g"></i>
+            <span class="urlbar"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.4"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>demo.munimo.online/app</span>
+          </div>
+          <div class="screen" id="webScreen">
+            <iframe id="webdemo" title="Munimo web Cash Book — live demo" loading="lazy" allow="clipboard-write"></iframe>
+            <div class="launch" id="webLaunch" role="button" tabindex="0" aria-label="Launch the live web Cash Book">
+              <img class="poster" src="assets/web/cashbook-hero.png" alt="Munimo web Cash Book — live dashboard with real figures" style="position:absolute;inset:0;z-index:-1">
+              <span class="ring"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+              <b>Launch the live Cash Book</b>
+              <small>Real software · real data · no sign-up</small>
+            </div>
+          </div>
+        </div>
+        <div class="miniphone">
+          <span class="plabel">● SAME ON PHONE</span>
+          <iframe src="lite-app/?demo=1" title="Munimo on phone — live" loading="eager"></iframe>
         </div>
       </div>
-      <div class="livehint">↑ Real app · try “diesel 3200 paid” in Quick entry, or tap <b>Attend</b></div>
+      <div class="webhint">↑ The office view runs on your computer · the <b>same books</b> on every phone on site</div>
     </div>
   </div>
 </section>
+<script>
+/* Launch the real web app inside the laptop frame on click (or when it scrolls
+   into view on desktop). Click-to-load keeps the hero instant and means the
+   poster stays crisp until a real person asks for the live app. */
+(function () {
+  var ln = document.getElementById('webLaunch'), fr = document.getElementById('webdemo'),
+      sc = document.getElementById('webScreen');
+  if (!ln || !fr || !sc) return;
+  var SRC = 'https://demo.munimo.online/app/app.html';
+  var loaded = false;
+  function go() { if (loaded) return; loaded = true; fr.src = SRC; ln.classList.add('gone'); }
+  // Bind to the whole screen container so a click anywhere on the laptop screen
+  // launches the live app (the overlay is a child, and clicks land on the
+  // container). Keyboard support stays on the focusable overlay.
+  sc.addEventListener('click', go);
+  ln.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+})();
+</script>
 
 <!-- ═══ POSTURE STATS ═══ -->
 <section class="sec-tight">
